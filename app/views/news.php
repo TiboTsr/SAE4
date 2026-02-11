@@ -7,26 +7,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Actualités</title>
-    <link rel="stylesheet" href="/styles/news_style.css">
+    <link rel="stylesheet" href="assets/styles/news_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 </head>
 <body class="body_margin">
-<?php
-    require_once 'header.php';
-    require_once 'database.php';
-    $db = new DB();
-    $show = 5;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
-        $show = (int) $_GET['show'];
-    }
+<?php
+    require_once 'app/views/header.php';
 ?>
+
 <h1>ACTUALITES</h1>
 <section>
-    <a class="show-more" href="/news.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <a class="show-more" href="index.php?page=news.php&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
     <div class="events-display">
                 <?php
                     $date = getdate();
@@ -34,12 +29,6 @@
                     $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
                     $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
                     $current_date = new DateTime(date("Y-m-d"));
-
-                    $events_to_display = $db->select(
-                        "SELECT id_actualite, titre_actualite, date_actualite FROM ACTUALITE WHERE date_actualite <= NOW() ORDER BY date_actualite ASC LIMIT ?;",
-                        "i",
-                        [$show]
-                    );
 
                     $closest_event_id = "";
 
@@ -82,10 +71,10 @@
         </div>
 </section>
 
-<?php require_once "footer.php" ?>
+<?php require_once "app/views/footer.php" ?>
 
-<script src="/scripts/news_details_redirect.js"></script>
-<script src="/scripts/scroll_to_closest_event.js"></script>
+<script src="assets/scripts/news_details_redirect.js"></script>
+<script src="assets/scripts/scroll_to_closest_event.js"></script>
 
 </body>
 </html>

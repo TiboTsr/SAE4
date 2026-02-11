@@ -7,47 +7,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Evenements</title>
-    <link rel="stylesheet" href="/styles/events_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/events_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 </head>
 <body class="body_margin">
-<?php
-    require_once 'header.php';
-    require_once 'database.php';
-    $db = new DB();
-    $isLoggedIn = isset($_SESSION["userid"]);
-    $show = 5;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
-        $show = (int) $_GET['show'];
-    }
+<?php
+    require_once 'app/views/header.php';
 ?>
+
 <h1>LES EVENEMENTS</h1>
 <section>
-    <a class="show-more" href="/events.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <a class="show-more" href="index.php?page=events.php&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
     <div class="events-display">
                 <?php
-                    $date = getdate();
-                    $sql_date = $date["year"]."-".$date["mon"]."-".$date["mday"];
-                    $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
-                    $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
-                    $current_date = new DateTime(date("Y-m-d"));
-
-                    $events_to_display = $db->select(
-                        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC;",
-                        "s",
-                        [$sql_date]
-                    );
-                    $passed_events = $db->select(
-                        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement < ? AND deleted = false ORDER BY date_evenement ASC LIMIT ?;",
-                        "si",
-                        [$sql_date, $show]
-                    );
-                    $events_to_display = array_merge($passed_events, $events_to_display);
-
-                    $closest_event_id = "";
 
                     foreach ($events_to_display as $event):
                         $eventid = $event["id_evenement"];
@@ -130,8 +105,8 @@
                 <?php endforeach; ?>
         </div>
 </section>
-    <?php require_once 'footer.php';?>
-    <script src="/scripts/event_details_redirect.js"></script>
-    <script src="/scripts/scroll_to_closest_event.js"></script>
+    <?php require_once 'app/views/footer.php';?>
+    <script src="assets/scripts/event_details_redirect.js"></script>
+    <script src="assets/scripts/scroll_to_closest_event.js"></script>
 </body>
 </html>
