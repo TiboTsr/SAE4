@@ -1,9 +1,9 @@
 <?php
 
 // Importer les fichiers
-require_once 'database.php';
-require_once 'files_save.php';
-require_once 'cart_class.php';
+require_once 'app/models/Database.php';
+require_once 'app/models/files_save.php';
+require_once 'app/models/Cart.php';
 
 // Connexion à la base de donnees
 $db = new DB();

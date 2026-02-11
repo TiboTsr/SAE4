@@ -7,43 +7,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="/styles/grade_style.css">
+    <link rel="stylesheet" href="assets/styles/grade_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
 
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 
 </head>
-
-
-
 <body class="body_margin">
-
-<!--------------->
-<!------PHP------>
-<!--------------->
 
 <!-- Importer les fichiers -->
 <?php 
-require_once "header.php" ;
-require_once 'database.php';
-require_once 'files_save.php';
-
-// Connexion à la base de donnees
-$db = new DB();
-
-
-//Requête SQL
-$products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix_grade");
+require_once "app/views/header.php" ;
 
 ?>
-
-
-
-<!--------------->
-<!------HTML----->
-<!--------------->
 
 <H1>Les grades</H1>
 
@@ -65,9 +43,9 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
                 <div id="one-product">
                     <div>
                         <?php if($product['image_grade'] == null):?>
-                            <img src="/admin/ressources/default_images/grade.webp" alt="Image du grade" />
+                            <img src="admin/ressources/default_images/grade.webp" alt="Image du grade" />
                         <?php else:?>
-                            <img src="/api/files/<?php echo $product['image_grade']; ?>" alt="Image du grade" />
+                            <img src="api/files/<?php echo $product['image_grade']; ?>" alt="Image du grade" />
                         <?php endif?>
 
                         <h3 title="<?= htmlspecialchars($product['nom_grade']) ?>">
@@ -92,7 +70,7 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
                             <?php if (!empty($_SESSION) && !empty($unAdherant)): ?>
                                 <button id="detention">Vous détenez ce grade</button>
                             <?php else: ?>
-                                <a id="buy-button" href="/grade_subscription.php?id=<?= htmlspecialchars($product['id_grade']) ?>">
+                                <a id="buy-button" href="index.php?page=grade_subscription&id=<?= htmlspecialchars($product['id_grade']) ?>">
                                     Acheter
                                 </a>
                             <?php endif; ?>
@@ -108,7 +86,7 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
 
 
 
-<?php require_once "footer.php" ?>
+<?php require_once "app/views/footer.php" ?>
 
 
 </body>

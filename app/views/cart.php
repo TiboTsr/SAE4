@@ -6,11 +6,11 @@
     <title>Mon panier</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/cart_style.css">
+    <link rel="stylesheet" href="assets/styles/cart_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 
     <script>
         //Fonction pour valider la soumission du formulaire (form-quantity) par la touche "Entrée"
@@ -35,16 +35,16 @@
 <?php 
 
 // Importer les fichiers
-require_once "header.php" ;
-require_once 'database.php';
-require_once 'files_save.php';
-require_once 'cart_class.php';
+require_once "app/views/header.php" ;
+require_once 'app/models/Database.php';
+require_once 'app/models/files_save.php';
+require_once 'app/models/Cart.php';
 
 // Connexion à la base de donnees
-$db = new DB();
+$db = new Database();
 
 // Initialisation du panier
-$cart = new cart($db);
+$cart = new Cart($db);
 ?>
 
 <!-- On récupère les produits du panier -->
@@ -88,8 +88,8 @@ $cart = new cart($db);
 
     <div>
         <button id="shop-button" >
-            <a href="shop.php">
-                <img src="/assets/fleche_retour.png" alt="Fleche de retour">
+            <a href="index.php?page=shop">
+                <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
                 Retourner à la boutique
             </a>
         </button>
@@ -98,7 +98,7 @@ $cart = new cart($db);
 
 <?php if (!empty($_SESSION['cart'])) : ?>
 <div id='cart-container'>
-    <form method="POST" action="/cart.php" id= "form-quantity">
+    <form method="POST" action="index.php?page=cart" id= "form-quantity">
     <table>
             <thead>
                 <tr>
@@ -113,14 +113,14 @@ $cart = new cart($db);
                 <?php foreach ($products as $product) :?>
                 <tr>
                     <td id='article-cell'>
-                        <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
+                        <img src="api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
                         <p><?= htmlspecialchars($product['nom_article']) ?></p>
                     </td>
                     <td><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> €</td>                
                     <td><input type='text' name="cart[quantity][<?=$product['id_article']?>]" value="<?=$_SESSION['cart'][$product['id_article']]?>" onkeydown="pressEnter(event)"></td>
                     <td><?= number_format(htmlspecialchars($product['prix_article'] * $_SESSION['cart'][$product['id_article']]), 2, ',', ' ') ?> €</td>  
                     <td>
-                        <a href="/cart.php?del=<?= $product['id_article'] ?>">Supprimer</a>
+                        <a href="index.php?page=cart&del=<?= $product['id_article'] ?>">Supprimer</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -173,7 +173,7 @@ $cart = new cart($db);
     </form>
 </div>
 <div>
-    <form class="subscription" action="/order.php" method="post">
+    <form class="subscription" action="index.php?page=order" method="post">
         <?php
         if (isset($_SESSION['cart'])) {
             // Encodage du panier entier en JSON et transmission dans un seul champ caché
@@ -195,7 +195,7 @@ $cart = new cart($db);
 
 
 
-<?php require_once "footer.php" ?>
+<?php require_once "app/views/footer.php" ?>
 
 </body>
 </html>
