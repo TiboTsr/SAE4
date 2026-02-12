@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div>
     <button id="cart-button">
         <a href="/grade.php">
-            <img src="/assets/fleche_retour.png" alt="Flèche de retour">
+            <img src="/assets/fleche_retour.png" alt="Flèche de retour, retourne à la page des grades">
             Retourner aux grades
         </a>
     </button>

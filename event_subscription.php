@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div>
         <button id="cart-button">
             <a href="/event_details.php?id=<?php echo $eventid?>">
-                <img src="/assets/fleche_retour.png" alt="Flèche de retour">
+                <img src="/assets/fleche_retour.png" alt="Flèche de retour, retourne à la page de l'évènement">
                 Retourner à l'évènement
             </a>
         </button>

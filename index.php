@@ -30,7 +30,7 @@
         <section>
             <h2 class="titre_vertical"> ADIIL</h2>
             <div id="index_carrousel">
-                <img src="/assets/photo_accueil_BDE.png" alt="Carrousel ADIIL">
+                <img src="/assets/photo_accueil_BDE.png" alt="Carrousel de photo de l'ADIIL">
             </div>
         </section>
 
@@ -71,10 +71,10 @@
                     <h4><?php echo $pod['prenom_membre'];?></h4>
                     <div>
                         <?php if($pod['pp_membre'] == null):?>
-                            <img src="/admin/ressources/default_images/user.jpg" alt="Profile Picture"
+                            <img src="/admin/ressources/default_images/user.jpg" alt="Photo de profil"
                             class="profile_picture">
                         <?php else:?>
-                            <img src="/api/files/<?php echo $pod['pp_membre'];?>" alt="Profile Picture"
+                            <img src="/api/files/<?php echo $pod['pp_membre'];?>" alt="Photo de profil"
                                 class="profile_picture">
                         <?php endif?>
                         <?php echo $pod['xp_membre'];?> xp

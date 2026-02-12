@@ -360,7 +360,7 @@ if (isset($_SESSION['message'])) {
         <form action="" method="post">
             <input type="hidden" name="deconnexion" value="true">
             <button type="submit">
-                    <img src="/assets/logOut_icon.png" alt="icone de deconnexion">
+                    <img src="/assets/logOut_icon.png" alt="Icône de déconnexion">
                     Déconnexion
             </button>
         </form>
@@ -369,7 +369,7 @@ if (isset($_SESSION['message'])) {
         <form action="delete_account.php" method="post">
             <input type="hidden" name="delete_account" value="true">
             <button type="submit">
-                <img src="/assets/delete_icon.png" alt="icone de suppression">
+                <img src="/assets/delete_icon.png" alt="Icône de suppression">
                 Supprimer mon compte
             </button>
         </form>

@@ -133,7 +133,7 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
     <div id='cart-info'>
         <button>
             <a href="cart.php">
-                <img src="/assets/logo_caddie.png" alt="Logo du panier">
+                <img src="/assets/logo_caddie.png" alt="Icône de panier">
                 <p>Panier (<span id="count"><?=$cart->count();?></span>)</p>
             </a>
         </button>
@@ -149,9 +149,9 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
                 <div id="one-product">
                     <div>
                         <?php if($product['image_article'] == null):?>
-                            <img src="/admin/ressources/default_images/boutique.png" alt="Image de l'article" />
+                            <img src="/admin/ressources/default_images/boutique.png" alt="Image par défaut de l'article, icône boutique générique">
                         <?php else:?>
-                            <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
+                            <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image personnalisée de l'article, photo ou illustration du produit">
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>

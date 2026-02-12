@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div>
     <button id="cart-button" >
         <a href="/cart.php">
-            <img src="/assets/fleche_retour.png" alt="Fleche de retour">
+            <img src="/assets/fleche_retour.png" alt="Fleche de retour, retourne au panier">
             Retourner au panier
         </a>
     </button>
