@@ -8,20 +8,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<<<<<<< HEAD:app/views/shop.php
     <link rel="stylesheet" href="assets/styles/shop_style.css">
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
-=======
-    <link rel="stylesheet" href="styles/shop_style.css">
-    <link rel="stylesheet" href="styles/general_style.css">
-    <link rel="stylesheet" href="styles/header_style.css">
-    <link rel="stylesheet" href="styles/footer_style.css">
-
-
-
->>>>>>> Mouad:shop.php
 
 </head>
 
@@ -66,13 +56,8 @@ require_once "app/views/header.php" ;
 
     <div id='cart-info'>
         <button>
-<<<<<<< HEAD:app/views/shop.php
             <a href="index.php?page=cart">
                 <img src="assets/images/logo_caddie.png" alt="Logo du panier">
-=======
-            <a href="cart.php">
-                <img src="assets/logo_caddie.png" alt="Logo du panier">
->>>>>>> Mouad:shop.php
                 <p>Panier (<span id="count"><?=$cart->count();?></span>)</p>
             </a>
         </button>
@@ -88,9 +73,9 @@ require_once "app/views/header.php" ;
                 <div id="one-product">
                     <div>
                         <?php if($product['image_article'] == null):?>
-                            <img src="admin/ressources/default_images/boutique.png" alt="Image de l'article" />
+                            <img src="/admin/ressources/default_images/boutique.png" alt="Image de l'article" />
                         <?php else:?>
-                            <img src="api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
+                            <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>
@@ -105,11 +90,7 @@ require_once "app/views/header.php" ;
                     <div>
                         <p id="stock-status">
                             <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0): ?>
-<<<<<<< HEAD:app/views/shop.php
                                 <a class="addCart" id="add-to-cart-button" href="app/models/cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
-=======
-                                <a class="addCart" id="add-to-cart-button" href="cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
->>>>>>> Mouad:shop.php
                                     Ajouter au panier
                                 </a>
                             <?php else: ?>
@@ -175,11 +156,7 @@ require_once "app/views/header.php" ;
         });
     </script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<<<<<<< HEAD:app/views/shop.php
 <script src="assets/scripts/add_cart.js"></script>
-=======
-<script src="scripts/add_cart.js"></script>
->>>>>>> Mouad:shop.php
 
 </body>
 </html>
