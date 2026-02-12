@@ -9,3 +9,14 @@ function getNews($show) {
         [$show]
     );
 }
+
+
+function getNew($eventid) {
+    $db = new Database();
+    return $db->select(
+        "SELECT *
+        FROM ACTUALITE WHERE id_actualite = ?",
+        "i",
+        args: [$eventid]
+    );
+}

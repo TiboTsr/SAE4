@@ -21,7 +21,7 @@
 
 <h1>ACTUALITES</h1>
 <section>
-    <a class="show-more" href="index.php?page=news.php&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <a class="show-more" href="index.php?page=news&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
     <div class="events-display">
                 <?php
                     $date = getdate();

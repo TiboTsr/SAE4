@@ -10,6 +10,25 @@ function getUserInfo() {
 }
 
 
+function getUserInfoByMail($mail) {
+    $db = new Database();
+    return $db->select(
+        "SELECT id_membre FROM MEMBRE WHERE email_membre = ?",
+        "s",
+        [$mail]
+    );
+}
+
+function insertUser($lname,$fname,$mail,$password) {
+    $db = new Database();
+    $db->query(
+        "CALL creationCompte ( ? , ? , ? , ? , ? );",
+        "sssss",
+        [$lname,$fname,$mail,password_hash($password, PASSWORD_DEFAULT),'defaultPP.png']
+    );
+}
+
+
 function updateUserPp($fileName) {
     $db = new Database();
     $db->query(
@@ -62,5 +81,32 @@ function updatePassword($hashedPassword) {
         "UPDATE MEMBRE SET password_membre = ? WHERE id_membre = ?",
         "si",
         [$hashedPassword, $_SESSION['userid']]
+    );
+}
+
+function getLogin($mail) {
+    $db = new Database();
+    return $db->select(
+        "SELECT id_membre, email_membre, password_membre FROM MEMBRE WHERE email_membre = ?",
+        "s",
+        [$mail]
+    );
+}
+
+function isAdmin($id) {
+    $db = new Database();
+    return $db->select(
+        "SELECT 1 FROM ASSIGNATION WHERE id_membre = ? LIMIT 1;",
+        "i",
+        [$id]
+    );
+}
+
+function deleteUser() {
+    $db = new Database();
+    $db->query(
+        "CALL suppressionCompte ( ? );",
+        "i",
+        [$_SESSION["userid"]]
     );
 }
