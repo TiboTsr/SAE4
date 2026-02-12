@@ -58,3 +58,12 @@ function isUserSubscribed($userId, $eventId) {
     return !empty($result);
 }
 
+function getTitle($eventid) {
+    $db = new Database();
+    return $db->select(
+    "SELECT `nom_evenement` FROM EVENEMENT WHERE id_evenement = ?",
+    "i",
+    [$eventid]
+    )[0];
+}
+
