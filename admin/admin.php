@@ -37,12 +37,12 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
     <!-- Navigation -->
     <nav>
 
-        <h1 onclick="window.location.href='/'" style="cursor: pointer;">ADIIL - Admin</h1>
+        <h1 onclick="window.location.href='../index.php'" style="cursor: pointer;">ADIIL - Admin</h1>
 
         <ul>
 
             <li perm="chat">
-                <img src="ressources/panels_icons/chat.svg" alt="Icone du chat">
+                    <img src="ressources/panels_icons/chat.svg" alt="Icône chat, bulle de discussion pour accès au chat">
                 <p>Chat</p>
             </li>
             
@@ -50,7 +50,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_boutique')){
                     echo '
                         <li perm="boutique">
-                            <img src="ressources/panels_icons/boutique.svg" alt="Icone de la boutique">
+                                <img src="ressources/panels_icons/boutique.svg" alt="Icône boutique, panier ou sac pour accès à la boutique">
                             <p>Boutique</p>
                         </li>
                         ';
@@ -61,7 +61,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_utilisateur')){
                     echo '
             <li perm="utilisateurs">
-                <img src="ressources/panels_icons/users.svg" alt="Icone des utilisateurs">
+                    <img src="ressources/panels_icons/users.svg" alt="Icône utilisateurs, silhouette ou groupe pour gestion des utilisateurs">
                 <p>Utilisateurs</p>
             </li>
                         ';
@@ -72,7 +72,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_grade')){
                     echo '
             <li perm="grades">
-                <img src="ressources/panels_icons/grades.svg" alt="Icone des grades">
+                    <img src="ressources/panels_icons/grades.svg" alt="Icône grades, médaille ou étoile pour gestion des grades">
                 <p>Grades</p>
             </li>
                         ';
@@ -83,7 +83,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_evenement')){
                     echo '
             <li perm="evenements">
-                <img src="ressources/panels_icons/events.svg" alt="Icone des événements">
+                    <img src="ressources/panels_icons/events.svg" alt="Icône événements, calendrier ou horloge pour gestion des événements">
                 <p>Evenements</p>
             </li>
                         ';
@@ -94,7 +94,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_comptabilite')){
                     echo '
             <li perm="comptabilite">
-                <img src="ressources/panels_icons/comptabilite.svg" alt="Icone de la comptabilite">
+                    <img src="ressources/panels_icons/comptabilite.svg" alt="Icône comptabilité, calculatrice ou graphique pour gestion comptable">
                 <p>Comptabilite</p>
             </li>
                         ';
@@ -105,7 +105,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_reunion')){
                     echo '
             <li perm="reunions">
-                <img src="ressources/panels_icons/reunions.svg" alt="Icone des réunions">
+                    <img src="ressources/panels_icons/reunions.svg" alt="Icône réunions, table ou personnes pour gestion des réunions">
                 <p>Réunions</p>
             </li>
                         ';
@@ -116,7 +116,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_role')){
                     echo '
             <li perm="roles">
-                <img src="ressources/panels_icons/roles.svg" alt="Icone des roles">
+                    <img src="ressources/panels_icons/roles.svg" alt="Icône rôles, clé ou badge pour gestion des rôles">
                 <p>Rôles</p>
             </li>
                         ';
@@ -127,7 +127,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_actualite')){
                     echo '
             <li perm="actualites">
-                <img src="ressources/panels_icons/actualite.svg" alt="Icone des actualités">
+                    <img src="ressources/panels_icons/actualite.svg" alt="Icône actualités, journal ou flux pour gestion des actualités">
                 <p>Actualités</p>
             </li>
                         ';
@@ -138,7 +138,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_boutique')){
                     echo '
             <li perm="history">
-                <img src="ressources/panels_icons/history.svg" alt="Icone de l\'historique d\'achat">
+                    <img src="ressources/panels_icons/history.svg" alt="Icône historique d\'achat, horloge ou liste pour suivi des achats">
                 <p>Historique d\'achats</p>
             </li>
                         ';
@@ -149,7 +149,7 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 if (tools::hasPermission('p_log')){
                     echo '
             <li perm="logs">
-                <img src="ressources/panels_icons/logs.svg" alt="Icone des logs du serveur">
+                    <img src="ressources/panels_icons/logs.svg" alt="Icône logs du serveur, document ou liste pour suivi des logs">
                 <p>Logs du serveur</p>
             </li>
                         ';

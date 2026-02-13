@@ -43,9 +43,9 @@ require_once "app/views/header.php" ;
                 <div id="one-product">
                     <div>
                         <?php if($product['image_grade'] == null):?>
-                            <img src="admin/ressources/default_images/grade.webp" alt="Image du grade" />
+                            <img src="admin/ressources/default_images/grade.webp" alt="Présentation du grade" />
                         <?php else:?>
-                            <img src="api/files/<?php echo $product['image_grade']; ?>" alt="Image du grade" />
+                            <img src="api/files/<?php echo $product['image_grade']; ?>" alt="Présentation du grade" />
                         <?php endif?>
 
                         <h3 title="<?= htmlspecialchars($product['nom_grade']) ?>">

@@ -63,7 +63,7 @@ async function selectReunion(id_reunion, li){
 
     // Show loader
     showLoader();
-
+    
     // Fetch grade information
     const role = await requestGET(`/meeting.php?id=${id_reunion}`);
 
