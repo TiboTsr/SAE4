@@ -72,7 +72,7 @@ if (isset($_SESSION['message'])) {
         <?php else: ?>
             <p><?php echo $infoUser[0]['nom_grade']; ?></p>
             <?php if($infoUser[0]['image_grade'] == null):?>
-                <img src="admin/ressources/default_images/grade.webp" alt="Image du grade" />
+                <img src="/admin/ressources/default_images/grade.webp" alt="Image du grade" />
             <?php else:?>
                 <img src="api/files/<?php echo $infoUser[0]['image_grade']; ?>" alt="Illustration du grade de l'utilisateur" />
             <?php endif?>
@@ -177,7 +177,7 @@ if (isset($_SESSION['message'])) {
         <form action="index.php?page=account" method="post">
             <input type="hidden" name="deconnexion" value="true">
             <button type="submit">
-                    <img src="assets/images/slogOut_icon.png" alt="icone de deconnexion">
+                    <img src="/assets/logOut_icon.png" alt="icone de deconnexion">
                     Déconnexion
             </button>
         </form>
@@ -186,7 +186,7 @@ if (isset($_SESSION['message'])) {
         <form action="index.php?page=delete_account" method="post">
             <input type="hidden" name="delete_account" value="true">
             <button type="submit">
-                <img src="/assets/delete_icon.png" alt="icone de suppression">
+                <img src="/assets/delete_icon.png" alt="Icône de suppression">
                 Supprimer mon compte
             </button>
         </form>

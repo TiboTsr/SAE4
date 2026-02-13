@@ -23,8 +23,8 @@ require_once "app/views/header.php";
 
 <div>
     <button id="cart-button">
-        <a href="index.php?page=grade">
-            <img src="assets/images/fleche_retour.png" alt="Flèche de retour">
+        <a href="/grade.php">
+            <img src="/assets/fleche_retour.png" alt="Flèche de retour">
             Retourner aux grades
         </a>
     </button>

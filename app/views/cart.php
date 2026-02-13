@@ -88,8 +88,8 @@ $cart = new Cart($db);
 
     <div>
         <button id="shop-button" >
-            <a href="index.php?page=shop">
-                <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
+            <a href="shop.php">
+                <img src="/assets/fleche_retour.png" alt="Fleche de retour">
                 Retourner à la boutique
             </a>
         </button>
