@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", ()=>{
-    var toggleElements = document.querySelectorAll('.toggle');
+    let toggleElements = document.querySelectorAll('.toggle');
     toggleElements.forEach(toggle => {
         toggle.addEventListener('click', (e) => {
             e.preventDefault();

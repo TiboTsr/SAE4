@@ -10,10 +10,10 @@
 
     <title>Ma Gallerie</title>
     
-    <link rel="stylesheet" href="/styles/my_gallery_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/my_gallery_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 
  
 
@@ -38,7 +38,7 @@
                 $eventid = $_GET['eventid'];
                 $userid = $_SESSION["userid"];
             }else {
-                header("Location: /index.php");
+                header("Location: index.php");
                 exit;
             }
         }
@@ -106,9 +106,9 @@
 
 <?php require_once 'footer.php';?>
 
-<script src="/scripts/open_media.js"></script>
-<script src="/scripts/add_media.js"></script>
-<script src="/scripts/delete_media.js"></script>
+<script src="scripts/open_media.js"></script>
+<script src="scripts/add_media.js"></script>
+<script src="scripts/delete_media.js"></script>
 
 
 </body>

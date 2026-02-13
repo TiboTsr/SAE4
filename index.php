@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+<<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,3 +160,10 @@
 </body>
 
 </html>
+=======
+if(isset($_GET['page'])  && file_exists('app/controllers/'.$_GET['page'].'.php')) {
+    require 'app/controllers/'.$_GET['page'].'.php';
+}else {
+    require 'app/controllers/home.php';
+}
+>>>>>>> ModifsAltImages

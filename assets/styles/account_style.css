@@ -182,11 +182,9 @@ H2 {
     all: unset;
     width: 7vh;
     border: 2px solid rgb(169, 169, 169);
-    background-color: #1E1E1E;
     border-radius: 5px;
     padding: 0.80vh 1.5vh 0.80vh 1vh;
-    background: #1E1E1E url('/assets/chevron_logo.png') no-repeat right 4px center;
-    background-size: 12px 12px;
+    background: #1E1E1E url('/assets/chevron_logo.png') no-repeat right 4px center / 12px 12px;
 }
 
 

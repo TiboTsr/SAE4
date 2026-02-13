@@ -24,7 +24,7 @@ require_once "app/views/header.php";
 <div>
     <button id="cart-button">
         <a href="/grade.php">
-            <img src="/assets/fleche_retour.png" alt="Flèche de retour">
+            <img src="/assets/fleche_retour.png" alt="Flèche de retour, retourne à la page des grades">
             Retourner aux grades
         </a>
     </button>
@@ -79,12 +79,12 @@ require_once "app/views/header.php";
             </form>
         </div>
         <div id="paypal" class="mode_paiement_fields" style="display: none;">
-            <form method="POST" action="index.php?page=grade_subscription.php&id=<?= $id_grade ?>">
+            <form method="POST" action="index.php?page=grade_subscription&id=<?= $id_grade ?>">
                 <input type="hidden" name="mode_paiement" value="paypal">
 
                 <button type="button" id="paypal-button">Se connecter à PayPal</button><br><br>
                     
-                <button type="submit" id="finalise-order-button">Valider l'adhésion'</button>
+                <button type="submit" id="finalise-order-button2">Valider l'adhésion</button>
             </form>
         </div>
     </div>

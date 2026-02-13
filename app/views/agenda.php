@@ -6,11 +6,19 @@
     <title>Agenda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<<<<<<< HEAD:app/views/agenda.php
 
     <link rel="stylesheet" href="assets/styles/planner_style.css">
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
+=======
+    <link rel="stylesheet" href="styles/planner_style.css">
+
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
+>>>>>>> Mouad:agenda.php
     
 </head>
 <body class="body_margin">
