@@ -6,115 +6,23 @@
     <title>Inscription</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/event_subscription_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/event_subscription_style.css">
+
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 </head>
 <body class="body_margin">
 
-
-
-<!--------------->
-<!------PHP------>
-<!--------------->
-
-<?php
-
-// Importer les fichiers
-require_once "header.php";
-require_once 'database.php';
-require_once 'files_save.php';
-
-
-// Vérifie si l'utilisateur est connecté
-$isLoggedIn = isset($_SESSION["userid"]);
-if (!$isLoggedIn) {
-    header("Location: /login.php");
-    exit;
-}
-
-$userid = $_SESSION["userid"];
-
-// Vérifie que la requête est POST et contient les données nécessaires
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userid = $_SESSION["userid"];
-    $eventid = $_POST["eventid"];
-
-    require_once 'database.php';
-    $db = new DB();
-    if(isset($_POST["price"], $_POST["eventid"])){
-        $db->query(
-            "INSERT INTO `INSCRIPTION` (`id_membre`, `id_evenement`, `date_inscription`, `paiement_inscription`, `prix_inscription`)
-            VALUES (?, ?, NOW(), 'WEB', ?);",
-            "iid",
-            [$userid, $eventid, $_POST["price"]]
-        );
-        $xp = $db->select("SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ?", "i", [$eventid])[0]['xp_evenement'];
-        $db->query(
-            "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
-            "ii",
-            [$xp, $userid]
-        );
-        header("Location: /events.php");
-        exit;
-    }
-    elseif(isset($_POST["eventid"])){
-            $event = $db->select(
-                "SELECT nom_evenement, xp_evenement, prix_evenement, reductions_evenement FROM EVENEMENT WHERE id_evenement = ? ;",
-                "i",
-                [$eventid]
-            );
-            if(empty($event)){
-                header("Location: /index.php");
-                exit;
-            }
-            $event = $event[0];
-            $title = $event["nom_evenement"];
-            $xp = $event["xp_evenement"];
-            $price = $event["prix_evenement"];
-
-            $isDiscounted = boolval($event["reductions_evenement"]);
-            $user_reduction = 1;
-
-            if($isDiscounted){
-                $user_reduction = $db->select(
-                    "SELECT reduction_grade FROM ADHESION 
-                    JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade
-                    WHERE id_membre = ? AND reduction_grade > 0 order by ADHESION.date_adhesion DESC LIMIT 1",
-                    "i",
-                    [$userid]
-                );
-                if(!empty($user_reduction)){
-                    $user_reduction = 1 - ($user_reduction[0]["reduction_grade"]/100);
-                }else{
-                    $user_reduction = 1;
-                }
-            }
-        }else{
-            header("Location: /login.php");
-            exit;
-        }
-    }else{
-        header("Location: /login.php");
-        exit;
-    }
-?>
-
-
-
-
-<!--------------->
-<!------HTML----->
-<!--------------->
+    <?php require_once "app/views/header.php"; ?>
 
     <h1>INSCRIPTION</h1>
 
     <div>
         <button id="cart-button">
-            <a href="/event_details.php?id=<?php echo $eventid?>">
-                <img src="/assets/fleche_retour.png" alt="Flèche de retour">
+            <a href="index.php?page=event_details.php&id=<?php echo $eventid?>">
+                <img src="assets/images/fleche_retour.png" alt="Flèche de retour">
                 Retourner à l'évènement
             </a>
         </button>
@@ -142,9 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
 
             <h3>Total &nbsp : &nbsp <?= number_format($price, 2, ',', ' ') ?> €</h3>
-            <?php         var_dump($price);
-            var_dump($user_reduction);?>
-                        <h3>Total après réductions &nbsp : &nbsp <?= number_format($price*$user_reduction, 2, ',', ' ') ?> €</h3>
+            <?php         
+                var_dump($price);
+                var_dump($user_reduction);
+            ?>
+            <h3>Total après réductions &nbsp : &nbsp <?= number_format($price*$user_reduction, 2, ',', ' ') ?> €</h3>
                    
         </div>
 
@@ -157,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <option value="paypal">PayPal</option>
             </select><br><br>
             <div id="carte_credit" class="mode_paiement_fields">
-                <form method="POST" action="/event_subscription.php">
+                <form method="POST" action="index.php?page=event_subscription">
                     <input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
                     <input type="hidden" name="price" value="<?php echo $price*$user_reduction; ?>">
                     <input type="hidden" name="mode_paiement" value="carte_credit">
@@ -175,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
             <div id="paypal" class="mode_paiement_fields" style="display: none;">
-                <form method="POST" action="/event_subscription.php">
+                <form method="POST" action="index.php?page=event_subscription">
                     <input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
                     <input type="hidden" name="price" value="<?php echo $price*$user_reduction; ?>">
                     <input type="hidden" name="mode_paiement" value="paypal">
@@ -202,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 
 
-<?php require_once "footer.php" ?>
+<?php require_once "app/views/footer.php" ?>
 
 </body>
 </html>

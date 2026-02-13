@@ -33,9 +33,9 @@
 
     <div class="my-medias">
 
-            <form id="add-media" action="add_media.php" method="post" enctype="multipart/form-data">
+            <form id="add-media" action="index.php?page=add_media" method="post" enctype="multipart/form-data">
                 <label for="file-picker">
-                    <img src="/assets/images/add_media.png" alt="Ajouter un média">
+                    <img src="assets/images/add_media.png" alt="Ajouter un média">
                 </label>
                 <input type="hidden" name="eventid" value="<?php echo $eventid?>">
                 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']?>">
@@ -53,7 +53,7 @@
                     <img src="api/files/<?php echo trim($img['url_media']); ?>" alt="Image Personnelle de l'événement">
                     <div class="delete-icon">
 
-                        <form class="delete-media" action="delete_media.php" method="post">
+                        <form class="delete-media" action="index.php?page=delete_media" method="post">
                             <label for="del-media">
                                 <img src="assets/images/delete_icon.png" alt="poubelle">
                             </label>
