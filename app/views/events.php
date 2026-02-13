@@ -20,7 +20,7 @@
 
 <h1>LES EVENEMENTS</h1>
 <section>
-    <a class="show-more" href="index.php?page=events.php&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <a class="show-more" href="index.php?page=events&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
     <div class="events-display">
                 <?php
 
