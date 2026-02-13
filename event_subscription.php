@@ -6,11 +6,11 @@
     <title>Inscription</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/event_subscription_style.css">
+    <link rel="stylesheet" href="styles/event_subscription_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 </head>
 <body class="body_margin">
 
@@ -31,7 +31,7 @@ require_once 'files_save.php';
 // Vérifie si l'utilisateur est connecté
 $isLoggedIn = isset($_SESSION["userid"]);
 if (!$isLoggedIn) {
-    header("Location: /login.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "ii",
             [$xp, $userid]
         );
-        header("Location: /events.php");
+        header("Location: events.php");
         exit;
     }
     elseif(isset($_POST["eventid"])){
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$eventid]
             );
             if(empty($event)){
-                header("Location: /index.php");
+                header("Location: index.php");
                 exit;
             }
             $event = $event[0];
@@ -93,11 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }else{
-            header("Location: /login.php");
+            header("Location: login.php");
             exit;
         }
     }else{
-        header("Location: /login.php");
+        header("Location: login.php");
         exit;
     }
 ?>
@@ -113,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div>
         <button id="cart-button">
-            <a href="/event_details.php?id=<?php echo $eventid?>">
-                <img src="/assets/fleche_retour.png" alt="Flèche de retour">
+            <a href="event_details.php?id=<?php echo $eventid?>">
+                <img src="assets/fleche_retour.png" alt="Flèche de retour">
                 Retourner à l'évènement
             </a>
         </button>
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <option value="paypal">PayPal</option>
             </select><br><br>
             <div id="carte_credit" class="mode_paiement_fields">
-                <form method="POST" action="/event_subscription.php">
+                <form method="POST" action="event_subscription.php">
                     <input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
                     <input type="hidden" name="price" value="<?php echo $price*$user_reduction; ?>">
                     <input type="hidden" name="mode_paiement" value="carte_credit">

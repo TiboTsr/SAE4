@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/delete_account_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
+    <link rel="stylesheet" href="styles/delete_account_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
 
     <title>Supprimer le compte</title>
 </head>
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </form>
                         </li>
                         <li>
-                            <button id="cancelDelete" onclick="window.location.href='/account.php'">Revenir en arrière</button>
+                            <button id="cancelDelete" onclick="window.location.href='account.php'">Revenir en arrière</button>
                         </li>
                     </ul>
                     </div>
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             [$_SESSION["userid"]]
         );
         session_destroy();
-        header("Location: /index.php");
+        header("Location: index.php");
         exit();
     }
 }

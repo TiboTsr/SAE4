@@ -7,11 +7,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Actualités</title>
-    <link rel="stylesheet" href="/styles/news_style.css">
+    <link rel="stylesheet" href="styles/news_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 </head>
 <body class="body_margin">
 <?php
@@ -26,7 +26,7 @@
 ?>
 <h1>ACTUALITES</h1>
 <section>
-    <a class="show-more" href="/news.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <a class="show-more" href="news.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
     <div class="events-display">
                 <?php
                     $date = getdate();
@@ -84,8 +84,8 @@
 
 <?php require_once "footer.php" ?>
 
-<script src="/scripts/news_details_redirect.js"></script>
-<script src="/scripts/scroll_to_closest_event.js"></script>
+<script src="scripts/news_details_redirect.js"></script>
+<script src="scripts/scroll_to_closest_event.js"></script>
 
 </body>
 </html>

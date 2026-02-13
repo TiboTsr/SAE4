@@ -6,10 +6,10 @@
     <title>Boutique</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/shop_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/shop_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 
 
 
@@ -133,7 +133,7 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
     <div id='cart-info'>
         <button>
             <a href="cart.php">
-                <img src="/assets/logo_caddie.png" alt="Logo du panier">
+                <img src="assets/logo_caddie.png" alt="Logo du panier">
                 <p>Panier (<span id="count"><?=$cart->count();?></span>)</p>
             </a>
         </button>
@@ -166,7 +166,7 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
                     <div>
                         <p id="stock-status">
                             <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0): ?>
-                                <a class="addCart" id="add-to-cart-button" href="/cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
+                                <a class="addCart" id="add-to-cart-button" href="cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
                                     Ajouter au panier
                                 </a>
                             <?php else: ?>
@@ -232,7 +232,7 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
         });
     </script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="/scripts/add_cart.js"></script>
+<script src="scripts/add_cart.js"></script>
 
 </body>
 </html>

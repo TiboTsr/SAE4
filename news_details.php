@@ -13,12 +13,12 @@
                 [$eventid]
             );
             if(empty($event) || is_null($event)){
-                header("Location: /index.php");
+                header("Location: index.php");
                 exit;
             }
             $event = $event[0];
         }else{
-            header("Location: /index.php");
+            header("Location: index.php");
             exit;
         }
     ?>
@@ -32,11 +32,11 @@
 
     <title><?php echo $event['titre_actualite']?></title>
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 
-    <link rel="stylesheet" href="/styles/event_details_style.css">
+    <link rel="stylesheet" href="styles/event_details_style.css">
 
 
 

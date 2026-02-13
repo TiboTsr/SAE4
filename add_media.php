@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'], $_POST['user
         exit();
 
     }else{
-        header("Location: /index.php");
+        header("Location: index.php");
         exit();
     }
 

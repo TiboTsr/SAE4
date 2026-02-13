@@ -6,11 +6,11 @@
     <title>Mon panier</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/styles/cart_style.css">
+    <link rel="stylesheet" href="styles/cart_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 
     <script>
         //Fonction pour valider la soumission du formulaire (form-quantity) par la touche "Entrée"
@@ -89,7 +89,7 @@ $cart = new cart($db);
     <div>
         <button id="shop-button" >
             <a href="shop.php">
-                <img src="/assets/fleche_retour.png" alt="Fleche de retour">
+                <img src="assets/fleche_retour.png" alt="Fleche de retour">
                 Retourner à la boutique
             </a>
         </button>
@@ -120,7 +120,7 @@ $cart = new cart($db);
                     <td><input type='text' name="cart[quantity][<?=$product['id_article']?>]" value="<?=$_SESSION['cart'][$product['id_article']]?>" onkeydown="pressEnter(event)"></td>
                     <td><?= number_format(htmlspecialchars($product['prix_article'] * $_SESSION['cart'][$product['id_article']]), 2, ',', ' ') ?> €</td>  
                     <td>
-                        <a href="/cart.php?del=<?= $product['id_article'] ?>">Supprimer</a>
+                        <a href="cart.php?del=<?= $product['id_article'] ?>">Supprimer</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -173,7 +173,7 @@ $cart = new cart($db);
     </form>
 </div>
 <div>
-    <form class="subscription" action="/order.php" method="post">
+    <form class="subscription" action="order.php" method="post">
         <?php
         if (isset($_SESSION['cart'])) {
             // Encodage du panier entier en JSON et transmission dans un seul champ caché

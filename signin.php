@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="/styles/login_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
+    <link rel="stylesheet" href="styles/login_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
 
 </head>
     <body>
@@ -79,7 +79,7 @@
                         [$lname,$fname,$mail,password_hash($password, PASSWORD_DEFAULT),'defaultPP.png']
                     );
                 }
-                header("Location: /login.php");
+                header("Location: login.php");
                 exit;
             }else{
                 echo 'Utilisateur déjà présent';

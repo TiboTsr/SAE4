@@ -138,3 +138,22 @@ div:nth-of-type(2) div:nth-of-type(2) div {
     margin-top: 50px;
     font-weight: bold;
 }
+
+#finalise-order-button2 {
+    display: flex;
+    flex-direction: row;
+    padding: 1vh;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.5em;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+    width: 270px;
+    height: 60px;
+    background-color:  rgb(119, 241, 190);
+    color: #1E1E1E;
+    margin: auto;
+    margin-top: 50px;
+    font-weight: bold;
+}

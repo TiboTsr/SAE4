@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="/styles/login_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
+    <link rel="stylesheet" href="styles/login_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
 
 </head>
     <body>
@@ -32,7 +32,7 @@
             <button type="submit">Se connecter</button>
         </form>
 
-        <form method="GET" action="/signin.php" id="create-account">
+        <form method="GET" action="signin.php" id="create-account">
             <h2>Pas encore de compte ?</h2>
             <button type="submit">Créez en un</button>
         </form>
@@ -76,7 +76,7 @@
                                 $_SESSION["isAdmin"] = true;
                             }
 
-                        header("Location: /index.php");
+                        header("Location: index.php");
                         exit;
 
                     }else{

@@ -9,11 +9,11 @@
 
     <title>Accueil</title>
 
-    <link rel="stylesheet" href="/styles/index_style.css">
-    <link rel="stylesheet" href="/styles/general_style.css">
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
-    <link rel="stylesheet" href="/styles/bubble.css">
+    <link rel="stylesheet" href="styles/index_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
+    <link rel="stylesheet" href="styles/bubble.css">
 
 </head>
 
@@ -30,7 +30,7 @@
         <section>
             <h2 class="titre_vertical"> ADIIL</h2>
             <div id="index_carrousel">
-                <img src="/assets/photo_accueil_BDE.png" alt="Carrousel ADIIL">
+                <img src="assets/photo_accueil_BDE.png" alt="Carrousel ADIIL">
             </div>
         </section>
 
@@ -147,7 +147,7 @@
                     </h4>
                 </div>
                 <?php endforeach; ?>
-                <h3><a href="/events.php">Voir tous les événements</a></h3>
+                <h3><a href="events.php">Voir tous les événements</a></h3>
             </div>
             <h2 class="titre_vertical">EVENT</h2>
 

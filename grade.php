@@ -7,12 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="/styles/grade_style.css">
+    <link rel="stylesheet" href="styles/grade_style.css">
 
-    <link rel="stylesheet" href="/styles/general_style.css">
+    <link rel="stylesheet" href="styles/general_style.css">
 
-    <link rel="stylesheet" href="/styles/header_style.css">
-    <link rel="stylesheet" href="/styles/footer_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
 
 </head>
 
@@ -92,7 +92,7 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
                             <?php if (!empty($_SESSION) && !empty($unAdherant)): ?>
                                 <button id="detention">Vous détenez ce grade</button>
                             <?php else: ?>
-                                <a id="buy-button" href="/grade_subscription.php?id=<?= htmlspecialchars($product['id_grade']) ?>">
+                                <a id="buy-button" href="grade_subscription.php?id=<?= htmlspecialchars($product['id_grade']) ?>">
                                     Acheter
                                 </a>
                             <?php endif; ?>

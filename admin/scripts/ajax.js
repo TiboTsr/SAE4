@@ -2,7 +2,7 @@
  * The base URL for the server API.
  * @constant {string}
  */
-const SERVER_API_URL = '/api';
+const SERVER_API_URL = '/BUT 2/S4/SAE4/api/';
 
 /**
  * If true, the fetch requests are logged in the console.
@@ -24,7 +24,7 @@ async function request(endpoint, method = 'GET', data = null, headers = {}) {
     if (!endpoint.startsWith('/'))
         endpoint = endpoint + '/';
     const url = SERVER_API_URL + endpoint;
-    
+
     // Fetch
     try {
         // Configuration de l'option de la requête
@@ -39,7 +39,7 @@ async function request(endpoint, method = 'GET', data = null, headers = {}) {
         if (data instanceof File || data instanceof Blob) {
             options.headers['Content-Type'] = data.type;
             options.body = data;
-        } else if (data instanceof FormData){
+        } else if (data instanceof FormData) {
             options.body = data;
         } else if (data) {
             options.headers['Content-Type'] = 'application/json; charset=utf-8';
@@ -137,7 +137,7 @@ function isDebug() {
 
     // Récupère l'URL actuelle
     const url = window.location.href;
-    
+
     // Vérifie si l'URL contient '?debug'
     if (url.includes('?debug')) {
         return true;
