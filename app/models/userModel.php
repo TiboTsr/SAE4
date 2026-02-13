@@ -9,6 +9,12 @@ function getUserInfo() {
     );
 }
 
+function getPodium() {
+    $db = new Database();
+    return $db->select("SELECT prenom_membre, xp_membre, pp_membre FROM MEMBRE ORDER BY xp_membre DESC LIMIT 3;");
+}
+
+
 
 function getUserInfoByMail($mail) {
     $db = new Database();

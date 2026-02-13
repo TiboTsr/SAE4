@@ -20,7 +20,7 @@
 <body id="index" class="body_margin">
 
     <?php
-     require_once 'header.php';
+     require_once 'app/views/header.php';
     ?>
     <div id="page-container">
         <!--H1 A METTRE -->
@@ -56,8 +56,7 @@
             <div id="podium">
                 <?php
                 foreach ([2,1,3] as $member_number):
-                $pod = $podium[$member_number-1];
-
+                    $pod = $podium[$member_number-1];
                 ?>
                 <div class="podium_unit">
                     <h3>#0<?php echo $member_number?></h3>
@@ -79,30 +78,18 @@
 
         <section>
             <div class="events-display">
-                <?php
-
-                foreach ($events_to_display as $event):
-                    $eventid = $event["id_evenement"];?>
+                <?php foreach ($eventsDisplay as $event):   
+                    $eventid = $event["id"];?>
 
                 <div class="event" event-id="<?php echo $eventid;?>">
                     <div>
-                        <h2><?php echo $event['nom_evenement'];?></h2>
-                        <?php
-                                $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
-
-                                $event_date = substr($event['date_evenement'], 0, 10);
-                                $event_date_info = getdate(strtotime($event_date));
-                                echo ucwords($event_date_info["mday"]." ".$moisFr[$event_date_info['mon']].", ".$event["lieu_evenement"]);
-                            ?>
+                        <h2><?php echo $event['titre'];?></h2>
+                        <?php echo ucwords($event_date_info["mday"]." ".$moisFr[$event_date_info['mon']].", ".$event["lieu"]); ?>
                     </div>
 
                     <h4 <?php
-                            $isPlaceDisponible = $db->select(
-                                "SELECT (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0 AS isPlaceDisponible FROM EVENEMENT WHERE EVENEMENT.id_evenement = ? ;",
-                                "i",
-                                [$eventid])[0]['isPlaceDisponible'];
                             
-                            if($isPlaceDisponible){
+                            if($event['isPlaceDisponible']){
                                 //editable
                                 $event_subscription_color_class = "event-not-subscribed hover_effect";
                                 $event_subscription_label = "S'inscrire";
@@ -113,13 +100,8 @@
                             }
 
                             if($isLoggedIn){
-                                $isSubscribed = !empty($db->select(
-                                "SELECT MEMBRE.id_membre FROM MEMBRE JOIN INSCRIPTION on MEMBRE.id_membre = INSCRIPTION.id_membre WHERE MEMBRE.id_membre = ? AND INSCRIPTION.id_evenement = ? ;",
-                                "ii",
-                                [$_SESSION['userid'], $event["id_evenement"]]
-                                ));
                                 
-                                if($isSubscribed){
+                                if($event['isSubscribed']){
                                     //editable
                                     $event_subscription_color_class = "event-subscribed";
                                     $event_subscription_label = "Inscrit";
@@ -139,7 +121,7 @@
 
         </section>
     </div>
-    <?php require_once 'footer.php';?>
+    <?php require_once 'app/views/footer.php';?>
     <script src="assets/scripts/event_details_redirect.js"></script>
     <script src="assets/scripts/bubble.js"></script>
 </body>
