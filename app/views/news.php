@@ -7,11 +7,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Actualités</title>
+<<<<<<< HEAD:app/views/news.php
     <link rel="stylesheet" href="assets/styles/news_style.css">
 
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
+=======
+    <link rel="stylesheet" href="styles/news_style.css">
+
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
+>>>>>>> Mouad:news.php
 </head>
 <body class="body_margin">
 
@@ -21,7 +29,11 @@
 
 <h1>ACTUALITES</h1>
 <section>
+<<<<<<< HEAD:app/views/news.php
     <a class="show-more" href="index.php?page=news&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+=======
+    <a class="show-more" href="news.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+>>>>>>> Mouad:news.php
     <div class="events-display">
                 <?php
                     $date = getdate();
@@ -73,8 +85,13 @@
 
 <?php require_once "app/views/footer.php" ?>
 
+<<<<<<< HEAD:app/views/news.php
 <script src="assets/scripts/news_details_redirect.js"></script>
 <script src="assets/scripts/scroll_to_closest_event.js"></script>
+=======
+<script src="scripts/news_details_redirect.js"></script>
+<script src="scripts/scroll_to_closest_event.js"></script>
+>>>>>>> Mouad:news.php
 
 </body>
 </html>

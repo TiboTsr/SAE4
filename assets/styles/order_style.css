@@ -83,11 +83,9 @@ div:nth-of-type(2) div:nth-of-type(2) label{
 div:nth-of-type(2) div:nth-of-type(2) select{
     all: unset;
     border: 2px solid rgb(169, 169, 169);
-    background-color: #1E1E1E;
     border-radius: 5px;
     padding: 0.80vh 2.5vh 0.80vh 1vh;
-    background: #1E1E1E url('/assets/chevron_logo.png') no-repeat right 4px center;
-    background-size: 12px 12px;
+    background: #1E1E1E url('/assets/chevron_logo.png') no-repeat right 4px center / 12px 12px;
 }
 
 div:nth-of-type(2) div:nth-of-type(2) div form input{
@@ -124,7 +122,7 @@ div:nth-of-type(2) div:nth-of-type(2) div {
     margin-top: 10px;
 }
 
-#finalise-order-button {
+.finalise-order-button{
     display: flex;
     flex-direction: row;
     padding: 1vh;
@@ -142,3 +140,5 @@ div:nth-of-type(2) div:nth-of-type(2) div {
     margin-top: 50px;
     font-weight: bold;
 }
+
+

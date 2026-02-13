@@ -6,11 +6,19 @@
     <title>Mon panier</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<<<<<<< HEAD:app/views/cart.php
     <link rel="stylesheet" href="assets/styles/cart_style.css">
 
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
+=======
+    <link rel="stylesheet" href="styles/cart_style.css">
+
+    <link rel="stylesheet" href="styles/general_style.css">
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
+>>>>>>> Mouad:cart.php
 
     <script>
         //Fonction pour valider la soumission du formulaire (form-quantity) par la touche "Entrée"
@@ -88,8 +96,13 @@ $cart = new Cart($db);
 
     <div>
         <button id="shop-button" >
+<<<<<<< HEAD:app/views/cart.php
             <a href="index.php?page=shop">
                 <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
+=======
+            <a href="shop.php">
+                <img src="assets/fleche_retour.png" alt="Fleche de retour">
+>>>>>>> Mouad:cart.php
                 Retourner à la boutique
             </a>
         </button>
@@ -120,7 +133,11 @@ $cart = new Cart($db);
                     <td><input type='text' name="cart[quantity][<?=$product['id_article']?>]" value="<?=$_SESSION['cart'][$product['id_article']]?>" onkeydown="pressEnter(event)"></td>
                     <td><?= number_format(htmlspecialchars($product['prix_article'] * $_SESSION['cart'][$product['id_article']]), 2, ',', ' ') ?> €</td>  
                     <td>
+<<<<<<< HEAD:app/views/cart.php
                         <a href="index.php?page=cart&del=<?= $product['id_article'] ?>">Supprimer</a>
+=======
+                        <a href="cart.php?del=<?= $product['id_article'] ?>">Supprimer</a>
+>>>>>>> Mouad:cart.php
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -173,7 +190,11 @@ $cart = new Cart($db);
     </form>
 </div>
 <div>
+<<<<<<< HEAD:app/views/cart.php
     <form class="subscription" action="index.php?page=order" method="post">
+=======
+    <form class="subscription" action="order.php" method="post">
+>>>>>>> Mouad:cart.php
         <?php
         if (isset($_SESSION['cart'])) {
             // Encodage du panier entier en JSON et transmission dans un seul champ caché

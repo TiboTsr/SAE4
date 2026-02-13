@@ -7,12 +7,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+<<<<<<< HEAD:app/views/grade.php
     <link rel="stylesheet" href="assets/styles/grade_style.css">
 
     <link rel="stylesheet" href="assets/styles/general_style.css">
 
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
+=======
+    <link rel="stylesheet" href="styles/grade_style.css">
+
+    <link rel="stylesheet" href="styles/general_style.css">
+
+    <link rel="stylesheet" href="styles/header_style.css">
+    <link rel="stylesheet" href="styles/footer_style.css">
+>>>>>>> Mouad:grade.php
 
 </head>
 <body class="body_margin">
@@ -70,7 +79,11 @@ require_once "app/views/header.php" ;
                             <?php if (!empty($_SESSION) && !empty($unAdherant)): ?>
                                 <button id="detention">Vous détenez ce grade</button>
                             <?php else: ?>
+<<<<<<< HEAD:app/views/grade.php
                                 <a id="buy-button" href="index.php?page=grade_subscription&id=<?= htmlspecialchars($product['id_grade']) ?>">
+=======
+                                <a id="buy-button" href="grade_subscription.php?id=<?= htmlspecialchars($product['id_grade']) ?>">
+>>>>>>> Mouad:grade.php
                                     Acheter
                                 </a>
                             <?php endif; ?>
