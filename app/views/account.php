@@ -180,7 +180,7 @@ if (isset($_SESSION['message'])) {
         <form action="index.php?page=account" method="post">
             <input type="hidden" name="deconnexion" value="true">
             <button type="submit">
-                    <img src="/assets/logOut_icon.png" alt="icone de deconnexion">
+                    <img src="/assets/logOut_icon.png" alt="Icône de déconnexion">
                     Déconnexion
             </button>
         </form>

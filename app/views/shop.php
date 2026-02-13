@@ -56,8 +56,8 @@ require_once "app/views/header.php" ;
 
     <div id='cart-info'>
         <button>
-            <a href="index.php?page=cart">
-                <img src="assets/images/logo_caddie.png" alt="Logo du panier">
+            <a href="cart.php">
+                <img src="/assets/logo_caddie.png" alt="Icône de panier">
                 <p>Panier (<span id="count"><?=$cart->count();?></span>)</p>
             </a>
         </button>
