@@ -43,15 +43,15 @@ require_once "app/views/header.php";
             </thead>
             <tbody>
                 <tr>
-                    <td>Grade <?php echo htmlspecialchars($grade[0]['nom_grade']); ?></td>
+                    <td>Grade <?php echo htmlspecialchars($grade['nom_grade']); ?></td>
                     <td>1</td>
-                    <td><?= number_format(htmlspecialchars($grade[0]['prix_grade']), 2, ',', ' ') ?> €</td>
-                    <td><?= number_format(htmlspecialchars($grade[0]['prix_grade']), 2, ',', ' ') ?> €</td>
+                    <td><?= number_format($prix, 2, ',', ' ') ?> €</td>
+                    <td><?= number_format($prix, 2, ',', ' ') ?> €</td>
                 </tr>
             </tbody>
         </table>
 
-        <h3>Total &nbsp : &nbsp<?= number_format(htmlspecialchars($grade[0]['prix_grade']), 2, ',', ' ') ?> €</h3>
+        <h3>Total &nbsp : &nbsp<?= number_format($prix, 2, ',', ' ') ?> €</h3>
     </div>
 
     <div>    
@@ -63,7 +63,7 @@ require_once "app/views/header.php";
             <option value="paypal">PayPal</option>
         </select><br><br>
         <div id="carte_credit" class="mode_paiement_fields">
-            <form method="POST" action="index.php?page=grade_subscription.php&id=<?= $id_grade ?>">
+            <form method="POST" action="index.php?page=grade_subscription&id=<?= $id_grade ?>">
                 <input type="hidden" name="mode_paiement" value="carte_credit">
 
                 <label for="numero_carte">Numéro de Carte :</label>

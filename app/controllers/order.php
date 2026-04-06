@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if (!empty($_SESSION['userid'])) {
     // Vérifie l'adhésion de l'utilisateur
-    $adherant = getReduction();
+    $adherant = getReduction($userid);
     
     //récupérer la réduction liée au grade
     if (!empty($adherant)) {

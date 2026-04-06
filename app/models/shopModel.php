@@ -19,14 +19,14 @@ function purchaseItem($userid, $product_id, $quantite, $mode_paiement) {
     );
 }
 
-function getReduction() {
+function getReduction($userId) {
     $db = new Database();
-    return $db->query(
+    return $db->select(
         "SELECT * FROM ADHESION 
         INNER JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade 
         WHERE ADHESION.id_membre = ? AND reduction_grade > 0",
         "i",
-        [$_SESSION['userid']]
+        [$userId]
     );
 }
 

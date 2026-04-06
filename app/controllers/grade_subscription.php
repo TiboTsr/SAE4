@@ -31,6 +31,9 @@ if (empty($grade)) {
     exit;
 }
 
+$grade = $grade[0];
+$prix = (float) $grade['prix_grade'];
+
 // Vérifie si l'utilisateur possède déjà un grade
 $currentGrade = getAdhesion($userid);
 
