@@ -5,7 +5,7 @@ class Cart {
 
     private $db;
 
-    public function __construct($db = null){
+    public function __construct(){
 
         if(!isset($_SESSION)){
             session_start();
@@ -15,7 +15,7 @@ class Cart {
             $_SESSION['cart']=array();
         }
 
-        $this->db = $db ?? new Database();
+        $this->db = new Database();
 
         if(isset($_GET['del'])){
             $this->del($_GET['del']);

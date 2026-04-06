@@ -1,16 +1,13 @@
 <?php
 
 require_once 'app/models/shopModel.php';
-require_once 'app/models/Database.php';
 require_once 'app/models/files_save.php';
-require_once 'app/models/cart_class.php';
+require_once 'app/models/Cart.php';
 
 
-// Connexion à la base de donnees
-$db = new DB();
 
 // Initialisation du panier
-$cart = new Cart($db);
+$cart = new Cart();
 
 
 
