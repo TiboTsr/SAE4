@@ -4,7 +4,7 @@ require_once 'app/models/Database.php';
 function getEventsToDisplay($sql_date) {
     $db = new Database();
 
-    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? ORDER BY date_evenement ASC LIMIT 2;",
+    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC LIMIT 2;",
     "s",
     [$sql_date]
     );
@@ -38,11 +38,11 @@ function isPlaceAvailable($eventId) {
     $result = $db->select(
         "SELECT (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0 AS isPlaceDisponible 
         FROM EVENEMENT 
-        WHERE EVENEMENT.id_evenement = ?;",
+        WHERE EVENEMENT.id_evenement = ? AND EVENEMENT.deleted = false;",
         "i",
         [$eventId]
     );
-    return $result[0]['isPlaceDisponible'];
+    return !empty($result) ? $result[0]['isPlaceDisponible'] : false;
 }
 
 function isUserSubscribed($userId, $eventId) {
@@ -61,7 +61,7 @@ function isUserSubscribed($userId, $eventId) {
 function getTitle($eventid) {
     $db = new Database();
     return $db->select(
-    "SELECT `nom_evenement` FROM EVENEMENT WHERE id_evenement = ?",
+    "SELECT `nom_evenement` FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
     "i",
     [$eventid]
     )[0];
@@ -72,8 +72,9 @@ function getTitle($eventid) {
 function getEvent($eventid) {
     $db = new Database();
     return $db->select(
-        "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`, `image_evenement`, `description_evenement`
-        FROM EVENEMENT WHERE id_evenement = ?",
+        "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`,
+                NULL AS `image_evenement`, '' AS `description_evenement`
+        FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
         "i",
         [$eventid]
     );
@@ -103,7 +104,7 @@ function insertSubscription($userid, $eventid, $price) {
 function selectXpEvent($eventid) {
     $db = new Database();
     return $db->select(
-        "SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ?", 
+        "SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ? AND deleted = false", 
         "i", 
         [$eventid]
     )[0]['xp_evenement'];
@@ -118,4 +119,49 @@ function updateXp($xp, $userid) {
         "ii",
         [$xp, $userid]
     );
+}
+
+function getEventSubscriptionInfo($eventId) {
+    $db = new Database();
+    $result = $db->select(
+        "SELECT nom_evenement, xp_evenement, prix_evenement, reductions_evenement
+         FROM EVENEMENT
+         WHERE id_evenement = ? AND deleted = false",
+        "i",
+        [$eventId]
+    );
+
+    return $result[0] ?? null;
+}
+
+function getUserReductionRate($userId) {
+    $db = new Database();
+    $result = $db->select(
+        "SELECT reduction_grade
+         FROM ADHESION
+         JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade
+         WHERE id_membre = ? AND reduction_grade > 0
+         ORDER BY ADHESION.date_adhesion DESC
+         LIMIT 1",
+        "i",
+        [$userId]
+    );
+
+    if (empty($result)) {
+        return 1.0;
+    }
+
+    return 1 - ((float) $result[0]['reduction_grade'] / 100);
+}
+
+function createEventSubscription($userId, $eventId, $price) {
+    insertSubscription($userId, $eventId, $price);
+}
+
+function getEventXp($eventId) {
+    return (int) selectXpEvent($eventId);
+}
+
+function addUserXp($userId, $xp) {
+    updateXp($xp, $userId);
 }
