@@ -1,27 +1,19 @@
 <?php
-
 require_once 'app/models/Database.php';
+require_once 'app/models/userModel.php';
 require_once 'app/models/eventsModel.php';
 
 $db = new Database();
-$isLoggedIn = isset($_SESSION["userid"]);
+$isLoggedIn = isset($_SESSION['userid']);
 
-$podium = $db->select("SELECT prenom_membre, xp_membre, pp_membre FROM MEMBRE ORDER BY xp_membre DESC LIMIT 3;");
+$podium = getPodium();
 
 $date = getdate();
-$sql_date = $date["year"]."-".$date["mon"]."-".$date["mday"];
-$events_to_display = $db->select(
-    "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? ORDER BY date_evenement ASC LIMIT 2;",
-    "s",
-    [$sql_date]
-);
+$sql_date = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
 
 $events = getEventsToDisplay($sql_date);
 
-// Préparer les labels et classes pour chaque événement
 $eventsDisplay = [];
-$isLoggedIn = isset($_SESSION['userid']);
-
 foreach ($events as $event) {
     $eventId = $event['id_evenement'];
     $isPlaceAvailable = isPlaceAvailable($eventId);
@@ -34,9 +26,9 @@ foreach ($events as $event) {
     }
 
     $eventsDisplay[] = [
-        'data' => $event,
+        'data'  => $event,
         'label' => $eventLabel,
-        'class' => $eventClass
+        'class' => $eventClass,
     ];
 }
 
