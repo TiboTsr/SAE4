@@ -118,3 +118,17 @@ function getPodium() {
         "SELECT prenom_membre, xp_membre, pp_membre FROM MEMBRE ORDER BY xp_membre DESC LIMIT 3;"
     );
 }
+
+function getHistoriqueAchats($userId, $viewAll = false) {
+    $db = new Database();
+    $sql = "SELECT nom_article AS element, qte_commande AS quantite, prix_commande AS montant, paiement_commande AS mode_paiement, date_commande AS date_transaction,
+            CASE WHEN statut_commande = 1 THEN 'Récupéré' ELSE 'Non récupéré' END AS statut
+            FROM COMMANDE INNER JOIN ARTICLE ON ARTICLE.id_article = COMMANDE.id_article
+            WHERE id_membre = ? ORDER BY date_transaction DESC";
+
+    if (!$viewAll) {
+        $sql .= " LIMIT 6";
+    }
+
+    return $db->select($sql, "i", [$userId]);
+}
