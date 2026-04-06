@@ -117,14 +117,6 @@ function deleteUser() {
     );
 }
 
-
-function getPodium() {
-    $db = new Database();
-    return $db->select(
-        "SELECT prenom_membre, xp_membre, pp_membre FROM MEMBRE ORDER BY xp_membre DESC LIMIT 3;"
-    );
-}
-
 function getHistoriqueAchats($userId, $viewAll = false) {
     $db = new Database();
     $sql = "SELECT nom_article AS element, qte_commande AS quantite, prix_commande AS montant, paiement_commande AS mode_paiement, date_commande AS date_transaction,

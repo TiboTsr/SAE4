@@ -118,7 +118,7 @@
         <div id="buttons-section">
             <button type="button">
                 <a href="https://discord.com/login" target="_blank">
-                    <img src="assets/images/slogo_discord.png" alt="Logo Discord">
+                    <img src="assets/images/logo_discord.png" alt="Logo Discord">
                     Associer mon compte à Discord
                 </a>
             </button>
@@ -126,7 +126,7 @@
             <form action="index.php?page=account" method="post">
                 <input type="hidden" name="deconnexion" value="true">
                 <button type="submit">
-                    <img src="assets/images/slogOut_icon.png" alt="Déconnexion">
+                    <img src="assets/images/logOut_icon.png" alt="Déconnexion">
                     Déconnexion
                 </button>
             </form>
@@ -134,7 +134,7 @@
             <form action="index.php?page=delete_account" method="post">
                 <input type="hidden" name="delete_account" value="true">
                 <button type="submit">
-                    <img src="/assets/delete_icon.png" alt="Suppression">
+                    <img src="assets/images/delete_icon.png" alt="Suppression">
                     Supprimer mon compte
                 </button>
             </form>

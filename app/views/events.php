@@ -7,11 +7,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Evenements</title>
 
-    <link rel="stylesheet" href="styles/events_style.css">
-    <link rel="stylesheet" href="styles/general_style.css">
-    <link rel="stylesheet" href="styles/header_style.css">
-    <link rel="stylesheet" href="styles/footer_style.css">
->>>>>>> Mouad:events.php
+    <link rel="stylesheet" href="assets/styles/events_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 </head>
 <body class="body_margin">
 
@@ -49,7 +48,7 @@
     </section>
 
     <?php require_once 'app/views/footer.php'; ?>
-    <script src="scripts/event_details_redirect.js"></script>
-    <script src="scripts/scroll_to_closest_event.js"></script>
+    <script src="assets/scripts/event_details_redirect.js"></script>
+    <script src="assets/scripts/scroll_to_closest_event.js"></script>
 </body>
 </html>

@@ -52,8 +52,8 @@ require_once "app/views/header.php" ;
 
     <div id='cart-info'>
         <button>
-            <a href="cart.php">
-                <img src="/assets/logo_caddie.png" alt="Icône de panier">
+            <a href="index.php?page=cart">
+                <img src="assets/images/logo_caddie.png" alt="Icône de panier">
                 <p>Panier (<span id="count"><?=$cart->count();?></span>)</p>
             </a>
         </button>
@@ -69,9 +69,9 @@ require_once "app/views/header.php" ;
                 <div id="one-product">
                     <div>
                         <?php if($product['image_article'] == null):?>
-                            <img src="/admin/ressources/default_images/boutique.png" alt="Illustration d'un article avec image indisponible"/>
+                            <img src="admin/ressources/default_images/boutique.png" alt="Illustration d'un article avec image indisponible"/>
                         <?php else:?>
-                            <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Illustration de l'article" />
+                            <img src="api/files/<?php echo $product['image_article']; ?>" alt="Illustration de l'article" />
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>

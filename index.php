@@ -9,4 +9,4 @@ if(isset($_GET['page'])  && file_exists('app/controllers/'.$_GET['page'].'.php')
 }else {
     require 'app/controllers/home.php';
 }
->>>>>>> ModifsAltImages
+

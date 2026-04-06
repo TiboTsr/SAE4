@@ -82,7 +82,7 @@ div:nth-of-type(2) div:nth-of-type(2) select{
     background-color: #1E1E1E;
     border-radius: 5px;
     padding: 0.80vh 2.5vh 0.80vh 1vh;
-    background: #1E1E1E url('/assets/chevron_logo.png') no-repeat right 4px center;
+    background: #1E1E1E url('../images/chevron_logo.png') no-repeat right 4px center;
     background-size: 12px 12px;
 }
 

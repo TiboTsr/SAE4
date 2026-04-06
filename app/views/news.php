@@ -7,11 +7,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Actualités</title>
-    <link rel="stylesheet" href="styles/news_style.css">
+    <link rel="stylesheet" href="assets/styles/news_style.css">
 
-    <link rel="stylesheet" href="styles/general_style.css">
-    <link rel="stylesheet" href="styles/header_style.css">
-    <link rel="stylesheet" href="styles/footer_style.css">
+    <link rel="stylesheet" href="assets/styles/general_style.css">
+    <link rel="stylesheet" href="assets/styles/header_style.css">
+    <link rel="stylesheet" href="assets/styles/footer_style.css">
 </head>
 <body class="body_margin">
 
@@ -40,8 +40,8 @@
 
 <?php require_once "app/views/footer.php" ?>
 
-<script src="scripts/news_details_redirect.js"></script>
-<script src="scripts/scroll_to_closest_event.js"></script>
+<script src="assets/scripts/news_details_redirect.js"></script>
+<script src="assets/scripts/scroll_to_closest_event.js"></script>
 
 </body>
 </html>
