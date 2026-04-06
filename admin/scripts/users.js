@@ -11,6 +11,7 @@ showPropertieSkeleton();
 // Get inputs
 const delete_btn = document.getElementById('delete_btn');
 const new_btn = document.getElementById('new_btn');
+const save_btn = document.getElementById('save_btn');
 const prop_img = document.getElementById('prop_img');
 const prop_nom = document.getElementById('prop_nom');
 const prop_prenom = document.getElementById('prop_prenom');

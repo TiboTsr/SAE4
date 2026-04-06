@@ -9,18 +9,25 @@ require_once __DIR__ . '/File.php';
 
 class Item extends BaseModel implements JsonSerializable
 {
+    private static function selectClause(): string
+    {
+        return "id_article, nom_article, xp_article, stock_article, image_article, reduction_article, prix_article,
+                '' AS categorie_article, deleted";
+    }
+
     public static function create(string $name, int $xp, int $stocks, float $reduction, float $price, File | null $image, string $categorie_article) : Item
     {
         $DB = new \DB();
+        $imageFileName = $image?->getFileName() ?? 'N/A';
 
-        $id = $DB->query("INSERT INTO ARTICLE (nom_article, xp_article, stock_article, reduction_article, prix_article, image_article, categorie_article)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)", "siiidss", [$name, $xp, $stocks, $reduction, $price, $image, $categorie_article]);
+        $id = $DB->query("INSERT INTO ARTICLE (nom_article, xp_article, stock_article, reduction_article, prix_article, image_article)
+                    VALUES (?, ?, ?, ?, ?, ?)", "siiids", [$name, $xp, $stocks, $reduction, $price, $imageFileName]);
         return new Item($id);
     }
 
     public function update(string $name, int $xp, int $stocks, float $reduction, float $price, string $categorie_article) : Item
     {
-        $this->DB->query("UPDATE ARTICLE SET nom_article = ?, xp_article = ?, stock_article = ?, reduction_article = ?, prix_article = ?, categorie_article = ? WHERE id_article = ?", "siiidsi", [$name, $xp, $stocks, $reduction, $price, $categorie_article, $this->id]);
+        $this->DB->query("UPDATE ARTICLE SET nom_article = ?, xp_article = ?, stock_article = ?, reduction_article = ?, prix_article = ? WHERE id_article = ?", "siiidi", [$name, $xp, $stocks, $reduction, $price, $this->id]);
 
         return $this;
     }
@@ -58,13 +65,13 @@ class Item extends BaseModel implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return $this->DB->select("SELECT * FROM ARTICLE WHERE id_article = ?", "i", [$this->id])[0];
+        return $this->DB->select("SELECT " . self::selectClause() . " FROM ARTICLE WHERE id_article = ?", "i", [$this->id])[0];
     }
 
     public static function bulkFetch() : array
     {
         $DB = new \DB();
-        return $DB->select("SELECT * FROM ARTICLE WHERE DELETED = FALSE");
+        return $DB->select("SELECT " . self::selectClause() . " FROM ARTICLE WHERE DELETED = FALSE");
     }
 
     public function __toString() : string

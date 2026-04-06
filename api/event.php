@@ -8,8 +8,7 @@ require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Event.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 
@@ -72,8 +71,14 @@ function create_event() : void
 
 function update_event() : void
 {
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
     $data = json_decode(file_get_contents('php://input'), true);
-    $event = Event::getInstance($_GET['id']);
+    $event = Event::getInstance(filter::int($_GET['id']));
 
     if (!$event) {
         http_response_code(404);
@@ -89,7 +94,13 @@ function update_event() : void
 
 function update_image() : void
 {
-    $event = Event::getInstance($_GET['id']);
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
+    $event = Event::getInstance(filter::int($_GET['id']));
 
     if (!$event) {
         http_response_code(404);
@@ -97,21 +108,19 @@ function update_image() : void
         return;
     }
 
-    $image = File::saveImage();
-
-    if (!$image) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Image could not be processed']);
-        return;
-    }
-
-    $event->updateImage($image);
-    echo json_encode($event);
+    http_response_code(400);
+    echo json_encode(['error' => 'Event images are not supported by the current database schema']);
 }
 
 function delete_event() : void
 {
-    $event = Event::getInstance($_GET['id']);
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
+    $event = Event::getInstance(filter::int($_GET['id']));
 
     if (!$event) {
         http_response_code(404);

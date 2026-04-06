@@ -28,7 +28,7 @@ class Filter
     {
         $filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
 
-        if (is_null($filtered) || strlen($filtered) < $minLenght || strlen($filtered) > $maxLenght)
+        if ($filtered === false || strlen($filtered) < $minLenght || strlen($filtered) > $maxLenght)
         {
             self::deny($value, "email");
         }
@@ -40,7 +40,7 @@ class Filter
     {
         $filtered = filter_var($value, FILTER_VALIDATE_INT);
 
-        if (is_null($filtered) || $filtered < $min || $filtered > $max)
+        if ($filtered === false || $filtered < $min || $filtered > $max)
         {
             self::deny($value, "int");
         }
@@ -50,13 +50,9 @@ class Filter
 
     public static function float(mixed $value, int $min=0, int $max=PHP_INT_MAX) : float | bool
     {
-        $filtered = filter_var($value, FILTER_VALIDATE_FLOAT, ['options' => [
-                'min_range' => $min,
-                'max_range' => $max
-            ]
-        ]);
+        $filtered = filter_var($value, FILTER_VALIDATE_FLOAT);
 
-        if ($filtered === false)
+        if ($filtered === false || $filtered < $min || $filtered > $max)
         {
             self::deny($value, "float");
         }
@@ -66,7 +62,7 @@ class Filter
 
     public static function bool(mixed $value) : bool
     {
-        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         if ($filtered === null)
         {

@@ -11,8 +11,7 @@ require_once 'models/Accounting.php';
 
 require_once 'models/Accounting.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 

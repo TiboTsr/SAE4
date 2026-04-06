@@ -5,11 +5,11 @@ include_once '../api/tools.php';
 
 
 if(!isset($_SESSION['userid'])){
-    header('Location: ../login.php');
+    header('Location: ../index.php?page=login');
     exit();
 }
 if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
-    header('Location: /admin/panels/unauthorized.html');
+    header('Location: panels/unauthorized.html');
     exit();
 }
 
