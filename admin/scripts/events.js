@@ -117,7 +117,7 @@ async function selectEvent(id_event, li){
     // Update displayed information
     prop_image.src = await getFullFilepath(event.image_evenement, '../ressources/default_images/event.jpg');
     prop_name.value = event.nom_evenement;
-    prop_desc.value = event.description_evenement;
+    prop_desc.value = event.description_evenement ?? '';
     prop_xp.value = event.xp_evenement;
     prop_places.value = event.places_evenement;
     prop_price.value = event.prix_evenement;
@@ -153,7 +153,9 @@ async function selectEvent(id_event, li){
 
     // Update image
     document.getElementById('prop_image_edit').onclick = async ()=>{
-    
+        toast("Les images d'evenements ne sont pas prises en charge par le schema actuel.", true);
+        return;
+
         // Get file form
         const image = await openFileDialog();
 

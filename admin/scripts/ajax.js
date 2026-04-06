@@ -2,7 +2,7 @@
  * The base URL for the server API.
  * @constant {string}
  */
-const SERVER_API_URL = '/BUT 2/S4/SAE4/api/';
+const SERVER_API_URL = `${window.location.pathname.split('/admin/')[0] || ''}/api`;
 
 /**
  * If true, the fetch requests are logged in the console.
@@ -58,7 +58,10 @@ async function request(endpoint, method = 'GET', data = null, headers = {}) {
         try {
             json = JSON.parse(text);
         } catch (error) {
-            throw new Error("The API returned a error : " + error.message);
+            if (!response.ok) {
+                throw new Error(`API request failed (${response.status})`);
+            }
+            throw new Error("The API returned invalid JSON");
         }
 
         // Vérification de la réponse

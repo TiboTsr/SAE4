@@ -29,3 +29,39 @@ function getReduction() {
         [$_SESSION['userid']]
     );
 }
+
+
+function getFilteredProducts($searchTerm, $filters, $orderBy) {
+    $db = new Database();
+
+    $query = "SELECT * FROM ARTICLE";
+    $whereClauses = ["deleted = false"];
+    $params = [];
+
+    if (!empty($searchTerm)) {
+        $whereClauses[] = "nom_article LIKE ?";
+        $params[] = '%' . $searchTerm . '%';
+    }
+
+    if (!empty($filters)) {
+        $placeholders = implode(", ", array_fill(0, count($filters), "?"));
+        $whereClauses[] = "categorie_article IN ($placeholders)";
+        $params = array_merge($params, $filters);
+    }
+
+    $query .= " WHERE " . implode(" AND ", $whereClauses);
+
+    $orderMap = [
+        'price_asc'  => 'prix_article ASC',
+        'price_desc' => 'prix_article DESC',
+        'name_asc'   => 'nom_article ASC',
+        'name_desc'  => 'nom_article DESC',
+    ];
+
+    if (isset($orderMap[$orderBy])) {
+        $query .= " ORDER BY " . $orderMap[$orderBy];
+    }
+
+    $types = str_repeat("s", count($params));
+    return $db->select($query, $types ?: null, $params ?: null);
+}

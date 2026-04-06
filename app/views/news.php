@@ -7,91 +7,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>Actualités</title>
-<<<<<<< HEAD:app/views/news.php
-    <link rel="stylesheet" href="assets/styles/news_style.css">
-
-    <link rel="stylesheet" href="assets/styles/general_style.css">
-    <link rel="stylesheet" href="assets/styles/header_style.css">
-    <link rel="stylesheet" href="assets/styles/footer_style.css">
-=======
     <link rel="stylesheet" href="styles/news_style.css">
 
     <link rel="stylesheet" href="styles/general_style.css">
     <link rel="stylesheet" href="styles/header_style.css">
     <link rel="stylesheet" href="styles/footer_style.css">
->>>>>>> Mouad:news.php
 </head>
 <body class="body_margin">
 
-<?php
-    require_once 'app/views/header.php';
-?>
+<?php require_once 'app/views/header.php'; ?>
 
 <h1>ACTUALITES</h1>
 <section>
-<<<<<<< HEAD:app/views/news.php
-    <a class="show-more" href="index.php?page=news&show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
-=======
-    <a class="show-more" href="news.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
->>>>>>> Mouad:news.php
+    <a class="show-more" href="index.php?page=news&show=<?= (int) $showMore ?>">Voir plus loin dans le passe</a>
     <div class="events-display">
-                <?php
-                    $date = getdate();
-                    $sql_date = $date["year"]."-".$date["mon"]."-".$date["mday"];
-                    $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
-                    $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
-                    $current_date = new DateTime(date("Y-m-d"));
-
-                    $closest_event_id = "";
-
-                    foreach ($events_to_display as $event):
-                        $eventid = $event["id_actualite"];
-                        $event_date = substr($event['date_actualite'], 0, 10);
-                        $event_date_info = getdate(strtotime($event_date));
-                        $event_date = new DateTime($event_date);
-
-                        if ($event_date == $current_date) {
-                            $closest_event_id = "closest-event"; // Marquer l'événement du jour comme le plus proche
-                        } else {
-                            if (empty($closest_event_id)) {
-                                $closest_event_id = "closest-event"; // Marquer le premier événement futur comme le plus proche
-                            }
-                        }
-                ?>
-                    <div class="event-box"  id="<?php echo $closest_event_id ?>">
-                        <div class="timeline-event">
-                            <h4> <?php echo ucwords($joursFr[$event_date_info['wday']]." ".$event_date_info["mday"]." ".$moisFr[$event_date_info['mon']]);?></h4>
-                            <div class="vertical-line"></div>
-                        </div>
-                        <div class="event" event-id="<?php echo $eventid;?>">
-                            <div>
-                                <h2 style="margin-bottom: 0px;"><?php echo $event['titre_actualite'];?></h2>
-                            </div>
-                            <h4
-                                <?php
-                                $event_subscription_color_class = "event-not-subscribed";
-                                $event_subscription_label = "Consulter";
-
-                                echo "class=\"$event_subscription_color_class\"";
-                                ?>>
-                                <?php echo $event_subscription_label;?>
-                            </h4>
-                        </div>
+        <?php foreach ($newsItems as $item): ?>
+            <div class="event-box" id="<?= $item['is_closest'] ? 'closest-event' : '' ?>">
+                <div class="timeline-event">
+                    <h4><?= htmlspecialchars($item['date_label']) ?></h4>
+                    <div class="vertical-line"></div>
+                </div>
+                <div class="event" event-id="<?= (int) $item['id_actualite'] ?>">
+                    <div>
+                        <h2 style="margin-bottom: 0px;"><?= htmlspecialchars($item['titre_actualite']) ?></h2>
                     </div>
-                    <?php $closest_event_id = "";?>
-                <?php endforeach; ?>
-        </div>
+                    <h4 class="event-not-subscribed">Consulter</h4>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </section>
 
 <?php require_once "app/views/footer.php" ?>
 
-<<<<<<< HEAD:app/views/news.php
-<script src="assets/scripts/news_details_redirect.js"></script>
-<script src="assets/scripts/scroll_to_closest_event.js"></script>
-=======
 <script src="scripts/news_details_redirect.js"></script>
 <script src="scripts/scroll_to_closest_event.js"></script>
->>>>>>> Mouad:news.php
 
 </body>
 </html>

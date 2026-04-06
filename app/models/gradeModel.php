@@ -1,9 +1,22 @@
 <?php
 require_once 'app/models/Database.php';
 
-function getGrade() {
+function getGrades() {
     $db = new Database();
     return $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix_grade");
+}
+
+function userOwnsGrade($userId, $gradeId) {
+    $db = new Database();
+    $result = $db->select(
+        "SELECT * FROM GRADE 
+         INNER JOIN ADHESION ON GRADE.id_grade = ADHESION.id_grade 
+         INNER JOIN MEMBRE ON ADHESION.id_membre = MEMBRE.id_membre 
+         WHERE GRADE.id_grade = ? AND MEMBRE.id_membre = ?;",
+        "ii",
+        [$gradeId, $userId]
+    );
+    return !empty($result);
 }
 
 

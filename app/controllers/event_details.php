@@ -1,6 +1,6 @@
-<?php 
-require_once '<app/models/eventsModel.php';
-require_once '<app/models/galleryModel.php';
+<?php
+require_once 'app/models/eventsModel.php';
+require_once 'app/models/galleryModel.php';
 
 $show = 8;
 

@@ -22,10 +22,6 @@ require_once "app/views/header.php" ;
 
 <body class="body_margin">
 
-<!--------------->
-<!------HTML----->
-<!--------------->
-
 <H1>LA BOUTIQUE</H1>
 
 <div id="principal-section">

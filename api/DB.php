@@ -13,7 +13,7 @@ class DB
 
         $conn = new mysqli($this->host, $this->db_user, $this->db_pass, $this->db, $this->port);
         if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+            throw new RuntimeException("Database connection failed");
         }
         $conn->set_charset("utf8mb4");
         return $conn;
@@ -26,12 +26,20 @@ class DB
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            $conn->close();
+            throw new RuntimeException("Database query preparation failed");
+        }
         if (!empty($types))
         {
             $stmt->bind_param($types, ...$args);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            throw new RuntimeException("Database query execution failed");
+        }
 
         $id = $conn->insert_id;
         $stmt->close();
@@ -44,11 +52,19 @@ class DB
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            $conn->close();
+            throw new RuntimeException("Database query preparation failed");
+        }
         if (!empty($types))
         {
             $stmt->bind_param($types, ...$args);
         }
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            throw new RuntimeException("Database query execution failed");
+        }
 
         $result = $stmt->get_result();
         $data = $result->fetch_all(MYSQLI_ASSOC);

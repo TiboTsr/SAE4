@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__ . '/Database.php';
+
 class Cart {
 
     private $db;
 
-    public function __construct($db){
+    public function __construct($db = null){
 
         if(!isset($_SESSION)){
             session_start();
@@ -13,7 +15,7 @@ class Cart {
             $_SESSION['cart']=array();
         }
 
-        $this->db = $db;
+        $this->db = $db ?? new Database();
 
         if(isset($_GET['del'])){
             $this->del($_GET['del']);
@@ -22,6 +24,59 @@ class Cart {
         if(isset($_POST['cart']['quantity'])) {
             $this->recalc();
         }
+    }
+
+    public function getProducts() {
+        $ids = array_keys($_SESSION['cart']);
+        if (empty($ids)) {
+            return [];
+        }
+
+        $placeholders = implode(",", array_fill(0, count($ids), "?"));
+        $query = "SELECT * FROM ARTICLE WHERE id_article IN ($placeholders)";
+        $types = str_repeat("i", count($ids));
+
+        return $this->db->select($query, $types, $ids);
+    }
+
+    public function getTotalWithReduction($userId, $products = null) {
+        if (empty($userId)) {
+            return null;
+        }
+
+        if ($products === null) {
+            $products = $this->getProducts();
+        }
+
+        if (empty($products)) {
+            return null;
+        }
+
+        $adherant = $this->db->select(
+            "SELECT * FROM ADHESION
+             INNER JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade
+             WHERE ADHESION.id_membre = ? AND reduction_grade > 0",
+            "i",
+            [$userId]
+        );
+
+        if (empty($adherant)) {
+            return null;
+        }
+
+        $reductionGrade = floatval($adherant[0]["reduction_grade"] ?? 0);
+        $user_reduction = 1 - ($reductionGrade / 100);
+        $totalWithReduc = 0;
+
+        foreach ($products as $product) {
+            if (!empty($product['reduction_article'])) {
+                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']] * $user_reduction;
+            } else {
+                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']];
+            }
+        }
+
+        return $totalWithReduc;
     }
 
 

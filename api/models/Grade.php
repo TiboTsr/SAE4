@@ -14,9 +14,10 @@ class Grade extends BaseModel implements JsonSerializable
     public static function create(string $name, string $description, float $price, File | null $image, float $reduction) : Grade
     {
         $DB = new \DB();
+        $imageFileName = $image?->getFileName() ?? 'N/A';
 
         $id = $DB->query("INSERT INTO GRADE (nom_grade, description_grade, prix_grade, image_grade, reduction_grade)
-                    VALUES (?, ?, ?, ?, ?)", "ssdsd", [$name, $description, $price, $image, $reduction]);
+                    VALUES (?, ?, ?, ?, ?)", "ssdsi", [$name, $description, $price, $imageFileName, $reduction]);
 
         return new Grade($id);
     }

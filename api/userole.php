@@ -9,8 +9,7 @@ require_once 'models/Member.php';
 require_once 'DB.php';
 require_once 'tools.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 
@@ -26,17 +25,10 @@ switch ($methode) {
     case 'GET':                      # READ
         get_userRoles();
         break;
-    case 'POST':                     # CREATE
-        create_role();
-        break;
     case 'PUT':
         if (tools::methodAccepted('application/json')) {
             setUserRoles();
         }
-        break;
-
-    case 'DELETE':                   # DELETE
-        delete_role();
         break;
     default:
         # 405 Method Not Allowed

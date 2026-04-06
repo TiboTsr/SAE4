@@ -7,8 +7,7 @@ require_once 'models/Role.php';
 require_once 'DB.php';
 require_once 'tools.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 
@@ -51,7 +50,7 @@ function get_role() : void
 
         if (!$data) {
             http_response_code(404);
-            echo json_encode(["message" => "User not found"]);
+            echo json_encode(["message" => "Role not found"]);
             return;
         }
 

@@ -10,8 +10,7 @@ require_once 'DB.php';
 require_once 'tools.php';
 require_once 'models/File.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
 

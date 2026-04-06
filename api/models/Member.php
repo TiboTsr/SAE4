@@ -40,8 +40,10 @@ class Member extends BaseModel implements JsonSerializable
     public static function create(string $nom, string $prenom, string $email, File | null $pp, string $tp) : Member
     {
         $DB = new \DB();
+        $ppFileName = $pp?->getFileName() ?? 'N/A';
+        $defaultPassword = password_hash('ChangeMe123!', PASSWORD_DEFAULT);
 
-        $id = $DB->query("INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, pp_membre, tp_membre) VALUES (?,?,?,?,?)", "sssss", [$nom, $prenom, $email, $pp, $tp]);
+        $id = $DB->query("INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, password_membre, pp_membre, tp_membre) VALUES (?,?,?,?,?,?)", "ssssss", [$nom, $prenom, $email, $defaultPassword, $ppFileName, $tp]);
 
         return new Member($id);
     }

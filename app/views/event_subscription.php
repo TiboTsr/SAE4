@@ -22,8 +22,8 @@
 
     <div>
         <button id="cart-button">
-            <a href="/event_details.php?id=<?php echo $eventid?>">
-                <img src="/assets/fleche_retour.png" alt="Flèche de retour, retourne à la page de l'évènement">
+            <a href="index.php?page=event_details&id=<?php echo $eventid ?>">
+                <img src="assets/images/fleche_retour.png" alt="Flèche de retour">
                 Retourner à l'évènement
             </a>
         </button>

@@ -1,12 +1,5 @@
 <link rel="shortcut icon" href="admin/ressources/favicon.png" type="image/x-icon">
 
-<?php
-    @session_start();
-    $isUserLoggedIn = isset($_SESSION['userid']);
-    $isAdmin = isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'] ;
-?>
-
-
 <!-- HEADER -->
 <header>
     <a id="accueil" href="index.php">

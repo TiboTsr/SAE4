@@ -26,7 +26,7 @@
 <section class="user-gallery">
 
     <a href="index.php?page=event_details&id=<?php echo "$eventid";?>" class="back-arrow">
-        &#8592;<span>Retour</span>
+        &#8592;<span>Retour</span> <!-- &#8592; est une flèche -->
     </a>
     <h1>MA GALLERIE</h1>
     <h2><?php echo $event['nom_evenement']?></h2>

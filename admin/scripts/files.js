@@ -57,5 +57,6 @@ export async function openFileDialog(accept = 'image/*') {
  * @returns {string} The URL of the file.
  */
 export function getFileBucketUrl(filename){
-    return `/api/files/${filename}`;
+    const appRoot = window.location.pathname.split('/admin/')[0] || '';
+    return `${appRoot}/api/files/${filename}`;
 }

@@ -115,7 +115,7 @@ async function selectArticle(id_article, li){
     prop_name.value = article.nom_article;
     prop_xp.value = article.xp_article;
     prop_qte.value = article.stock_article;
-    prop_categorie.value = article.categorie_article;
+    prop_categorie.value = article.categorie_article ?? '';
     prop_price.value = article.prix_article;
     updateToggleStatus(prop_reductions, article.reduction_article);
 
