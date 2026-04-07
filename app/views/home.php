@@ -56,7 +56,7 @@
                         <?php if ($pod['pp_membre'] == null): ?>
                             <img src="admin/ressources/default_images/user.jpg" alt="Profile Picture" class="profile_picture">
                         <?php else: ?>
-                            <img src="api/files/<?php echo htmlspecialchars($pod['pp_membre']); ?>" alt="Profile Picture" class="profile_picture">
+                            <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($pod['pp_membre'], 'admin/ressources/default_images/user.jpg')); ?>" alt="Profile Picture" class="profile_picture">
                         <?php endif; ?>
                         <?php echo $pod['xp_membre']; ?> xp
                     </div>

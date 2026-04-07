@@ -34,7 +34,7 @@
                     <?php if (empty($product['image_grade'])): ?>
                         <img src="admin/ressources/default_images/grade.webp" alt="Image du grade">
                     <?php else: ?>
-                        <img src="api/files/<?php echo htmlspecialchars($product['image_grade']); ?>" alt="Image du grade">
+                        <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($product['image_grade'], 'admin/ressources/default_images/grade.webp')); ?>" alt="Image du grade">
                     <?php endif; ?>
 
                     <h3 title="<?php echo htmlspecialchars($product['nom_grade']); ?>">
