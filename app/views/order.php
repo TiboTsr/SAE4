@@ -25,12 +25,10 @@
 <h1>MA COMMANDE</h1>
 
 <div>
-    <button id="cart-button" >
-        <a href="index.php?page=cart">
-            <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
-            Retourner au panier
-        </a>
-    </button>
+    <a id="cart-button" href="index.php?page=cart">
+        <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
+        Retourner au panier
+    </a>
 </div>
 
 <div>
@@ -48,9 +46,9 @@
                 <?php foreach ($cart_items as $product_id => $item): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($item['nom_article']); ?></td>
-                        <td><?php echo $item['quantite']; ?></td>
-                        <td><?php echo number_format($item['prix_article'], 2, ',', ' ') . " €"; ?></td>
-                        <td><?php echo number_format($item['prix_article'] * $item['quantite'], 2, ',', ' ') . " €"; ?></td>
+                        <td><?php echo (int) $item['quantite']; ?></td>
+                        <td><?php echo number_format((float) $item['prix_article'], 2, ',', ' ') . " €"; ?></td>
+                        <td><?php echo number_format((float) $item['prix_article'] * (int) $item['quantite'], 2, ',', ' ') . " €"; ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -109,7 +107,7 @@
         } else if (modePaiement === 'paypal') {
             document.getElementById('carte_credit').style.display = 'none';
             document.getElementById('paypal').style.display = 'block';
-        }
+        }   
     });
 </script>
 

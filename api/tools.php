@@ -4,6 +4,38 @@ require_once 'DB.php';
 
 class tools
 {
+    private const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx'];
+    private const ALLOWED_IMAGE_MIME_TYPES = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    private static function normalizeUploadedExtension(string $fileName): ?string
+    {
+        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        if (!in_array($extension, self::ALLOWED_UPLOAD_EXTENSIONS, true)) {
+            return null;
+        }
+
+        return $extension;
+    }
+
+    private static function getUploadedFileTmpPath(): ?string
+    {
+        if (!isset($_FILES['file']) || $_FILES['file']['tmp_name'] === '') {
+            return null;
+        }
+
+        return $_FILES['file']['tmp_name'];
+    }
+
+    private static function getUploadPath(string $fileName): string
+    {
+        return 'files/' . $fileName;
+    }
+
     public static function generateUUID(){
         $data = random_bytes(16);
 
@@ -17,9 +49,19 @@ class tools
     {
         // Retourne le nom du fichier si l'enregistrement a réussi, faux sinon.
 
-        $name = self::generateUUID() . '.' . pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        $tmpPath = self::getUploadedFileTmpPath();
+        if ($tmpPath === null) {
+            return false;
+        }
 
-        if (move_uploaded_file($_FILES['file']['tmp_name'], 'files/' . $name)) {
+        $extension = self::normalizeUploadedExtension($_FILES['file']['name']);
+        if ($extension === null) {
+            return false;
+        }
+
+        $name = self::generateUUID() . '.' . $extension;
+
+        if (move_uploaded_file($tmpPath, self::getUploadPath($name))) {
             return DB::clean($name);
         }
 
@@ -31,28 +73,34 @@ class tools
         // Vérification des données de l'image, puis enregistrement.
         // Retourne Faux si l'image n'en est pas une, ou si elle n'a pas pu être enregistrée.
 
-        if (!isset($_FILES['file']) || $_FILES['file']['tmp_name'] === '') {
+        $tmpPath = self::getUploadedFileTmpPath();
+        if ($tmpPath === null) {
             return false;
         }
 
         // Vérifie le type MIME avec finfo
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($_FILES['file']['tmp_name']);
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($mimeType, $allowedTypes)) {
+        $mimeType = $finfo->file($tmpPath);
+        if (!array_key_exists($mimeType, self::ALLOWED_IMAGE_MIME_TYPES)) {
             return false;
         }
 
-        // On s'assure que l'extension du fichier ne causerait pas de problèmes
-        return self::saveFile();
+        $name = self::generateUUID() . '.' . self::ALLOWED_IMAGE_MIME_TYPES[$mimeType];
+
+        if (move_uploaded_file($tmpPath, self::getUploadPath($name))) {
+            return DB::clean($name);
+        }
+
+        return false;
     }
 
 
     public static function deleteFile($fileName)
     {
+        $path = self::getUploadPath($fileName);
 
-        if (file_exists('files/' . $fileName)) {
-            unlink('files/' . $fileName);
+        if (file_exists($path)) {
+            unlink($path);
             return true;
         }
 

@@ -17,6 +17,11 @@
     <?php require_once 'app/views/header.php'; ?>
 
     <h1>LES EVENEMENTS</h1>
+    <?php if (isset($_SESSION['message'])): ?>
+        <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
+        <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
+        <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+    <?php endif; ?>
     <section>
         <a class="show-more" href="index.php?page=events&show=<?php echo $show + 10; ?>">Voir plus loin dans le passé</a>
         <div class="events-display">

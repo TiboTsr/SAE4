@@ -101,6 +101,15 @@ function insertSubscription($userid, $eventid, $price) {
     );
 }
 
+function deleteSubscription($userid, $eventid) {
+    $db = new Database();
+    $db->query(
+        "DELETE FROM INSCRIPTION WHERE id_membre = ? AND id_evenement = ?;",
+        "ii",
+        [$userid, $eventid]
+    );
+}
+
 function selectXpEvent($eventid) {
     $db = new Database();
     return $db->select(
@@ -116,6 +125,17 @@ function updateXp($xp, $userid) {
     $db = new Database();
     $db->query(
         "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
+        "ii",
+        [$xp, $userid]
+    );
+}
+
+function removeXp($xp, $userid) {
+    $db = new Database();
+    $db->query(
+        "UPDATE MEMBRE
+         SET MEMBRE.xp_membre = GREATEST(0, MEMBRE.xp_membre - ?)
+         WHERE MEMBRE.id_membre = ?;",
         "ii",
         [$xp, $userid]
     );
@@ -164,4 +184,12 @@ function getEventXp($eventId) {
 
 function addUserXp($userId, $xp) {
     updateXp($xp, $userId);
+}
+
+function cancelEventSubscription($userId, $eventId) {
+    deleteSubscription($userId, $eventId);
+}
+
+function removeUserXp($userId, $xp) {
+    removeXp($xp, $userId);
 }

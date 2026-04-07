@@ -48,7 +48,15 @@ foreach ($products as $product) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
+        $allowedPaymentModes = ['carte_credit', 'paypal'];
         $mode_paiement = $_POST['mode_paiement'];
+
+        if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
+            $_SESSION['message'] = "Mode de paiement invalide.";
+            $_SESSION['message_type'] = "error";
+            header("Location: index.php?page=order");
+            exit;
+        }
 
         // Enregistrer la commande dans la base de données
         foreach ($cart_items as $product_id => $item) {
@@ -78,9 +86,9 @@ if (!empty($_SESSION['userid'])) {
         // Calcule le total en tenant compte des réductions applicables
         foreach ($products as $product) {
             if (!empty($product['reduction_article'])) { // Vérifie si une réduction est applicable
-                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']] * $user_reduction;
+                $totalWithReduc += $product['prix_article'] * $cart[$product['id_article']] * $user_reduction;
             } else {
-                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']];
+                $totalWithReduc += $product['prix_article'] * $cart[$product['id_article']];
             }
         }       
     }
