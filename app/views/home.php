@@ -66,49 +66,47 @@
         </section>
 
         <section>
-            <div class="events-display">
-                <?php foreach ($eventsDisplay as $event):   
-                    $eventid = $event["id"];?>
-
-                <div class="event" event-id="<?php echo $eventid;?>">
-                    <div>
-                        <h2><?php echo $event['titre'];?></h2>
-                        <?php echo ucwords($event_date_info["mday"]." ".$moisFr[$event_date_info['mon']].", ".$event["lieu"]); ?>
-                    </div>
-
-                    <h4 <?php
+            <h2 class="titre_vertical">EVENT</h2>
+                <div class="events-display">
+                    <?php foreach ($eventsDisplay as $event): 
+    
+                        if (!isset($event['data']) || $event['data'] === null) {
+                            continue;
+                        }
+                    
+                        $data = $event['data'];
+                    
+                        if (!isset($data["id_evenement"], $data["nom_evenement"], $data["lieu_evenement"], $data["date_evenement"])) {
+                            continue;
+                        }
+                    
+                        $eventid = $data["id_evenement"];
+                        $event_date_info = getdate(strtotime($data["date_evenement"]));
+                    ?>
+    
+                    <div class="event" event-id="<?php echo $eventid;?>">
+                        <div>
+                            <h2><?php echo htmlspecialchars($data['nom_evenement']); ?></h2>
+                            <p>
+                                <?php 
+                                echo ucwords(
+                                    $event_date_info["mday"]." ".
+                                    $moisFr[$event_date_info['mon']].", ".
+                                    htmlspecialchars($data["lieu_evenement"])
+                                ); 
+                                ?>
+                            </p>
+                        </div>
                             
-                            if($event['isPlaceDisponible']){
-                                //editable
-                                $event_subscription_color_class = "event-not-subscribed hover_effect";
-                                $event_subscription_label = "S'inscrire";
-                            }else{
-                                //editable
-                                $event_subscription_color_class = "event-full";
-                                $event_subscription_label = "Complet";
-                            }
-
-                            if($isLoggedIn){
-                                
-                                if($event['isSubscribed']){
-                                    //editable
-                                    $event_subscription_color_class = "event-subscribed";
-                                    $event_subscription_label = "Inscrit";
-                                }
-                            }
-
-                            echo "class=\"$event_subscription_color_class\"";
-                            ?>>
-                        <?php echo $event_subscription_label;?>
-
-                    <h4 class="<?php echo $item['class']; ?>">
-                        <?php echo $item['label']; ?>
-                    </h4>
-                </div>
+                        <h4 class="<?php echo $event['class'] ?? ''; ?>">
+                            <?php echo $event['label'] ?? ''; ?>
+                        </h4>
+                    </div>
+                            
                 <?php endforeach; ?>
+                        
                 <h3><a href="index.php?page=events">Voir tous les événements</a></h3>
             </div>
-            <h2 class="titre_vertical">EVENT</h2>
         </section>
 
     </div>
