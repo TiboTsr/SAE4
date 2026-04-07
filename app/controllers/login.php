@@ -2,6 +2,38 @@
 
 require_once 'app/models/userModel.php';
 
+function sanitizeLoginRedirect(?string $candidate): ?string
+{
+    if (!is_string($candidate)) {
+        return null;
+    }
+
+    $candidate = trim($candidate);
+    if ($candidate === '') {
+        return null;
+    }
+
+    if (str_contains($candidate, "\r") || str_contains($candidate, "\n")) {
+        return null;
+    }
+
+    if (str_contains($candidate, '://') || str_starts_with($candidate, '//')) {
+        return null;
+    }
+
+    if (!str_starts_with($candidate, 'index.php')) {
+        return null;
+    }
+
+    return $candidate;
+}
+
+$redirectCandidate = $_GET['next'] ?? $_POST['next'] ?? null;
+$sanitizedRedirect = sanitizeLoginRedirect($redirectCandidate);
+if ($sanitizedRedirect !== null) {
+    $_SESSION['login_redirect'] = $sanitizedRedirect;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
     $login_error = "<h3 class=\"login-error\">Erreur dans les informations de connexion.</h3>";
@@ -31,7 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $_SESSION["isAdmin"] = !empty($result);
 
-            header("Location: index.php");
+            $redirectTarget = $_SESSION['login_redirect'] ?? 'index.php';
+            unset($_SESSION['login_redirect']);
+
+            header("Location: " . $redirectTarget);
             exit;
 
         }else{
@@ -42,6 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo $login_error;
     }
 }
+
+$loginNext = $_SESSION['login_redirect'] ?? '';
 
 require_once 'app/views/login.php';
         

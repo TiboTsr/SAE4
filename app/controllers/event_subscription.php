@@ -3,9 +3,20 @@
 require_once 'app/models/eventsModel.php';
 require_once 'app/models/userModel.php';
 
+function getEventLoginRedirectTarget(): string
+{
+    $eventId = isset($_POST['eventid']) ? (int) $_POST['eventid'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
+    if ($eventId > 0) {
+        return 'index.php?page=event_details&id=' . $eventId;
+    }
+
+    return 'index.php?page=events';
+}
+
 $isLoggedIn = isset($_SESSION["userid"]);
 if (!$isLoggedIn) {
-    header("Location: index.php?page=login");
+    $next = getEventLoginRedirectTarget();
+    header("Location: index.php?page=login&next=" . rawurlencode($next));
     exit;
 }
 

@@ -14,7 +14,7 @@ $cart = new Cart();
 
 $isLoggedIn = isset($_SESSION["userid"]);
 if (!$isLoggedIn) {
-    header("Location: index.php?page=login");
+    header("Location: index.php?page=login&next=" . rawurlencode('index.php?page=order'));
     exit;
 }
 
