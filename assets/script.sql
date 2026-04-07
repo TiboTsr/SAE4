@@ -651,7 +651,7 @@ create procedure achat_article(
 )
 BEGIN
 
- 	DECLARE _prix_art INT;
+ 	DECLARE _prix_art DECIMAL(10,2);
  	DECLARE _reduc_grade float;
  	DECLARE _xp_gagne int;
     DECLARE _is_reductible BOOL;
