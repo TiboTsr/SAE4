@@ -760,30 +760,39 @@ CALL suppressionCompte(5); -- Le membre ayant l'identifiant 5 souhaite supprimer
 /*Fonctionnement : Apres l'insertion le SGBD annule l'inscription
 automatiquement si l'evenements est deja complet. */
 
-DROP trigger IF EXISTS verif_places_event;
+DROP TRIGGER IF EXISTS verif_places_event;
+DROP TRIGGER IF EXISTS verif_places_eventb;
 
 DELIMITER $$
 
 CREATE TRIGGER verif_places_eventb AFTER INSERT ON INSCRIPTION FOR EACH ROW
 BEGIN
     DECLARE _id_evenement_inscription INT;
+    DECLARE _places_evenement INT;
     DECLARE _places_restantes INT;
 
     SET _id_evenement_inscription = NEW.id_evenement;
-
-    -- Calcul des places restantes
-    SET _places_restantes = (
-        SELECT EVENEMENT.places_evenement - COUNT(*)
+    SET _places_evenement = (
+        SELECT places_evenement
         FROM EVENEMENT
-                 JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
-        WHERE EVENEMENT.id_evenement = _id_evenement_inscription
-        GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
+        WHERE id_evenement = _id_evenement_inscription
     );
 
-    IF (SELECT places_evenement FROM EVENEMENT WHERE id_evenement = _id_evenement_inscription) <> -1
-       AND _places_restantes <= 0 THEN
-        -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
-        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+    -- -1 = places illimitees
+    IF _places_evenement != -1 THEN
+        -- Calcul des places restantes
+        SET _places_restantes = (
+            SELECT EVENEMENT.places_evenement - COUNT(*)
+            FROM EVENEMENT
+                     JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
+            WHERE EVENEMENT.id_evenement = _id_evenement_inscription
+            GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
+        );
+
+        IF _places_restantes <= 0 THEN
+            -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
+            SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+        END IF;
     END IF;
 END$$
 

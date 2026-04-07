@@ -32,16 +32,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST["price"], $_POST["eventid"])) {
         $price = (float) $_POST["price"];
+        $mode_paiement = $_POST['mode_paiement'] ?? '';
+
+        if ($price <= 0) {
+            $mode_paiement = 'gratuit';
+        } else {
+            $allowedPaymentModes = ['carte_credit', 'paypal', 'especes'];
+            if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
+                $_SESSION['message'] = "Mode de paiement invalide.";
+                $_SESSION['message_type'] = 'error';
+                header("Location: index.php?page=event_details&id=" . $eventid);
+                exit;
+            }
+        }
 
         if (isUserSubscribed($userid, $eventid)) {
             $_SESSION['message'] = "Vous etes deja inscrit a cet evenement.";
             $_SESSION['message_type'] = 'error';
         } else {
-            createEventSubscription($userid, $eventid, $price);
-            $xp = getEventXp($eventid);
-            addUserXp($userid, $xp);
-            $_SESSION['message'] = "Inscription confirmee.";
-            $_SESSION['message_type'] = 'success';
+            try {
+                createEventSubscription($userid, $eventid, $price, $mode_paiement);
+                $xp = getEventXp($eventid);
+                addUserXp($userid, $xp);
+                $_SESSION['message'] = "Inscription confirmee.";
+                $_SESSION['message_type'] = 'success';
+            } catch (\Throwable $e) {
+                $_SESSION['message'] = "Inscription impossible pour le moment.";
+                $_SESSION['message_type'] = 'error';
+            }
         }
 
         header("Location: index.php?page=events");
