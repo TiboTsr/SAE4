@@ -26,11 +26,11 @@ h1 {
 }
 
 .order-layout {
-  width: 100vw;
-  max-width: none;
+  width: 100%;
+  max-width: 100%;
   margin: 50px 0 20px 0;
-  margin-left: calc(50% - 50vw);
-  padding: 0 2vw;
+  margin-left: 0;
+  padding: 0;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -168,3 +168,4 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
