@@ -10,9 +10,10 @@ require_once 'DB.php';
 require_once 'tools.php';
 require_once 'models/File.php';
 
-ini_set('display_errors', 0);
-
 header('Content-Type: application/json');
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 tools::checkPermission('p_actualite');
 
@@ -69,8 +70,15 @@ function get_news() : void
 
 function create_news() : void
 {
-    $news = News::create("Nouvel article", "Description de l'article", "2021-01-01", $_SESSION['userid'], null);
-    echo $news;
+    try {
+        $id_membre = filter::int($_SESSION['userid']);
+        $date = date('Y-m-d H:i:s');
+        $news = News::create("Nouvel article", "Description de l'article", $date, $id_membre, null);
+        echo json_encode($news);
+    } catch (\Throwable $error) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to create news']);
+    }
 }
 
 function update_news() : void

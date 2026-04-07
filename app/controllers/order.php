@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = "Commande réalisée avec succès !";
         $_SESSION['message_type'] = "success";
 
-        header("Location: index.php?page=login"); // Rediriger vers le panier
+        header("Location: index.php?page=cart"); // Rediriger vers le panier
         exit;
     }
 }
