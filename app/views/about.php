@@ -9,9 +9,11 @@
 
     <link rel="stylesheet" href="assets/styles/about_style.css">
 
+
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">
     <link rel="stylesheet" href="assets/styles/footer_style.css">
+
 
 </head>
 
@@ -23,15 +25,25 @@
     require_once "app/views/header.php";
 ?>
 
+<!-- MENU POUR NAVIGUER DANS LES SECTIONS -->
+<nav class="menu-ancrage">
+  <a href="#bureau">Le Bureau</a>
+  <a href="#membres">Les Membres</a>
+  <a href="#adhesion">Devenir Membre</a>
+</nav>
+
 <!-- CORPS DE LA PRESENTATION -->
+
+<!-- Section Bureau -->
 <H1 class='titre_section_apropos'>LE BUREAU</H1>
 <section id="bureau">
     <img src="assets/images/photo_bureau_ADIIL.png" alt="Photo de groupe du bureau du BDE 2024" />
     <p>Le Bureau des Étudiants "ADIIL" du département informatique de l'IUT de Laval a pour ambition de créer un environnement stimulant et convivial pour tous les étudiants. Notre motivation principale est de favoriser les échanges, de créer des opportunités d’apprentissage et de renforcer les liens entre les membres de notre communauté. Nous organisons des événements variés, allant des ateliers techniques aux soirées conviviales, pour répondre aux intérêts de chacun.</p>
 </section>
 
+<!-- Section Membres -->
 <H2 class='titre_section_apropos'>LES MEMBRES</H2>
-<section>
+<section id="membres">
     
     <div>
         <p>Enzo, notre Président :  <br>Passionné par l’informatique et le travail d’équipe, Enzo est un leader naturel. Il est motivé par l’idée de créer un cadre où chaque étudiant peut s’épanouir. Toujours à l'écoute, il s'assure que toutes les voix sont entendues et que nos projets reflètent les attentes de nos membres.</p>
@@ -66,6 +78,30 @@
         <img src="assets/images/photo_julien.png" alt="Photo de Julien Dauvergne" />
     </div>
 
+</section>
+
+<!-- Section Devenir Membre -->
+<H2 class='titre_section_apropos'>COMMENT REJOINDRE L'ADIIL</H2>
+<section id="adhesion">
+    <div>
+        <p>
+            <strong>MEMBRE ACTIF</strong><br><br>
+            <em>Pour tous les étudiants du département :</em><br><br>
+            • Être inscrit au <strong>Département Informatique</strong> IUT Laval<br>
+            • Être en <strong>1ère ou 2ème année BUT Informatique</strong><br><br>
+        </p>
+    </div>
+    
+    <div>
+        <p>
+            <strong>BUREAU DE L'ADIIL (4 places)</strong><br><br>
+            <em>Élection exclusive en 1ère année :</em><br><br>
+            <strong>Élection des représentants</strong> de la promotion.<br>
+            Parmi eux, <strong>4 représentants seront élus à l'issue du vote</strong> deviendront membres du bureau de l'ADIIL.<br>
+            Les autres représentants deviendront <strong>membres actifs.</strong><br><br>
+            <strong>Le bureau dirige</strong> l'association toute l'année.
+        </p>
+    </div>
 </section>
 
 
