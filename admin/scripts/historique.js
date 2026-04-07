@@ -1,5 +1,5 @@
 // Imports
-import { requestGET } from './ajax.js';
+import { requestGET, requestPATCH } from './ajax.js';
 import { getToggleStatus } from './toggle.js';
 
 // DOM Elements
@@ -14,6 +14,7 @@ const userSearch = document.getElementById('userSearch');
 const default_data = await requestGET('/purchase.php');
 default_data.forEach(item => {
     item.user = item.nom_membre.toUpperCase() + ' ' + item.prenom_membre;
+    item.recupere = Number(item.recupere);
 });
 
 // Load data
@@ -69,6 +70,30 @@ function loadData(){
         const paiementCell = document.createElement('td');
         paiementCell.textContent = item.mode_paiement;
         row.appendChild(paiementCell);
+
+        const statutCell = document.createElement('td');
+        if (item.type_transaction === 'Commande' && item.id_commande !== null) {
+            const statusBtn = document.createElement('button');
+            statusBtn.classList.add('status-toggle-btn');
+            statusBtn.classList.add(item.recupere === 1 ? 'is-done' : 'is-pending');
+            statusBtn.textContent = item.recupere === 1 ? 'Récupérée' : 'En attente';
+            statusBtn.addEventListener('click', async () => {
+                const newStatus = item.recupere === 1 ? 0 : 1;
+                statusBtn.disabled = true;
+                try {
+                    await requestPATCH(`/purchase.php?id=${item.id_commande}`, { recupere: newStatus === 1 });
+                    item.recupere = newStatus;
+                    loadData();
+                } catch (error) {
+                    statusBtn.disabled = false;
+                    alert("Impossible de modifier le statut de la commande.");
+                }
+            });
+            statutCell.appendChild(statusBtn);
+        } else {
+            statutCell.textContent = '-';
+        }
+        row.appendChild(statutCell);
 
         tbody.appendChild(row);
     });
