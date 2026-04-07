@@ -19,7 +19,7 @@
 
 <h1>ACTUALITES</h1>
 <section>
-    <a class="show-more" href="index.php?page=news&show=<?= (int) $showMore ?>">Voir plus loin dans le passe</a>
+    
     <div class="events-display">
         <?php foreach ($newsItems as $item): ?>
             <div class="event-box" id="<?= $item['is_closest'] ? 'closest-event' : '' ?>">
@@ -36,6 +36,7 @@
             </div>
         <?php endforeach; ?>
     </div>
+    <a class="show-more" href="index.php?page=news&show=<?= (int) $showMore ?>">Voir plus loin dans le passe</a>
 </section>
 
 <?php require_once "app/views/footer.php" ?>
