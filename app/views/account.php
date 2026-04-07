@@ -145,13 +145,6 @@
     <section id="section-mesAchats">
         <h2>MES ACHATS</h2>
         <div id="historique-achats">
-            <form method="GET" action="#section-mesAchats" id="viewAll-form">
-                <?php if ($viewAll): ?>
-                    <button type="submit" name="viewAll" value="0">Afficher moins</button>
-                <?php else: ?>
-                    <button type="submit" name="viewAll" value="1">Afficher tout</button>
-                <?php endif; ?>
-            </form>
 
             <?php if (!empty($historiqueAchats)): ?>
                 <table id="tab-historique-achats">
