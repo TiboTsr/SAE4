@@ -78,6 +78,8 @@ CREATE TABLE COMMANDE(
 CREATE TABLE EVENEMENT(
                           id_evenement INT AUTO_INCREMENT,
                           nom_evenement VARCHAR(100) NOT NULL,
+                          description_evenement VARCHAR(1000),
+                          image_evenement VARCHAR(500),
                           xp_evenement INT NOT NULL DEFAULT 10,
                           places_evenement INT NOT NULL,
                           prix_evenement INT NOT NULL,
@@ -778,7 +780,8 @@ BEGIN
         GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
     );
 
-    IF _places_restantes <= 0 THEN
+    IF (SELECT places_evenement FROM EVENEMENT WHERE id_evenement = _id_evenement_inscription) <> -1
+       AND _places_restantes <= 0 THEN
         -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
         SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
     END IF;
@@ -915,6 +918,12 @@ SELECT*FROM MEMBRE;
 -- fixs for deployment
 ALTER TABLE EVENEMENT
     ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE EVENEMENT
+    ADD COLUMN IF NOT EXISTS description_evenement VARCHAR(1000);
+
+ALTER TABLE EVENEMENT
+    ADD COLUMN IF NOT EXISTS image_evenement VARCHAR(500);
 
 ALTER TABLE GRADE
     ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;

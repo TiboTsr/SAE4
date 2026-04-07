@@ -36,7 +36,10 @@ function getPassedEventsToDisplay($sql_date, $show) {
 function isPlaceAvailable($eventId) {
     $db = new Database();
     $result = $db->select(
-        "SELECT (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0 AS isPlaceDisponible 
+        "SELECT (
+            EVENEMENT.places_evenement = -1 OR
+            (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0
+        ) AS isPlaceDisponible 
         FROM EVENEMENT 
         WHERE EVENEMENT.id_evenement = ? AND EVENEMENT.deleted = false;",
         "i",
@@ -73,7 +76,7 @@ function getEvent($eventid) {
     $db = new Database();
     return $db->select(
         "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`,
-                NULL AS `image_evenement`, '' AS `description_evenement`
+                `image_evenement`, COALESCE(`description_evenement`, '') AS `description_evenement`
         FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
         "i",
         [$eventid]
