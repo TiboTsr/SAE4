@@ -12,7 +12,7 @@ class Event extends BaseModel implements JsonSerializable
     private static function selectClause(): string
     {
         return "id_evenement, nom_evenement, xp_evenement, places_evenement, prix_evenement, reductions_evenement, lieu_evenement, date_evenement,
-                NULL AS image_evenement, '' AS description_evenement, deleted";
+                image_evenement, description_evenement, deleted";
     }
 
     public function delete() : void
@@ -22,18 +22,32 @@ class Event extends BaseModel implements JsonSerializable
 
     public function update(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date) : Event
     {
-        $this->DB->query("UPDATE EVENEMENT SET nom_evenement = ?, xp_evenement = ?, places_evenement = ?, reductions_evenement = ?, prix_evenement = ?, lieu_evenement = ?, date_evenement = ? WHERE id_evenement = ?", "siiidssi", [$nom, $xp, $places, $reductions, $prix, $lieu, $date, $this->id]);
+        $this->DB->query(
+            "UPDATE EVENEMENT SET nom_evenement = ?, description_evenement = ?, xp_evenement = ?, places_evenement = ?, reductions_evenement = ?, prix_evenement = ?, lieu_evenement = ?, date_evenement = ? WHERE id_evenement = ?",
+            "ssiiidssi",
+            [$nom, $description, $xp, $places, $reductions, $prix, $lieu, $date, $this->id]
+        );
 
         return $this;
     }
 
     public function getImage() : File | null
     {
-        return null;
+        $row = $this->DB->select("SELECT image_evenement FROM EVENEMENT WHERE id_evenement = ?", "i", [$this->id]);
+        $imageName = $row[0]['image_evenement'] ?? null;
+
+        return File::getFile($imageName);
     }
 
     public function updateImage(File $image) : Event
     {
+        $oldImage = $this->getImage();
+        $this->DB->query("UPDATE EVENEMENT SET image_evenement = ? WHERE id_evenement = ?", "si", [(string) $image, $this->id]);
+
+        if ($oldImage !== null) {
+            $oldImage->deleteFile();
+        }
+
         return $this;
     }
 
@@ -53,8 +67,12 @@ class Event extends BaseModel implements JsonSerializable
     public static function create(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date) : Event
     {
         $DB = new \DB();
-        $id = $DB->query("INSERT INTO EVENEMENT (nom_evenement, xp_evenement, places_evenement, reductions_evenement, prix_evenement, lieu_evenement, date_evenement)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)", "siiidss", [$nom, $xp, $places, $reductions, $prix, $lieu, $date]);
+        $id = $DB->query(
+            "INSERT INTO EVENEMENT (nom_evenement, description_evenement, image_evenement, xp_evenement, places_evenement, reductions_evenement, prix_evenement, lieu_evenement, date_evenement)
+             VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)",
+            "ssiiidss",
+            [$nom, $description, $xp, $places, $reductions, $prix, $lieu, $date]
+        );
 
         return new Event($id);
     }

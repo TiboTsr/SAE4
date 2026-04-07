@@ -78,6 +78,8 @@ CREATE TABLE COMMANDE(
 CREATE TABLE EVENEMENT(
                           id_evenement INT AUTO_INCREMENT,
                           nom_evenement VARCHAR(100) NOT NULL,
+                          description_evenement VARCHAR(1000),
+                          image_evenement VARCHAR(500),
                           xp_evenement INT NOT NULL DEFAULT 10,
                           places_evenement INT NOT NULL,
                           prix_evenement INT NOT NULL,
@@ -167,6 +169,15 @@ CREATE TABLE INSCRIPTION(
                             PRIMARY KEY(id_membre, id_evenement),
                             FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre),
                             FOREIGN KEY(id_evenement) REFERENCES EVENEMENT(id_evenement)
+);
+
+CREATE TABLE ADMIN_CHAT(
+                            id_message INT AUTO_INCREMENT,
+                            id_membre INT NOT NULL,
+                            contenu_message VARCHAR(1000) NOT NULL,
+                            date_message DATETIME NOT NULL,
+                            PRIMARY KEY(id_message),
+                            FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre)
 );
 
 
@@ -925,6 +936,12 @@ SELECT*FROM MEMBRE;
 -- fixs for deployment
 ALTER TABLE EVENEMENT
     ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE EVENEMENT
+    ADD COLUMN IF NOT EXISTS description_evenement VARCHAR(1000);
+
+ALTER TABLE EVENEMENT
+    ADD COLUMN IF NOT EXISTS image_evenement VARCHAR(500);
 
 ALTER TABLE GRADE
     ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;

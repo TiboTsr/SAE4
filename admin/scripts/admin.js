@@ -26,7 +26,9 @@ listItems.forEach(item => {
 
         // Ajoute la classe 'selected' à l'élément cliqué
         item.classList.add('selected');
-        content.src = './panels/' + item.getAttribute('perm') + '.html' + (debug ? '?debug' : '');
+        const baseQuery = debug ? '?debug' : '';
+        const separator = baseQuery === '' ? '?' : '&';
+        content.src = './panels/' + item.getAttribute('perm') + '.html' + baseQuery + separator + 'v=' + Date.now();
         
         
     });

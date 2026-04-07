@@ -64,7 +64,7 @@
                 <?php foreach ($products as $product) : ?>
                 <tr>
                     <td id="article-cell">
-                        <img src="api/files/<?php echo htmlspecialchars($product['image_article']); ?>" alt="Image de l'article" />
+                        <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($product['image_article'], 'admin/ressources/default_images/boutique.png')); ?>" alt="Image de l'article" />
                         <p><?= htmlspecialchars($product['nom_article']) ?></p>
                     </td>
                     <td><?= number_format((float) $product['prix_article'], 2, ',', ' ') ?> &euro;</td>

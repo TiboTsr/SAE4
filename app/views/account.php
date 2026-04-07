@@ -33,7 +33,7 @@
                         <?php if (empty($infoUser[0]['pp_membre'])): ?>
                             <img src="admin/ressources/default_images/user.jpg" alt="Photo de profil">
                         <?php else: ?>
-                            <img src="api/files/<?php echo htmlspecialchars($infoUser[0]['pp_membre']); ?>" alt="Photo de profil">
+                            <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($infoUser[0]['pp_membre'], 'admin/ressources/default_images/user.jpg')); ?>" alt="Photo de profil">
                         <?php endif; ?>
                     </label>
                     <input type="file" id="profilePictureInput" name="file" accept="image/jpeg, image/png, image/webp" style="display:none;" onchange="this.form.submit()">
@@ -58,7 +58,7 @@
                     <?php if (empty($infoUser[0]['image_grade'])): ?>
                         <img src="admin/ressources/default_images/grade.webp" alt="Image du grade">
                     <?php else: ?>
-                        <img src="api/files/<?php echo htmlspecialchars($infoUser[0]['image_grade']); ?>" alt="Image du grade">
+                        <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($infoUser[0]['image_grade'], 'admin/ressources/default_images/grade.webp')); ?>" alt="Image du grade">
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

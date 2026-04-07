@@ -117,8 +117,16 @@ function update_image() : void
         return;
     }
 
-    http_response_code(400);
-    echo json_encode(['error' => 'Event images are not supported by the current database schema']);
+    $image = File::saveImage();
+
+    if ($image === null) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid image format']);
+        return;
+    }
+
+    $event->updateImage($image);
+    echo json_encode($event);
 }
 
 function delete_event() : void

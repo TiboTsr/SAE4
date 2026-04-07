@@ -3,6 +3,7 @@
 require_once 'app/models/shopModel.php';
 require_once 'app/models/files_save.php';
 require_once 'app/models/Cart.php';
+require_once 'app/models/userModel.php';
 
 
 
@@ -18,6 +19,24 @@ if (!$isLoggedIn) {
 }
 
 $userid = $_SESSION["userid"];
+$userInfo = getMinimalUserInfo();
+$checkoutProfile = [
+    'prenom' => '',
+    'nom' => '',
+    'email' => '',
+    'tp' => '',
+];
+
+if (!empty($userInfo)) {
+    $checkoutProfile['prenom'] = (string) ($userInfo[0]['prenom_membre'] ?? '');
+    $checkoutProfile['nom'] = (string) ($userInfo[0]['nom_membre'] ?? '');
+    $checkoutProfile['email'] = (string) ($userInfo[0]['email_membre'] ?? '');
+    $checkoutProfile['tp'] = (string) ($userInfo[0]['tp_membre'] ?? '');
+}
+
+$message = $_SESSION['message'] ?? null;
+$messageType = $_SESSION['message_type'] ?? null;
+unset($_SESSION['message'], $_SESSION['message_type']);
 
 // Récupérer le panier
 if (empty($_SESSION['cart'])) {
