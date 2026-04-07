@@ -52,6 +52,22 @@ function getAllEventsToDisplay($sql_date) {
     );
 }
 
+function getEventsByDateDesc(int $show): array
+{
+    $db = new Database();
+    $typeSelect = eventTypeSelectExpr();
+
+    return $db->select(
+        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect}
+         FROM EVENEMENT
+         WHERE deleted = false
+         ORDER BY date_evenement DESC
+         LIMIT ?",
+        "i",
+        [$show]
+    );
+}
+
 
 
 function getPassedEventsToDisplay($sql_date, $show) {

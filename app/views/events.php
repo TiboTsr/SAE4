@@ -23,7 +23,6 @@
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
     <section>
-        <a class="show-more" href="index.php?page=events&show=<?php echo $show + 10; ?>">Voir plus loin dans le passé</a>
         <div class="events-display">
             <?php foreach ($eventsDisplay as $item):
                 $event = $item['data'];
@@ -51,6 +50,7 @@
             </div>
             <?php endforeach; ?>
         </div>
+        <a class="show-more" href="index.php?page=events&show=<?php echo (int) $showMore; ?>">Voir plus loin dans le passe</a>
     </section>
 
     <?php require_once 'app/views/footer.php'; ?>
