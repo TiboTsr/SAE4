@@ -12,13 +12,37 @@ $userid = $_SESSION["userid"];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventid = isset($_POST["eventid"]) ? (int) $_POST["eventid"] : 0;
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'unsubscribe' && $eventid > 0) {
+        if (isUserSubscribed($userid, $eventid)) {
+            cancelEventSubscription($userid, $eventid);
+            $xp = getEventXp($eventid);
+            removeUserXp($userid, $xp);
+            $_SESSION['message'] = "Desinscription reussie.";
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = "Vous n'etes pas inscrit a cet evenement.";
+            $_SESSION['message_type'] = 'error';
+        }
+
+        header("Location: index.php?page=event_details&id=" . $eventid);
+        exit;
+    }
 
     if (isset($_POST["price"], $_POST["eventid"])) {
         $price = (float) $_POST["price"];
 
-        createEventSubscription($userid, $eventid, $price);
-        $xp = getEventXp($eventid);
-        addUserXp($userid, $xp);
+        if (isUserSubscribed($userid, $eventid)) {
+            $_SESSION['message'] = "Vous etes deja inscrit a cet evenement.";
+            $_SESSION['message_type'] = 'error';
+        } else {
+            createEventSubscription($userid, $eventid, $price);
+            $xp = getEventXp($eventid);
+            addUserXp($userid, $xp);
+            $_SESSION['message'] = "Inscription confirmee.";
+            $_SESSION['message_type'] = 'success';
+        }
 
         header("Location: index.php?page=events");
         exit;

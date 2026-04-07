@@ -12,6 +12,40 @@ class File implements JsonSerializable
 {
     private string $fileName;
 
+    private const UPLOAD_DIRECTORY = 'files/';
+    private const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx'];
+    private const ALLOWED_PUT_PATCH_MIME_TYPES = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+        'application/pdf' => 'pdf',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+        'application/vnd.ms-excel' => 'xls',
+    ];
+    private const ALLOWED_IMAGE_MIME_TYPES = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+
+    private static function getUploadPath(string $fileName): string
+    {
+        return self::UPLOAD_DIRECTORY . $fileName;
+    }
+
+    private static function normalizeUploadedExtension(string $fileName): ?string
+    {
+        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        if (!in_array($extension, self::ALLOWED_UPLOAD_EXTENSIONS, true)) {
+            return null;
+        }
+
+        return $extension;
+    }
+
     public function getFileName(): string
     {
         return $this->fileName;
@@ -25,7 +59,7 @@ class File implements JsonSerializable
 
     public static function getFile(string | null $fileName): File | null
     {
-        if (!is_null($fileName) && file_exists('files/' . $fileName)) {
+        if (!is_null($fileName) && file_exists(self::getUploadPath($fileName))) {
             return new File($fileName);
         }
 
@@ -49,11 +83,16 @@ class File implements JsonSerializable
                 return null;
             }
 
-            $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-            $name = tools::generateUUID() . '.' . $extension;
+            $extension = self::normalizeUploadedExtension($_FILES['file']['name']);
+            if ($extension === null) {
+                return null;
+            }
 
-            if (move_uploaded_file($_FILES['file']['tmp_name'], 'files/' . $name)) {
-                chmod('files/' . $name, 0644);
+            $name = tools::generateUUID() . '.' . $extension;
+            $uploadPath = self::getUploadPath($name);
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadPath)) {
+                chmod($uploadPath, 0644);
                 return new File($name);
             }
             return null;
@@ -84,22 +123,17 @@ class File implements JsonSerializable
             $mimeType = $finfo->file($tempFile);
 
             // Détermination de l'extension basée sur le type MIME
-            $extensions = [
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/webp' => 'webp',
-                'image/gif' => 'gif',
-                'application/pdf' => 'pdf',
-                # Excel
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
-                'application/vnd.ms-excel' => 'xls',
-            ];
+            $extension = self::ALLOWED_PUT_PATCH_MIME_TYPES[$mimeType] ?? null;
+            if ($extension === null) {
+                @unlink($tempFile);
+                return null;
+            }
 
-            $extension = $extensions[$mimeType] ?? 'bin';
             $name = tools::generateUUID() . '.' . $extension;
+            $uploadPath = self::getUploadPath($name);
 
             // Déplacement du fichier vers sa destination finale
-            if (rename($tempFile, 'files/' . $name)) {
+            if (rename($tempFile, $uploadPath)) {
                 return new File($name);
             }
 
@@ -114,8 +148,34 @@ class File implements JsonSerializable
     // cf. mon commentaire de la méthode ci dessus
     public static function saveImage(): File | null
     {
-        // Types MIME autorisés
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        if ($method === 'POST') {
+            if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+                return null;
+            }
+
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($_FILES['file']['tmp_name']);
+            $extension = self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null;
+            if ($extension === null) {
+                return null;
+            }
+
+            $name = tools::generateUUID() . '.' . $extension;
+            $uploadPath = self::getUploadPath($name);
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadPath)) {
+                chmod($uploadPath, 0644);
+                return new File($name);
+            }
+
+            return null;
+        }
+
+        if ($method !== 'PUT' && $method !== 'PATCH') {
+            return null;
+        }
 
         // Lecture du corps brut de la requête
         $rawData = file_get_contents('php://input');
@@ -130,25 +190,32 @@ class File implements JsonSerializable
         // Vérification du type MIME
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($tmpFile);
-        if (!in_array($mimeType, $allowedTypes)) {
+        $extension = self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null;
+        if ($extension === null) {
             unlink($tmpFile); // Nettoyage
             return null; // Type non autorisé
         }
 
-        // Appel de la méthode `saveFile` avec le fichier temporaire
-        $savedFile = self::saveFile();
+        $name = tools::generateUUID() . '.' . $extension;
+        $uploadPath = self::getUploadPath($name);
 
-        // Nettoyage du fichier temporaire après enregistrement
+        if (rename($tmpFile, $uploadPath)) {
+            chmod($uploadPath, 0644);
+            return new File($name);
+        }
+
+        // Nettoyage du fichier temporaire après échec
         unlink($tmpFile);
-
-        return $savedFile; // Retourne l'objet File ou null si l'enregistrement échoue
+        return null;
     }
 
 
     public function deleteFile() : bool
     {
-            if (file_exists('files/' . $this->fileName)) {
-                unlink('files/' . $this->fileName);
+            $path = self::getUploadPath($this->fileName);
+
+            if (file_exists($path)) {
+                unlink($path);
                 return true;
             }
 
