@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 use model\Event;
 use model\File;
@@ -24,7 +24,7 @@ switch ($methode) {
     case 'POST':                     # CREATE
         create_event();
         break;
-    case 'PUT':                      # UPDATE (données seulement)
+    case 'PUT':                      # UPDATE (donnÃ©es seulement)
         if (tools::methodAccepted('application/json')) {
             update_event();
         }
@@ -65,14 +65,15 @@ function get_events() : void
 function create_event() : void
 {
     $event = Event::create(
-        "Nouvel événement",
-        "Description de l'événement",
+        "Nouvel Ã©vÃ©nement",
+        "Description de l'Ã©vÃ©nement",
         0,
         -1,
         false,
         0,
-        "Lieu de l'événement",
-        date('Y-m-d')
+        "Lieu de l'Ã©vÃ©nement",
+        date('Y-m-d'),
+        'autre'
     );
 
     echo json_encode($event);
@@ -95,9 +96,11 @@ function update_event() : void
         return;
     }
 
+    $eventType = isset($data['type']) ? filter::string($data['type'], maxLenght:50) : 'autre';
+
     $event->update(filter::string($data['nom'], maxLenght:100), filter::string($data['description'], maxLenght:1000),
                    filter::int($data['xp']), filter::int($data['places'], -100000), filter::bool($data['reductions']), filter::float($data['prix']),
-                   filter::string($data['lieu'], maxLenght:50), filter::date($data['date']));
+                   filter::string($data['lieu'], maxLenght:50), filter::date($data['date']), $eventType);
     echo json_encode($event);
 }
 
@@ -149,3 +152,4 @@ function delete_event() : void
     http_response_code(200);
     echo json_encode(['message' => 'Event deleted']);
 }
+

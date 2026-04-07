@@ -24,10 +24,18 @@ function eventColumnExists(string $columnName): bool {
     return $cache[$columnName];
 }
 
+function eventTypeSelectExpr(): string
+{
+    return eventColumnExists('type_evenement')
+        ? "COALESCE(NULLIF(TRIM(`type_evenement`), ''), 'autre') AS `type_evenement`"
+        : "'autre' AS `type_evenement`";
+}
+
 function getEventsToDisplay($sql_date) {
     $db = new Database();
+    $typeSelect = eventTypeSelectExpr();
 
-    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC LIMIT 2;",
+    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect} FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC LIMIT 2;",
     "s",
     [$sql_date]
     );
@@ -36,8 +44,9 @@ function getEventsToDisplay($sql_date) {
 
 function getAllEventsToDisplay($sql_date) {
     $db = new Database();
+    $typeSelect = eventTypeSelectExpr();
 
-    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC;",
+    return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect} FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC;",
     "s",
     [$sql_date]
     );
@@ -47,9 +56,10 @@ function getAllEventsToDisplay($sql_date) {
 
 function getPassedEventsToDisplay($sql_date, $show) {
     $db = new Database();
+    $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
-    "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement < ? AND deleted = false ORDER BY date_evenement ASC LIMIT ?;",
+    "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect} FROM EVENEMENT WHERE date_evenement < ? AND deleted = false ORDER BY date_evenement ASC LIMIT ?;",
     "si",
     [$sql_date, $show]
 );
@@ -120,10 +130,11 @@ function getEvent($eventid) {
     $descriptionSelect = eventColumnExists('description_evenement')
         ? "COALESCE(`description_evenement`, '') AS `description_evenement`"
         : "'' AS `description_evenement`";
+    $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
         "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`,
-                {$imageSelect}, {$descriptionSelect}
+                {$imageSelect}, {$descriptionSelect}, {$typeSelect}
         FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
         "i",
         [$eventid]

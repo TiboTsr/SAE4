@@ -71,6 +71,10 @@
 
         <ul>
             <li>
+                <div>🏷️<h3><?php echo ucfirst(htmlspecialchars($event['type_evenement'] ?? 'autre')); ?></h3>
+                </div>
+            </li>
+            <li>
                 <div>📍<h3><?php echo $event['lieu_evenement']; ?></h3>
                 </div>
             </li>

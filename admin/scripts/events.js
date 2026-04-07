@@ -13,6 +13,7 @@ showPropertieSkeleton();
 const prop_image = document.getElementById('prop_image');
 const prop_name = document.getElementById('prop_name');
 const prop_desc = document.getElementById('prop_desc');
+const prop_type = document.getElementById('prop_type');
 const prop_lieu = document.getElementById('prop_lieu');
 const prop_xp = document.getElementById('prop_xp');
 const prop_date = document.getElementById('prop_date');
@@ -56,6 +57,7 @@ async function saveEvent(id_event){
     const data = {
         nom: prop_name.value,
         description: prop_desc.value,
+        type: prop_type.value,
         xp: prop_xp.value,
         places: prop_places.value,
         prix: prop_price.value,
@@ -122,6 +124,8 @@ async function selectEvent(id_event, li){
     };
     prop_name.value = event.nom_evenement;
     prop_desc.value = event.description_evenement ?? '';
+    const eventType = String(event.type_evenement ?? 'autre').toLowerCase();
+    prop_type.value = [...prop_type.options].some(option => option.value === eventType) ? eventType : 'autre';
     prop_xp.value = event.xp_evenement;
     prop_places.value = event.places_evenement;
     prop_price.value = event.prix_evenement;

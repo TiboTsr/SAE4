@@ -41,6 +41,7 @@
                 <div class="event" event-id="<?php echo $event['id_evenement']; ?>">
                     <div>
                         <h2><?php echo htmlspecialchars($event['nom_evenement']); ?></h2>
+                        <p><?php echo ucfirst(htmlspecialchars($event['type_evenement'] ?? 'autre')); ?></p>
                         <?php echo ucwords(htmlspecialchars($event['lieu_evenement'])); ?>
                     </div>
                     <h4 class="<?php echo $item['eventClass']; ?>">
