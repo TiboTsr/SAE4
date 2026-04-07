@@ -37,12 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($price <= 0) {
             $mode_paiement = 'gratuit';
         } else {
-            $allowedPaymentModes = ['carte_credit', 'paypal', 'especes'];
+            $allowedPaymentModes = ['carte_credit', 'paypal', 'Especes', 'especes'];
             if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
                 $_SESSION['message'] = "Mode de paiement invalide.";
                 $_SESSION['message_type'] = 'error';
                 header("Location: index.php?page=event_details&id=" . $eventid);
                 exit;
+            }
+
+            if (strtolower($mode_paiement) === 'especes') {
+                $mode_paiement = 'Especes';
             }
         }
 

@@ -67,7 +67,7 @@
         <select id="mode_paiement" name="mode_paiement" required>
             <option value="carte_credit">Carte de Crédit</option>
             <option value="paypal">PayPal</option>
-            <option value="especes">Espèces</option>
+            <option value="Especes">Espèces</option>
         </select><br><br>
         <div id="carte_credit" class="mode_paiement_fields">
             <form method="POST" action="index.php?page=order">
@@ -96,7 +96,7 @@
         </div>
         <div id="especes" class="mode_paiement_fields" style="display: none;">
             <form method="POST" action="index.php?page=order">
-                <input type="hidden" name="mode_paiement" value="especes">
+                <input type="hidden" name="mode_paiement" value="Especes">
                 <p>Paiement en espèces à la récupération de la commande.</p>
                 <button type="submit" id="finalise-order-button">Valider la commande</button>
             </form>
@@ -117,7 +117,7 @@
             document.getElementById('carte_credit').style.display = 'none';
             document.getElementById('paypal').style.display = 'block';
             document.getElementById('especes').style.display = 'none';
-        } else if (modePaiement === 'especes') {
+        } else if (modePaiement === 'Especes') {
             document.getElementById('carte_credit').style.display = 'none';
             document.getElementById('paypal').style.display = 'none';
             document.getElementById('especes').style.display = 'block';

@@ -55,3 +55,37 @@ main{
     font-size: 16px;
     margin-bottom: 15px;
 }
+
+/* STATUS BUTTON */
+#table .status-toggle-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+    min-width: 128px;
+    text-align: center;
+}
+
+#table .status-toggle-btn:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+}
+
+#table .status-toggle-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
+#table .status-toggle-btn.is-pending {
+    background-color: #cfcfcf;
+    color: #ffffff;
+}
+
+#table .status-toggle-btn.is-done {
+    background-color: #63ca60;
+    color: #ffffff;
+}
