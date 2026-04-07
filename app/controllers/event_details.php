@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         exit;
     }
     $event = $event[0];
+    $remainingPlaces = getRemainingPlaces((int) $_GET['id']);
 
     if (isset($_GET['show']) && is_numeric($_GET['show']) && $_GET['show']) {
         $show = (int) $_GET['show'];

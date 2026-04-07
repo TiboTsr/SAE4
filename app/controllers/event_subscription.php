@@ -1,6 +1,7 @@
 <?php
 
 require_once 'app/models/eventsModel.php';
+require_once 'app/models/userModel.php';
 
 $isLoggedIn = isset($_SESSION["userid"]);
 if (!$isLoggedIn) {
@@ -9,6 +10,20 @@ if (!$isLoggedIn) {
 }
 
 $userid = $_SESSION["userid"];
+$userInfo = getMinimalUserInfo();
+$checkoutProfile = [
+    'prenom' => '',
+    'nom' => '',
+    'email' => '',
+    'tp' => '',
+];
+
+if (!empty($userInfo)) {
+    $checkoutProfile['prenom'] = (string) ($userInfo[0]['prenom_membre'] ?? '');
+    $checkoutProfile['nom'] = (string) ($userInfo[0]['nom_membre'] ?? '');
+    $checkoutProfile['email'] = (string) ($userInfo[0]['email_membre'] ?? '');
+    $checkoutProfile['tp'] = (string) ($userInfo[0]['tp_membre'] ?? '');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventid = isset($_POST["eventid"]) ? (int) $_POST["eventid"] : 0;
@@ -17,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'unsubscribe' && $eventid > 0) {
         if (isUserSubscribed($userid, $eventid)) {
             cancelEventSubscription($userid, $eventid);
-            $xp = getEventXp($eventid);
-            removeUserXp($userid, $xp);
             $_SESSION['message'] = "Desinscription reussie.";
             $_SESSION['message_type'] = 'success';
         } else {
@@ -56,8 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 createEventSubscription($userid, $eventid, $price, $mode_paiement);
-                $xp = getEventXp($eventid);
-                addUserXp($userid, $xp);
                 $_SESSION['message'] = "Inscription confirmee.";
                 $_SESSION['message_type'] = 'success';
             } catch (\Throwable $e) {
@@ -84,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $isDiscounted = (bool) $event["reductions_evenement"];
         $user_reduction = $isDiscounted ? getUserReductionRate($userid) : 1;
+        $remainingPlaces = getRemainingPlaces($eventid);
     } else {
         header("Location: index.php?page=login");
         exit;

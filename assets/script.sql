@@ -171,6 +171,15 @@ CREATE TABLE INSCRIPTION(
                             FOREIGN KEY(id_evenement) REFERENCES EVENEMENT(id_evenement)
 );
 
+CREATE TABLE ADMIN_CHAT(
+                            id_message INT AUTO_INCREMENT,
+                            id_membre INT NOT NULL,
+                            contenu_message VARCHAR(1000) NOT NULL,
+                            date_message DATETIME NOT NULL,
+                            PRIMARY KEY(id_message),
+                            FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre)
+);
+
 
 
 -- ---------------------------------------------

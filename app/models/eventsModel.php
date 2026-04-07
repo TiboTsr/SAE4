@@ -102,6 +102,27 @@ function getEvent($eventid) {
     );
 }
 
+function getRemainingPlaces(int $eventId): int {
+    $db = new Database();
+    $result = $db->select(
+        "SELECT
+            CASE
+                WHEN places_evenement = -1 THEN -1
+                ELSE places_evenement - (
+                    SELECT COUNT(*)
+                    FROM INSCRIPTION
+                    WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement
+                )
+            END AS remaining_places
+         FROM EVENEMENT
+         WHERE id_evenement = ? AND deleted = false",
+        "i",
+        [$eventId]
+    );
+
+    return !empty($result) ? (int) ($result[0]['remaining_places'] ?? 0) : 0;
+}
+
 
 function getInscription($id, $userid) {
     $db = new Database();
@@ -197,7 +218,21 @@ function getUserReductionRate($userId) {
 }
 
 function createEventSubscription($userId, $eventId, $price, $mode_paiement) {
+    if (isUnlimitedEvent($eventId)) {
+        $db = new Database();
+        try {
+            $db->query("UPDATE EVENEMENT SET places_evenement = 2147483647 WHERE id_evenement = ?", "i", [$eventId]);
+            insertSubscription($userId, $eventId, $price, $mode_paiement);
+            updateXp(getEventXp($eventId), $userId);
+        } finally {
+            $db->query("UPDATE EVENEMENT SET places_evenement = -1 WHERE id_evenement = ?", "i", [$eventId]);
+        }
+
+        return;
+    }
+
     insertSubscription($userId, $eventId, $price, $mode_paiement);
+    updateXp(getEventXp($eventId), $userId);
 }
 
 function getEventXp($eventId) {
@@ -210,6 +245,7 @@ function addUserXp($userId, $xp) {
 
 function cancelEventSubscription($userId, $eventId) {
     deleteSubscription($userId, $eventId);
+    removeXp(getEventXp($eventId), $userId);
 }
 
 function removeUserXp($userId, $xp) {

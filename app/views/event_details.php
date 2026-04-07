@@ -25,7 +25,7 @@
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
-    <?php $hasAvailablePlaces = isPlaceAvailable((int) $eventid); ?>
+    <?php $hasAvailablePlaces = isUnlimitedEvent((int) $eventid) || isPlaceAvailable((int) $eventid); ?>
     <section class="event-details">
         <?php if($event['image_evenement'] == null):?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'événement">
@@ -80,6 +80,17 @@
             </li>
             <li>
                 <div>💸<h3><?php echo $event['prix_evenement']; ?>€ par personne</h3>
+                </div>
+            </li>
+            <li>
+                <div>
+                    🪑<h3>
+                        <?php if ($remainingPlaces === -1): ?>
+                            Places restantes : Illimité
+                        <?php else: ?>
+                            Places restantes : <?php echo max(0, $remainingPlaces); ?>
+                        <?php endif; ?>
+                    </h3>
                 </div>
             </li>
             <?php if(boolval($event['reductions_evenement'])){echo "<li><div>💎<h3>-10% pour les membres Diamants</h3></div></li>";} ?>
