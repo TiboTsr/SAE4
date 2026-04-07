@@ -25,6 +25,7 @@
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
+    <?php $hasAvailablePlaces = isPlaceAvailable((int) $eventid); ?>
     <section class="event-details">
         <?php if($event['image_evenement'] == null):?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'événement">
@@ -51,10 +52,23 @@
                     </form>
                     <?php
                 else:?>
-                    <form class="subscription" action="index.php?page=event_subscription" method="post">
-                        <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
-                        <button type="submit">Inscription</a></button>
-                    </form>
+                    <?php if ($hasAvailablePlaces): ?>
+                        <?php if ((float) $event['prix_evenement'] <= 0): ?>
+                            <form class="subscription" action="index.php?page=event_subscription" method="post">
+                                <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
+                                <input type="hidden" name="price" value="0">
+                                <input type="hidden" name="mode_paiement" value="gratuit">
+                                <button type="submit">Inscription</button>
+                            </form>
+                        <?php else: ?>
+                            <form class="subscription" action="index.php?page=event_subscription" method="post">
+                                <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
+                                <button type="submit">Inscription</button>
+                            </form>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <button class="subscription" id="passed_subscription" type="button">Complet</button>
+                    <?php endif; ?>
                 <?php endif;?>
             <?php endif;?>
         </div>

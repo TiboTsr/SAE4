@@ -53,7 +53,8 @@ foreach ($events_to_display as $event) {
         }
     }
 
-    $isPlaceAvailable = isPlaceAvailable($eventId);
+    $isUnlimitedEvent = isUnlimitedEvent($eventId);
+    $isPlaceAvailable = $isUnlimitedEvent || isPlaceAvailable($eventId);
     $eventLabel = $isPlaceAvailable ? "S'inscrire" : 'Complet';
     $eventClass = $isPlaceAvailable ? 'event-not-subscribed hover_effect' : 'event-full';
 
