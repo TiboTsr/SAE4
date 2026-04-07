@@ -1,6 +1,29 @@
 <?php
 require_once 'app/models/Database.php';
 
+function eventColumnExists(string $columnName): bool {
+    static $cache = [];
+
+    if (array_key_exists($columnName, $cache)) {
+        return $cache[$columnName];
+    }
+
+    $db = new Database();
+    $result = $db->select(
+        "SELECT 1
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = 'EVENEMENT'
+           AND COLUMN_NAME = ?
+         LIMIT 1",
+        "s",
+        [$columnName]
+    );
+    $cache[$columnName] = !empty($result);
+
+    return $cache[$columnName];
+}
+
 function getEventsToDisplay($sql_date) {
     $db = new Database();
 
@@ -93,9 +116,14 @@ function getTitle($eventid) {
 
 function getEvent($eventid) {
     $db = new Database();
+    $imageSelect = eventColumnExists('image_evenement') ? "`image_evenement`" : "NULL AS `image_evenement`";
+    $descriptionSelect = eventColumnExists('description_evenement')
+        ? "COALESCE(`description_evenement`, '') AS `description_evenement`"
+        : "'' AS `description_evenement`";
+
     return $db->select(
         "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`,
-                `image_evenement`, COALESCE(`description_evenement`, '') AS `description_evenement`
+                {$imageSelect}, {$descriptionSelect}
         FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
         "i",
         [$eventid]

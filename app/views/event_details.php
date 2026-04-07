@@ -27,11 +27,7 @@
     <?php endif; ?>
     <?php $hasAvailablePlaces = isUnlimitedEvent((int) $eventid) || isPlaceAvailable((int) $eventid); ?>
     <section class="event-details">
-        <?php if($event['image_evenement'] == null):?>
-            <img src="admin/ressources/default_images/event.jpg" alt="Image de l'événement">
-        <?php else:?>
-            <img src="api/files/<?php echo $event['image_evenement']; ?>" alt="Image de l'événement">
-        <?php endif?>
+        <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($event['image_evenement'] ?? null, 'admin/ressources/default_images/event.jpg')); ?>" alt="Image de l'événement">
 
         <h1><?php echo strtoupper($event['nom_evenement']); ?></h1>
 

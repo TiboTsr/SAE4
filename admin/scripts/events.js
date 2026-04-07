@@ -3,7 +3,7 @@ import { requestGET, requestPUT, requestDELETE, requestPATCH, requestPOST } from
 import { showLoader, hideLoader } from "./loader.js";
 import { toast } from "./toaster.js";
 import { showPropertieSkeleton, hidePropertieSkeleton } from "./propertieskeleton.js";
-import { getFullFilepath, openFileDialog } from "./files.js";
+import { openFileDialog } from "./files.js";
 import { getToggleStatus, updateToggleStatus } from "./toggle.js";
 
 // Show skeleton
@@ -115,7 +115,11 @@ async function selectEvent(id_event, li){
     const event = await requestGET(`/event.php?id=${id_event}`);
 
     // Update displayed information
-    prop_image.src = await getFullFilepath(event.image_evenement, '../ressources/default_images/event.jpg');
+    prop_image.src = resolveAdminEventImage(event.image_evenement);
+    prop_image.onerror = () => {
+        prop_image.onerror = null;
+        prop_image.src = '../ressources/default_images/event.jpg';
+    };
     prop_name.value = event.nom_evenement;
     prop_desc.value = event.description_evenement ?? '';
     prop_xp.value = event.xp_evenement;
@@ -207,3 +211,25 @@ new_btn.onclick = async ()=>{
 
 // Load navbar
 refreshNavbar(fetchData, selectEvent);
+
+function resolveAdminEventImage(storedValue) {
+    if (typeof storedValue !== 'string') {
+        return '../ressources/default_images/event.jpg';
+    }
+
+    const value = storedValue.trim().replaceAll('\\', '/');
+    if (!value || value === 'N/A') {
+        return '../ressources/default_images/event.jpg';
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (/^\/\//.test(value)) {
+        return `${window.location.protocol}${value}`;
+    }
+
+    const normalized = value.replace(/^.*?api\/files\//i, '').replace(/^\/+/, '');
+    return new URL(`../../api/files/${normalized}`, import.meta.url).href;
+}
