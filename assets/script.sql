@@ -651,7 +651,7 @@ create procedure achat_article(
 )
 BEGIN
 
- 	DECLARE _prix_art INT;
+ 	DECLARE _prix_art DECIMAL(10,2);
  	DECLARE _reduc_grade float;
  	DECLARE _xp_gagne int;
     DECLARE _is_reductible BOOL;
@@ -758,29 +758,39 @@ CALL suppressionCompte(5); -- Le membre ayant l'identifiant 5 souhaite supprimer
 /*Fonctionnement : Apres l'insertion le SGBD annule l'inscription
 automatiquement si l'evenements est deja complet. */
 
-DROP trigger IF EXISTS verif_places_event;
+DROP TRIGGER IF EXISTS verif_places_event;
+DROP TRIGGER IF EXISTS verif_places_eventb;
 
 DELIMITER $$
 
 CREATE TRIGGER verif_places_eventb AFTER INSERT ON INSCRIPTION FOR EACH ROW
 BEGIN
     DECLARE _id_evenement_inscription INT;
+    DECLARE _places_evenement INT;
     DECLARE _places_restantes INT;
 
     SET _id_evenement_inscription = NEW.id_evenement;
-
-    -- Calcul des places restantes
-    SET _places_restantes = (
-        SELECT EVENEMENT.places_evenement - COUNT(*)
+    SET _places_evenement = (
+        SELECT places_evenement
         FROM EVENEMENT
-                 JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
-        WHERE EVENEMENT.id_evenement = _id_evenement_inscription
-        GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
+        WHERE id_evenement = _id_evenement_inscription
     );
 
-    IF _places_restantes <= 0 THEN
-        -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
-        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+    -- -1 = places illimitees
+    IF _places_evenement != -1 THEN
+        -- Calcul des places restantes
+        SET _places_restantes = (
+            SELECT EVENEMENT.places_evenement - COUNT(*)
+            FROM EVENEMENT
+                     JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
+            WHERE EVENEMENT.id_evenement = _id_evenement_inscription
+            GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
+        );
+
+        IF _places_restantes <= 0 THEN
+            -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
+            SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+        END IF;
     END IF;
 END$$
 
@@ -945,5 +955,22 @@ FROM MEMBRE
 LEFT JOIN ASSIGNATION ON MEMBRE.id_membre = ASSIGNATION.id_membre
 LEFT JOIN ROLE        ON ASSIGNATION.id_role = ROLE.id_role
 GROUP BY MEMBRE.id_membre;
+
+DROP TRIGGER IF EXISTS permissions_create_event;
+
+DELIMITER $$
+CREATE TRIGGER permissions_create_event AFTER INSERT ON ACTUALITE FOR EACH ROW
+	BEGIN
+		DECLARE _user_id INT;
+		DECLARE _has_perms INT;
+		SET _user_id = NEW.id_membre;
+		SET _has_perms = (SELECT p_actualite FROM LISTE_PERMISSIONS WHERE id_membre = _user_id);
+
+		IF (_has_perms = 0 OR _has_perms IS NULL) THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vous n''avez pas les permissions pour ajouter une actualite';
+		END IF;
+	END$$
+
+DELIMITER ;
 
 UPDATE MEMBRE SET password_membre = '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq';

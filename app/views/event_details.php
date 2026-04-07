@@ -20,6 +20,12 @@
     <?php
     require_once 'app/views/header.php';
 ?>
+    <?php if (isset($_SESSION['message'])): ?>
+        <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
+        <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
+        <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+    <?php endif; ?>
+    <?php $hasAvailablePlaces = isPlaceAvailable((int) $eventid); ?>
     <section class="event-details">
         <?php if($event['image_evenement'] == null):?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'événement">
@@ -37,12 +43,32 @@
                 <button class="subscription" id="passed_subscription">Passé</button>
             <?php else:
                 if($isSubscribed):
-                    echo '<button class="subscription" id="passed_subscription">Inscrit</button>';
-                else:?>
+                    echo '<button class="subscription" id="passed_subscription" type="button">Inscrit</button>';
+                    ?>
                     <form class="subscription" action="index.php?page=event_subscription" method="post">
                         <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
-                        <button type="submit">Inscription</a></button>
+                        <input type="hidden" name="action" value="unsubscribe">
+                        <button type="submit">Se desinscrire</button>
                     </form>
+                    <?php
+                else:?>
+                    <?php if ($hasAvailablePlaces): ?>
+                        <?php if ((float) $event['prix_evenement'] <= 0): ?>
+                            <form class="subscription" action="index.php?page=event_subscription" method="post">
+                                <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
+                                <input type="hidden" name="price" value="0">
+                                <input type="hidden" name="mode_paiement" value="gratuit">
+                                <button type="submit">Inscription</button>
+                            </form>
+                        <?php else: ?>
+                            <form class="subscription" action="index.php?page=event_subscription" method="post">
+                                <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
+                                <button type="submit">Inscription</button>
+                            </form>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <button class="subscription" id="passed_subscription" type="button">Complet</button>
+                    <?php endif; ?>
                 <?php endif;?>
             <?php endif;?>
         </div>

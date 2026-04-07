@@ -1,4 +1,12 @@
 <?php
+const UPLOAD_DIRECTORY = 'api/files/';
+const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx'];
+const ALLOWED_IMAGE_MIME_TYPES = [
+    'image/jpeg' => 'jpg',
+    'image/png' => 'png',
+    'image/webp' => 'webp',
+];
+
 function generateUUID(){
         $data = random_bytes(16);
 
@@ -8,13 +16,48 @@ function generateUUID(){
         return bin2hex($data);
 }
 
+function normalizeUploadedExtension(string $fileName): ?string
+{
+    $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+    if (!in_array($extension, ALLOWED_UPLOAD_EXTENSIONS, true)) {
+        return null;
+    }
+
+    return $extension;
+}
+
+function getUploadedFileTmpPath(): ?string
+{
+    if (!isset($_FILES['file']) || $_FILES['file']['tmp_name'] === '') {
+        return null;
+    }
+
+    return $_FILES['file']['tmp_name'];
+}
+
+function getUploadPath(string $fileName): string
+{
+    return UPLOAD_DIRECTORY . $fileName;
+}
+
 function saveFile() : string | null
     {
         // Retourne le nom du fichier si l'enregistrement a réussi, faux sinon.
 
-        $name = generateUUID() . '.' . pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        $tmpPath = getUploadedFileTmpPath();
+        if ($tmpPath === null) {
+            return null;
+        }
 
-        if (move_uploaded_file($_FILES['file']['tmp_name'], 'api/files/' . $name)) {
+        $extension = normalizeUploadedExtension($_FILES['file']['name']);
+        if ($extension === null) {
+            return null;
+        }
+
+        $name = generateUUID() . '.' . $extension;
+
+        if (move_uploaded_file($tmpPath, getUploadPath($name))) {
             return $name;
         }
 
@@ -26,26 +69,33 @@ function saveImage() : string | null
         // Vérification des données de l'image, puis enregistrement.
         // Retourne Faux si l'image n'en est pas une, ou si elle n'a pas pu être enregistrée.
 
-        if (!isset($_FILES['file']) || $_FILES['file']['tmp_name'] === '') {
+        $tmpPath = getUploadedFileTmpPath();
+        if ($tmpPath === null) {
             return null;
         }
 
         // Vérifie le type MIME avec finfo
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($_FILES['file']['tmp_name']);
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($mimeType, $allowedTypes)) {
+        $mimeType = $finfo->file($tmpPath);
+        if (!array_key_exists($mimeType, ALLOWED_IMAGE_MIME_TYPES)) {
             return null;
         }
 
-        // On s'assure que l'extension du fichier ne causerait pas de problèmes
-        return saveFile();
+        $name = generateUUID() . '.' . ALLOWED_IMAGE_MIME_TYPES[$mimeType];
+
+        if (move_uploaded_file($tmpPath, getUploadPath($name))) {
+            return $name;
+        }
+
+        return null;
     }
 
 function deleteFile(string $fileName) : bool
     {
-        if (file_exists("api/files/" . $fileName)) {
-            unlink("api/files/" . $fileName);
+        $path = getUploadPath($fileName);
+
+        if (file_exists($path)) {
+            unlink($path);
             return true;
         }
 

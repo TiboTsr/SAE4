@@ -4,14 +4,30 @@ class DB
 {
     private $host = 'localhost';
     private $port = '3306';
-    private $db = 'sae'; // <- ici
-    private $db_user = 'root'; // <- ici
-    private $db_pass = ''; // <- ici
+    private $db = 'sae';
+    private $db_user = 'root';
+    private $db_pass = '';
+
+    private function getConfigValue(string $envName, string $fallback): string
+    {
+        $value = getenv($envName);
+        if ($value === false || $value === '') {
+            return $fallback;
+        }
+
+        return $value;
+    }
 
     public function connect()
     {
 
-        $conn = new mysqli($this->host, $this->db_user, $this->db_pass, $this->db, $this->port);
+        $conn = new mysqli(
+            $this->host,
+            $this->getConfigValue('SAE_DB_USER', $this->db_user),
+            $this->getConfigValue('SAE_DB_PASS', $this->db_pass),
+            $this->getConfigValue('SAE_DB_NAME', $this->db),
+            $this->port
+        );
         if ($conn->connect_error) {
             throw new RuntimeException("Database connection failed");
         }
@@ -76,6 +92,6 @@ class DB
 
     public static function clean($input): string
     {
-        return htmlspecialchars($input);
+        return htmlspecialchars((string) $input, ENT_QUOTES, 'UTF-8');
     }
 }

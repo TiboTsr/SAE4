@@ -25,12 +25,10 @@
 <h1>MA COMMANDE</h1>
 
 <div>
-    <button id="cart-button" >
-        <a href="index.php?page=cart">
-            <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
-            Retourner au panier
-        </a>
-    </button>
+    <a id="cart-button" href="index.php?page=cart">
+        <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
+        Retourner au panier
+    </a>
 </div>
 
 <div>
@@ -48,9 +46,9 @@
                 <?php foreach ($cart_items as $product_id => $item): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($item['nom_article']); ?></td>
-                        <td><?php echo $item['quantite']; ?></td>
-                        <td><?php echo number_format($item['prix_article'], 2, ',', ' ') . " €"; ?></td>
-                        <td><?php echo number_format($item['prix_article'] * $item['quantite'], 2, ',', ' ') . " €"; ?></td>
+                        <td><?php echo (int) $item['quantite']; ?></td>
+                        <td><?php echo number_format((float) $item['prix_article'], 2, ',', ' ') . " €"; ?></td>
+                        <td><?php echo number_format((float) $item['prix_article'] * (int) $item['quantite'], 2, ',', ' ') . " €"; ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -69,6 +67,7 @@
         <select id="mode_paiement" name="mode_paiement" required>
             <option value="carte_credit">Carte de Crédit</option>
             <option value="paypal">PayPal</option>
+            <option value="especes">Espèces</option>
         </select><br><br>
         <div id="carte_credit" class="mode_paiement_fields">
             <form method="POST" action="index.php?page=order">
@@ -95,6 +94,13 @@
                 <button type="submit" id="finalise-order-button">Valider la commande</button>
             </form>
         </div>
+        <div id="especes" class="mode_paiement_fields" style="display: none;">
+            <form method="POST" action="index.php?page=order">
+                <input type="hidden" name="mode_paiement" value="especes">
+                <p>Paiement en espèces à la récupération de la commande.</p>
+                <button type="submit" id="finalise-order-button">Valider la commande</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -106,9 +112,15 @@
         if (modePaiement === 'carte_credit') {
             document.getElementById('carte_credit').style.display = 'block';
             document.getElementById('paypal').style.display = 'none';
+            document.getElementById('especes').style.display = 'none';
         } else if (modePaiement === 'paypal') {
             document.getElementById('carte_credit').style.display = 'none';
             document.getElementById('paypal').style.display = 'block';
+            document.getElementById('especes').style.display = 'none';
+        } else if (modePaiement === 'especes') {
+            document.getElementById('carte_credit').style.display = 'none';
+            document.getElementById('paypal').style.display = 'none';
+            document.getElementById('especes').style.display = 'block';
         }
     });
 </script>

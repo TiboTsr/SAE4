@@ -28,8 +28,25 @@ switch ($methode) {
 function get_purchase() : void {
     $db = new DB();
 
-    $data = $db->select("SELECT H.*, M.nom_membre, M.prenom_membre FROM HISTORIQUE_COMPLET as H INNER JOIN MEMBRE M on H.id_membre = M.id_membre");
+    try {
+        $data = $db->select("
+            SELECT
+                H.type_transaction,
+                H.element,
+                H.quantite,
+                H.date_transaction,
+                H.mode_paiement,
+                H.montant,
+                H.nom_utilisateur AS nom_membre,
+                H.prenom_membre
+            FROM HISTORIQUE AS H
+            ORDER BY H.date_transaction DESC
+        ");
 
-    echo json_encode(array_reverse($data));
+        echo json_encode($data);
+    } catch (\Throwable $error) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to load purchases history']);
+    }
 }
 

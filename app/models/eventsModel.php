@@ -36,13 +36,35 @@ function getPassedEventsToDisplay($sql_date, $show) {
 function isPlaceAvailable($eventId) {
     $db = new Database();
     $result = $db->select(
-        "SELECT (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0 AS isPlaceDisponible 
+        "SELECT
+            CASE
+                WHEN EVENEMENT.places_evenement = -1 THEN 1
+                WHEN (EVENEMENT.places_evenement - (
+                    SELECT COUNT(*)
+                    FROM INSCRIPTION
+                    WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement
+                )) > 0 THEN 1
+                ELSE 0
+            END AS isPlaceDisponible
         FROM EVENEMENT 
         WHERE EVENEMENT.id_evenement = ? AND EVENEMENT.deleted = false;",
         "i",
         [$eventId]
     );
     return !empty($result) ? $result[0]['isPlaceDisponible'] : false;
+}
+
+function isUnlimitedEvent($eventId) {
+    $db = new Database();
+    $result = $db->select(
+        "SELECT places_evenement = -1 AS isUnlimited
+         FROM EVENEMENT
+         WHERE id_evenement = ? AND deleted = false",
+        "i",
+        [$eventId]
+    );
+
+    return !empty($result) ? (bool) $result[0]['isUnlimited'] : false;
 }
 
 function isUserSubscribed($userId, $eventId) {
@@ -91,13 +113,22 @@ function getInscription($id, $userid) {
 }
 
 
-function insertSubscription($userid, $eventid, $price) {
+function insertSubscription($userid, $eventid, $price, $mode_paiement) {
     $db = new Database();
     $db->query(
         "INSERT INTO `INSCRIPTION` (`id_membre`, `id_evenement`, `date_inscription`, `paiement_inscription`, `prix_inscription`)
-        VALUES (?, ?, NOW(), 'WEB', ?);",
-        "iid",
-        [$userid, $eventid, $price]
+        VALUES (?, ?, NOW(), ?, ?);",
+        "iisd",
+        [$userid, $eventid, $mode_paiement, $price]
+    );
+}
+
+function deleteSubscription($userid, $eventid) {
+    $db = new Database();
+    $db->query(
+        "DELETE FROM INSCRIPTION WHERE id_membre = ? AND id_evenement = ?;",
+        "ii",
+        [$userid, $eventid]
     );
 }
 
@@ -116,6 +147,17 @@ function updateXp($xp, $userid) {
     $db = new Database();
     $db->query(
         "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
+        "ii",
+        [$xp, $userid]
+    );
+}
+
+function removeXp($xp, $userid) {
+    $db = new Database();
+    $db->query(
+        "UPDATE MEMBRE
+         SET MEMBRE.xp_membre = GREATEST(0, MEMBRE.xp_membre - ?)
+         WHERE MEMBRE.id_membre = ?;",
         "ii",
         [$xp, $userid]
     );
@@ -154,8 +196,8 @@ function getUserReductionRate($userId) {
     return 1 - ((float) $result[0]['reduction_grade'] / 100);
 }
 
-function createEventSubscription($userId, $eventId, $price) {
-    insertSubscription($userId, $eventId, $price);
+function createEventSubscription($userId, $eventId, $price, $mode_paiement) {
+    insertSubscription($userId, $eventId, $price, $mode_paiement);
 }
 
 function getEventXp($eventId) {
@@ -164,4 +206,12 @@ function getEventXp($eventId) {
 
 function addUserXp($userId, $xp) {
     updateXp($xp, $userId);
+}
+
+function cancelEventSubscription($userId, $eventId) {
+    deleteSubscription($userId, $eventId);
+}
+
+function removeUserXp($userId, $xp) {
+    removeXp($xp, $userId);
 }
