@@ -41,6 +41,33 @@ function getUploadPath(string $fileName): string
     return UPLOAD_DIRECTORY . $fileName;
 }
 
+function resolveStoredImageSrc(?string $storedValue, string $defaultSrc, string $basePath = UPLOAD_DIRECTORY): string
+{
+    $storedValue = trim((string) $storedValue);
+
+    if ($storedValue === '') {
+        return $defaultSrc;
+    }
+
+    if (str_starts_with($storedValue, 'admin/') || str_starts_with($storedValue, 'assets/')) {
+        return $storedValue;
+    }
+
+    if (preg_match('~^(?:https?:)?//~i', $storedValue) === 1 || str_starts_with($storedValue, 'data:')) {
+        $storedValue = basename($storedValue);
+    }
+
+    $storedValue = preg_replace('~^api/files/~i', '', $storedValue);
+    $storedValue = ltrim($storedValue, '/');
+
+    $fileSystemPath = dirname(__DIR__, 2) . '/' . $basePath . $storedValue;
+    if (is_file($fileSystemPath)) {
+        return $basePath . $storedValue;
+    }
+
+    return $defaultSrc;
+}
+
 function saveFile() : string | null
     {
         // Retourne le nom du fichier si l'enregistrement a réussi, faux sinon.

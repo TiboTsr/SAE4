@@ -1,6 +1,7 @@
 <?php
 require_once 'app/models/userModel.php';
 require_once 'app/models/eventsModel.php';
+require_once 'app/models/files_save.php';
 
 $isLoggedIn = isset($_SESSION['userid']);
 

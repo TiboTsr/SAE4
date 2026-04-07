@@ -41,13 +41,17 @@ $currentGrade = getAdhesion($userid);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
         $mode_paiement = $_POST['mode_paiement'];
-        $allowedPaymentModes = ['carte_credit', 'paypal', 'especes'];
+        $allowedPaymentModes = ['carte_credit', 'paypal', 'Especes', 'especes'];
 
         if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
             $_SESSION['message'] = "Mode de paiement invalide.";
             $_SESSION['message_type'] = "error";
             header("Location: index.php?page=grade_subscription&id=$id_grade");
             exit;
+        }
+
+        if (strtolower($mode_paiement) === 'especes') {
+            $mode_paiement = 'Especes';
         }
 
         if (!empty($currentGrade)) {

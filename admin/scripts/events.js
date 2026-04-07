@@ -153,11 +153,12 @@ async function selectEvent(id_event, li){
 
     // Update image
     document.getElementById('prop_image_edit').onclick = async ()=>{
-        toast("Les images d'evenements ne sont pas prises en charge par le schema actuel.", true);
-        return;
-
         // Get file form
         const image = await openFileDialog();
+
+        if (!image) {
+            return;
+        }
 
         // Update image src
         const url = URL.createObjectURL(image);
