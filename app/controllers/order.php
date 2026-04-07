@@ -48,7 +48,7 @@ foreach ($products as $product) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
-        $allowedPaymentModes = ['carte_credit', 'paypal'];
+        $allowedPaymentModes = ['carte_credit', 'paypal', 'especes'];
         $mode_paiement = $_POST['mode_paiement'];
 
         if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = "Commande réalisée avec succès !";
         $_SESSION['message_type'] = "success";
 
-        header("Location: index.php?page=cart");
+        header("Location: index.php?page=cart"); // Rediriger vers le panier
         exit;
     }
 }
