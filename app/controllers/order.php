@@ -48,7 +48,7 @@ foreach ($products as $product) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
-        $allowedPaymentModes = ['carte_credit', 'paypal'];
+        $allowedPaymentModes = ['carte_credit', 'paypal', 'especes'];
         $mode_paiement = $_POST['mode_paiement'];
 
         if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
