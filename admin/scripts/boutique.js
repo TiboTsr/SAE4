@@ -3,7 +3,7 @@ import { requestGET, requestPUT, requestDELETE, requestPATCH, requestPOST, reque
 import { showLoader, hideLoader } from "./loader.js";
 import { toast } from "./toaster.js";
 import { showPropertieSkeleton, hidePropertieSkeleton } from "./propertieskeleton.js";
-import { getFullFilepath, openFileDialog } from "./files.js";
+import { openFileDialog } from "./files.js";
 import { getToggleStatus, updateToggleStatus } from "./toggle.js";
 
 // Show skeleton
@@ -111,7 +111,12 @@ async function selectArticle(id_article, li){
     const article = await requestGET(`/item.php?id=${id_article}`);
 
     // Update displayed information
-    prop_image.src = await getFullFilepath(article.image_article, '../ressources/default_images/boutique.png');
+    const resolvedImageUrl = resolveAdminArticleImage(article.image_article);
+    prop_image.src = resolvedImageUrl;
+    prop_image.onerror = () => {
+        prop_image.onerror = null;
+        prop_image.src = '../ressources/default_images/boutique.png';
+    };
     prop_name.value = article.nom_article;
     prop_xp.value = article.xp_article;
     prop_qte.value = article.stock_article;
@@ -198,3 +203,25 @@ new_btn.onclick = async ()=>{
 
 // Load navbar
 refreshNavbar(fetchData, selectArticle);
+
+function resolveAdminArticleImage(storedValue) {
+    if (typeof storedValue !== 'string') {
+        return '../ressources/default_images/boutique.png';
+    }
+
+    const value = storedValue.trim().replaceAll('\\', '/');
+    if (!value || value === 'N/A') {
+        return '../ressources/default_images/boutique.png';
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (/^\/\//.test(value)) {
+        return `${window.location.protocol}${value}`;
+    }
+
+    const normalized = value.replace(/^.*?api\/files\//i, '').replace(/^\/+/, '');
+    return new URL(`../../api/files/${normalized}`, import.meta.url).href;
+}
