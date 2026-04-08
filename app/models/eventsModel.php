@@ -53,7 +53,7 @@ function getAllEventsToDisplay($sql_date) {
 }
 
 function getAllEventsForCalendar() {
-    $db = new Database();
+    $db = new DB();
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
