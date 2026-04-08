@@ -65,7 +65,16 @@ export async function openFileDialog(accept = 'image/*') {
  * @returns {string} The URL of the file.
  */
 export function getFileBucketUrl(filename) {
+    const externalUrl = normalizeExternalUrl(filename);
+    if (externalUrl) {
+        return externalUrl;
+    }
+
     const normalizedFileName = normalizeStoredFilename(filename);
+    if (!normalizedFileName || normalizedFileName === 'N/A') {
+        return '';
+    }
+
     return new URL(`../../api/files/${normalizedFileName}`, import.meta.url).href;
 }
 

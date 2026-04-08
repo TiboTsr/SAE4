@@ -69,10 +69,19 @@ async function selectReunion(id_reunion, li){
 
     // Update displayed information
     const url = getFileBucketUrl(role.fichier_reunion);
-    pdf_preview.src = url;
+    if (!url) {
+        pdf_preview.src = '';
+        toast("Impossible de trouver l'URL du fichier.", true);
+    } else {
+        pdf_preview.src = url;
+    }
 
     // Update download button
     download_btn.onclick = ()=>{
+        if (!url) {
+            toast("Impossible de trouver l'URL du fichier.", true);
+            return;
+        }
         window.open(url, '_blank');
     };
 
@@ -103,8 +112,12 @@ async function selectReunion(id_reunion, li){
 // Handle new reunion
 new_btn.onclick = async ()=>{
 
-    // Get file
-    const file = await openFileDialog("application/pdf");
+    let file = null;
+    try {
+        file = await openFileDialog(".pdf");
+    } catch (error) {
+        return;
+    }
 
     // Show loader
     showLoader();
@@ -116,7 +129,7 @@ new_btn.onclick = async ()=>{
 
     // Send request
     try{
-        const { id_role: id_reunion } =  await requestPOST('/meeting.php', form_data);
+        const { id_reunion } =  await requestPOST('/meeting.php', form_data);
         refreshNavbar(fetchData, selectReunion, id_reunion);
         toast("Fichier uploadé avec succès");
     } catch (error) {
