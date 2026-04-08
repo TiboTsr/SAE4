@@ -13,14 +13,17 @@
 
 </head>
     <body>
-        <?php 
-            require_once 'header.php';
+        <?php
+            require_once 'app/views/header.php';
         ?>
 
 
         <!-- Formulaire de connexion -->
         <form method="POST" action="index.php?page=login" class="login-form">
             <h1>Connexion</h1>
+            <?php if (!empty($loginNext)) : ?>
+                <input type="hidden" name="next" value="<?php echo htmlspecialchars($loginNext); ?>">
+            <?php endif; ?>
             <label for="mail">Adresse Mail :</label>
             <input type="email" name="mail" required>
 

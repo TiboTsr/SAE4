@@ -210,19 +210,19 @@ class File implements JsonSerializable
     }
 
 
-    public function deleteFile() : bool
+    public function deleteFile(): bool
     {
             $path = self::getUploadPath($this->fileName);
 
-            if (file_exists($path)) {
-                unlink($path);
-                return true;
-            }
+        if (file_exists($path)) {
+            unlink($path);
+            return true;
+        }
 
             return false;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->fileName;
     }

@@ -36,7 +36,8 @@ class tools
         return 'files/' . $fileName;
     }
 
-    public static function generateUUID(){
+    public static function generateUUID()
+    {
         $data = random_bytes(16);
 
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
@@ -132,7 +133,8 @@ class tools
         exit;
     }
 
-    public static function hasPermission($permission) : bool {
+    public static function hasPermission($permission): bool
+    {
 
         if (!isset($_SESSION['userid'])) {
             return false;
@@ -146,7 +148,6 @@ class tools
         }
 
         return true;
-
     }
 
     public static function checkPermission($permission): void

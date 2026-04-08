@@ -17,10 +17,10 @@
 
 </head>
 <body>
-<?php 
+<?php
         require_once 'app/views/header.php';
-        
-    ?>
+
+?>
 
 
 <section class="user-gallery">
@@ -45,10 +45,10 @@
             </form>
 
            <?php
-            
-            
-                   
-           foreach($medias as $media => $img):?>
+
+
+
+            foreach ($medias as $media => $img) :?>
                 <div class="media-container">
                     <img src="api/files/<?php echo trim($img['url_media']); ?>" alt="Image Personnelle de l'événement">
                     <div class="delete-icon">

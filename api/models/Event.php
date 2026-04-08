@@ -9,38 +9,123 @@ require_once __DIR__ . '/BaseModel.php';
 
 class Event extends BaseModel implements JsonSerializable
 {
-    private static function selectClause(): string
+    private const DEFAULT_EVENT_TYPE = 'autre';
+
+    private static function hasColumn(string $columnName): bool
     {
-        return "id_evenement, nom_evenement, xp_evenement, places_evenement, prix_evenement, reductions_evenement, lieu_evenement, date_evenement,
-                image_evenement, description_evenement, deleted";
+        static $cache = [];
+
+        if (array_key_exists($columnName, $cache)) {
+            return $cache[$columnName];
+        }
+
+        $DB = new \DB();
+        $result = $DB->select(
+            "SELECT 1
+             FROM INFORMATION_SCHEMA.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME = 'EVENEMENT'
+               AND COLUMN_NAME = ?
+             LIMIT 1",
+            "s",
+            [$columnName]
+        );
+        $cache[$columnName] = !empty($result);
+
+        return $cache[$columnName];
     }
 
-    public function delete() : void
+    private static function selectClause(): string
+    {
+        $imageSelect = self::hasColumn('image_evenement') ? "image_evenement" : "NULL AS image_evenement";
+        $descriptionSelect = self::hasColumn('description_evenement')
+            ? "COALESCE(description_evenement, '') AS description_evenement"
+            : "'' AS description_evenement";
+        $typeSelect = self::hasColumn('type_evenement')
+            ? "COALESCE(NULLIF(TRIM(type_evenement), ''), '" . self::DEFAULT_EVENT_TYPE . "') AS type_evenement"
+            : "'" . self::DEFAULT_EVENT_TYPE . "' AS type_evenement";
+
+        return "id_evenement, nom_evenement, xp_evenement, places_evenement, prix_evenement, reductions_evenement, lieu_evenement, date_evenement,
+                {$imageSelect}, {$descriptionSelect}, {$typeSelect}, deleted";
+    }
+
+    public function delete(): void
     {
         $this->DB->query("UPDATE EVENEMENT SET deleted=true WHERE id_evenement = ?", "i", [$this->id]);
     }
 
-    public function update(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date) : Event
+    public function update(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type): Event
     {
+        $fields = ["nom_evenement = ?"];
+        $types = "s";
+        $values = [$nom];
+
+        if (self::hasColumn('description_evenement')) {
+            $fields[] = "description_evenement = ?";
+            $types .= "s";
+            $values[] = $description;
+        }
+
+        $fields[] = "xp_evenement = ?";
+        $types .= "i";
+        $values[] = $xp;
+
+        $fields[] = "places_evenement = ?";
+        $types .= "i";
+        $values[] = $places;
+
+        $fields[] = "reductions_evenement = ?";
+        $types .= "i";
+        $values[] = (int) $reductions;
+
+        $fields[] = "prix_evenement = ?";
+        $types .= "d";
+        $values[] = $prix;
+
+        $fields[] = "lieu_evenement = ?";
+        $types .= "s";
+        $values[] = $lieu;
+
+        $fields[] = "date_evenement = ?";
+        $types .= "s";
+        $values[] = $date;
+
+        if (self::hasColumn('type_evenement')) {
+            $fields[] = "type_evenement = ?";
+            $types .= "s";
+            $values[] = self::normalizeEventType($type);
+        }
+
+        $types .= "i";
+        $values[] = $this->id;
+
         $this->DB->query(
-            "UPDATE EVENEMENT SET nom_evenement = ?, description_evenement = ?, xp_evenement = ?, places_evenement = ?, reductions_evenement = ?, prix_evenement = ?, lieu_evenement = ?, date_evenement = ? WHERE id_evenement = ?",
-            "ssiiidssi",
-            [$nom, $description, $xp, $places, $reductions, $prix, $lieu, $date, $this->id]
+            "UPDATE EVENEMENT SET " . implode(", ", $fields) . " WHERE id_evenement = ?",
+            $types,
+            $values
         );
 
         return $this;
     }
 
-    public function getImage() : File | null
+    public function getImage(): File | null
     {
+        if (!self::hasColumn('image_evenement')) {
+            return null;
+        }
+
         $row = $this->DB->select("SELECT image_evenement FROM EVENEMENT WHERE id_evenement = ?", "i", [$this->id]);
         $imageName = $row[0]['image_evenement'] ?? null;
 
         return File::getFile($imageName);
     }
 
-    public function updateImage(File $image) : Event
+    public function updateImage(File $image): Event
     {
+        if (!self::hasColumn('image_evenement')) {
+            return $this;
+        }
+
         $oldImage = $this->getImage();
         $this->DB->query("UPDATE EVENEMENT SET image_evenement = ? WHERE id_evenement = ?", "si", [(string) $image, $this->id]);
 
@@ -64,21 +149,49 @@ class Event extends BaseModel implements JsonSerializable
         return new Event($id);
     }
 
-    public static function create(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date) : Event
+    public static function create(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type): Event
     {
         $DB = new \DB();
+        $columns = ["nom_evenement"];
+        $placeholders = ["?"];
+        $types = "s";
+        $values = [$nom];
+
+        if (self::hasColumn('description_evenement')) {
+            $columns[] = "description_evenement";
+            $placeholders[] = "?";
+            $types .= "s";
+            $values[] = $description;
+        }
+
+        if (self::hasColumn('image_evenement')) {
+            $columns[] = "image_evenement";
+            $placeholders[] = "NULL";
+        }
+
+        if (self::hasColumn('type_evenement')) {
+            $columns[] = "type_evenement";
+            $placeholders[] = "?";
+            $types .= "s";
+            $values[] = self::normalizeEventType($type);
+        }
+
+        $columns = array_merge($columns, ["xp_evenement", "places_evenement", "reductions_evenement", "prix_evenement", "lieu_evenement", "date_evenement"]);
+        $placeholders = array_merge($placeholders, ["?", "?", "?", "?", "?", "?"]);
+        $types .= "iiidss";
+        $values = array_merge($values, [$xp, $places, (int) $reductions, $prix, $lieu, $date]);
+
         $id = $DB->query(
-            "INSERT INTO EVENEMENT (nom_evenement, description_evenement, image_evenement, xp_evenement, places_evenement, reductions_evenement, prix_evenement, lieu_evenement, date_evenement)
-             VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)",
-            "ssiiidss",
-            [$nom, $description, $xp, $places, $reductions, $prix, $lieu, $date]
+            "INSERT INTO EVENEMENT (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")",
+            $types,
+            $values
         );
 
         return new Event($id);
     }
 
 
-    public static function bulkFetch() : array
+    public static function bulkFetch(): array
     {
         $DB = new \DB();
         $sql = "SELECT " . self::selectClause() . " FROM EVENEMENT WHERE deleted=false";
@@ -88,11 +201,16 @@ class Event extends BaseModel implements JsonSerializable
     public function jsonSerialize(): array
     {
         return $this->DB->select("SELECT " . self::selectClause() . " FROM EVENEMENT WHERE id_evenement = ?", "i", [$this->id])[0];
-
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return json_encode($this);
+    }
+
+    private static function normalizeEventType(string $type): string
+    {
+        $value = strtolower(trim($type));
+        return $value === '' ? self::DEFAULT_EVENT_TYPE : $value;
     }
 }

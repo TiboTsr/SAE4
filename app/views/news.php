@@ -21,7 +21,7 @@
 <section>
     
     <div class="events-display">
-        <?php foreach ($newsItems as $item): ?>
+        <?php foreach ($newsItems as $item) : ?>
             <div class="event-box" id="<?= $item['is_closest'] ? 'closest-event' : '' ?>">
                 <div class="timeline-event">
                     <h4><?= htmlspecialchars($item['date_label']) ?></h4>

@@ -31,7 +31,7 @@
     <h1>MON PANIER</h1>
 
     <div>
-        <?php if (!empty($message)): ?>
+        <?php if (!empty($message)) : ?>
             <?php $messageStyle = $messageType === "error" ? "error-message" : "success-message"; ?>
             <div id="<?= $messageStyle ?>"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -86,7 +86,7 @@
                     <td><?= number_format($cart->total(), 2, ',', ' ') ?> &euro;</td>
                 </tr>
 
-                <?php if ($totalWithReduc !== null): ?>
+                <?php if ($totalWithReduc !== null) : ?>
                     <tr>
                         <th style="min-width: 400px">Total apres reductions :</th>
                         <td style="min-width: 50px"><?= number_format($totalWithReduc, 2, ',', ' ') ?> &euro;</td>
@@ -98,7 +98,7 @@
 </div>
 <div>
     <form class="subscription" action="index.php?page=order" method="post">
-        <?php if (!empty($_SESSION['cart'])): ?>
+        <?php if (!empty($_SESSION['cart'])) : ?>
             <input type="hidden" name="cart" value='<?= htmlspecialchars(json_encode($_SESSION['cart'], JSON_UNESCAPED_UNICODE), ENT_QUOTES, "UTF-8") ?>'>
         <?php endif; ?>
         <button type="submit" id="order-button">

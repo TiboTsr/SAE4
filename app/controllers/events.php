@@ -6,51 +6,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($
     $show = (int) $_GET['show'];
 }
 
-$date = getdate();
-$sql_date = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
+$events_to_display = getEventsByDateDesc($show);
+$showMore = $show + 10;
 $current_date = new DateTime(date('Y-m-d'));
 
 $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
-$moisFr  = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin',
-            7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
+$moisFr  = [1 => 'Janvier', 2 => 'Fevrier', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin',
+            7 => 'Juillet', 8 => 'Aout', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Decembre'];
 
-$future_events = getAllEventsToDisplay($sql_date);
-$passed_events = getPassedEventsToDisplay($sql_date, $show);
-$events_to_display = array_merge($passed_events, $future_events);
-
-// Préparer les données d'affichage pour chaque événement
 $isLoggedIn = isset($_SESSION['userid']);
-$closest_event_id_set = false;
+$todayMarked = false;
 $eventsDisplay = [];
 
 foreach ($events_to_display as $event) {
-    $eventId   = $event['id_evenement'];
-    $eventDate = new DateTime(substr($event['date_evenement'], 0, 10));
-    $eventDateInfo = getdate(strtotime(substr($event['date_evenement'], 0, 10)));
+    $eventId = (int) $event['id_evenement'];
+    $eventDateString = substr($event['date_evenement'], 0, 10);
+    $eventDate = new DateTime($eventDateString);
+    $eventDateInfo = getdate(strtotime($eventDateString));
 
-    $otherClasses  = '';
-    $isPassed      = false;
-    $closestId     = '';
+    $otherClasses = '';
+    $isPassed = false;
+    $closestId = '';
 
     if ($eventDate < $current_date) {
         $datePinClass = 'passed';
         $datePinLabel = 'Passé';
         $otherClasses = 'passed';
-        $isPassed     = true;
+        $isPassed = true;
     } elseif ($eventDate == $current_date) {
         $datePinClass = 'today';
         $datePinLabel = "Aujourd'hui";
-        if (!$closest_event_id_set) {
+        if (!$todayMarked) {
             $closestId = 'closest-event';
-            $closest_event_id_set = true;
+            $todayMarked = true;
         }
     } else {
         $datePinClass = 'upcoming';
         $datePinLabel = 'A venir';
-        if (!$closest_event_id_set) {
-            $closestId = 'closest-event';
-            $closest_event_id_set = true;
-        }
     }
 
     $isUnlimitedEvent = isUnlimitedEvent($eventId);
@@ -69,15 +61,19 @@ foreach ($events_to_display as $event) {
     }
 
     $eventsDisplay[] = [
-        'data'          => $event,
-        'dateInfo'      => $eventDateInfo,
-        'otherClasses'  => $otherClasses,
-        'closestId'     => $closestId,
-        'datePinClass'  => $datePinClass,
-        'datePinLabel'  => $datePinLabel,
-        'eventLabel'    => $eventLabel,
-        'eventClass'    => $eventClass,
+        'data'         => $event,
+        'dateInfo'     => $eventDateInfo,
+        'otherClasses' => $otherClasses,
+        'closestId'    => $closestId,
+        'datePinClass' => $datePinClass,
+        'datePinLabel' => $datePinLabel,
+        'eventLabel'   => $eventLabel,
+        'eventClass'   => $eventClass,
     ];
+}
+
+if (!$todayMarked && !empty($eventsDisplay)) {
+    $eventsDisplay[0]['closestId'] = 'closest-event';
 }
 
 require_once 'app/views/events.php';

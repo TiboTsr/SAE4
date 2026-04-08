@@ -46,8 +46,7 @@ class DB
             $conn->close();
             throw new RuntimeException("Database query preparation failed");
         }
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
 
@@ -72,8 +71,7 @@ class DB
             $conn->close();
             throw new RuntimeException("Database query preparation failed");
         }
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
         if (!$stmt->execute()) {

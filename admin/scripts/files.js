@@ -8,12 +8,20 @@
  * @returns {Promise<string>} The full file path or the default file path.
  */
 export async function getFullFilepath(filename, defaultFile) {
-    // Vérifiez si le filename est invalide (vide, null ou "N/A")
-    if (!filename || filename === "N/A") {
+    const normalizedFileName = normalizeStoredFilename(filename);
+    const externalUrl = normalizeExternalUrl(filename);
+
+    // Check if filename is invalid (empty, null, or "N/A")
+    if ((!normalizedFileName && !externalUrl) || normalizedFileName === 'N/A') {
         return defaultFile;
     }
 
-    const fullFilePath = getFileBucketUrl(filename);
+    // External URLs should be used as-is.
+    if (externalUrl) {
+        return externalUrl;
+    }
+
+    const fullFilePath = getFileBucketUrl(normalizedFileName);
     try {
         const response = await fetch(fullFilePath);
         if (!response.ok) {
@@ -52,11 +60,53 @@ export async function openFileDialog(accept = 'image/*') {
 
 /**
  * Retrieves the URL of a file stored in the file bucket.
- * 
+ *
  * @param {string} filename - The name of the file to retrieve the URL for.
  * @returns {string} The URL of the file.
  */
-export function getFileBucketUrl(filename){
-    const appRoot = window.location.pathname.split('/admin/')[0] || '';
-    return `${appRoot}/api/files/${filename}`;
+export function getFileBucketUrl(filename) {
+    const normalizedFileName = normalizeStoredFilename(filename);
+    return new URL(`../../api/files/${normalizedFileName}`, import.meta.url).href;
+}
+
+function normalizeStoredFilename(filename) {
+    if (typeof filename !== 'string') {
+        return '';
+    }
+
+    let normalized = filename.trim().replaceAll('\\', '/');
+    if (!normalized) {
+        return '';
+    }
+
+    // Keep external URLs for dedicated handling.
+    if (/^(?:https?:)?\/\//i.test(normalized)) {
+        return '';
+    }
+
+    // Remove any leading path part up to and including api/files/.
+    normalized = normalized.replace(/^.*?api\/files\//i, '');
+
+    return normalized.replace(/^\/+/, '');
+}
+
+function normalizeExternalUrl(filename) {
+    if (typeof filename !== 'string') {
+        return '';
+    }
+
+    const value = filename.trim();
+    if (!value || value === 'N/A') {
+        return '';
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (/^\/\//.test(value)) {
+        return `${window.location.protocol}${value}`;
+    }
+
+    return '';
 }

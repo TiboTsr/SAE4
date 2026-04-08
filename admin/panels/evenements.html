@@ -173,6 +173,25 @@
 
             <div class="propertie">
                 <div>
+                    <p>Type d'événement</p>
+                    <p>Catégorie affichée (repas, fêtes, jeux, etc.).</p>
+                </div>
+                <div>
+                    <select id="prop_type">
+                        <option value="repas">Repas</option>
+                        <option value="fete">Fête</option>
+                        <option value="jeux">Jeux</option>
+                        <option value="soiree">Soirée</option>
+                        <option value="atelier">Atelier</option>
+                        <option value="conference">Conférence</option>
+                        <option value="sport">Sport</option>
+                        <option value="autre" selected>Autre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="propertie">
+                <div>
                     <p>XP</p>
                     <p>XP rapporter par l'événement.</p>
                 </div>
@@ -242,8 +261,8 @@
 
     <!-- SCRIPTS -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="module" src="../scripts/toggle.js"></script>
-    <script type="module" src="../scripts/events.js"></script>
+    <script type="module" src="../scripts/toggle.js?v=20260407-3"></script>
+    <script type="module" src="../scripts/events.js?v=20260407-3"></script>
     
 </body>
 </html>

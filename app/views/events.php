@@ -17,18 +17,17 @@
     <?php require_once 'app/views/header.php'; ?>
 
     <h1>LES EVENEMENTS</h1>
-    <?php if (isset($_SESSION['message'])): ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
     <section>
-        <a class="show-more" href="index.php?page=events&show=<?php echo $show + 10; ?>">Voir plus loin dans le passé</a>
         <div class="events-display">
-            <?php foreach ($eventsDisplay as $item):
+            <?php foreach ($eventsDisplay as $item) :
                 $event = $item['data'];
                 $eventDateInfo = $item['dateInfo'];
-            ?>
+                ?>
             <div class="event-box <?php echo $item['otherClasses']; ?>" id="<?php echo $item['closestId']; ?>">
                 <div class="timeline-event">
                     <h4><?php echo ucwords($joursFr[$eventDateInfo['wday']] . ' ' . $eventDateInfo['mday'] . ' ' . $moisFr[$eventDateInfo['mon']]); ?></h4>
@@ -41,6 +40,7 @@
                 <div class="event" event-id="<?php echo $event['id_evenement']; ?>">
                     <div>
                         <h2><?php echo htmlspecialchars($event['nom_evenement']); ?></h2>
+                        <p><?php echo ucfirst(htmlspecialchars($event['type_evenement'] ?? 'autre')); ?></p>
                         <?php echo ucwords(htmlspecialchars($event['lieu_evenement'])); ?>
                     </div>
                     <h4 class="<?php echo $item['eventClass']; ?>">
@@ -50,6 +50,7 @@
             </div>
             <?php endforeach; ?>
         </div>
+        <a class="show-more" href="index.php?page=events&show=<?php echo (int) $showMore; ?>">Voir plus loin dans le passe</a>
     </section>
 
     <?php require_once 'app/views/footer.php'; ?>

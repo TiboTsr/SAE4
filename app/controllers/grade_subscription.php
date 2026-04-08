@@ -22,7 +22,6 @@ $id_grade = intval($_GET['id']);
 
 // On récupère les informations du grade
 $grade = getGradeById($id_grade);
-
 // Vérifie que le grade existe
 if (empty($grade)) {
     $_SESSION['message'] = "Le grade sélectionné n'existe pas.";
@@ -33,7 +32,6 @@ if (empty($grade)) {
 
 $grade = $grade[0];
 $prix = (float) $grade['prix_grade'];
-
 // Vérifie si l'utilisateur possède déjà un grade
 $currentGrade = getAdhesion($userid);
 
@@ -42,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
         $mode_paiement = $_POST['mode_paiement'];
         $allowedPaymentModes = ['carte_credit', 'paypal', 'Especes', 'especes'];
-
         if (!in_array($mode_paiement, $allowedPaymentModes, true)) {
             $_SESSION['message'] = "Mode de paiement invalide.";
             $_SESSION['message_type'] = "error";

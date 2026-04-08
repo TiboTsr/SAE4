@@ -3,6 +3,112 @@ main{
     padding: 20px;
 }
 
+/* CREATE ORDER */
+.create-order {
+    background: #f7fff6;
+    border: 1px solid #d7ead7;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.create-order-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.create-order h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.create-order-header button {
+    border: 1px solid #93c893;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2f7d2d;
+    padding: 7px 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.create-order-header button:hover {
+    background: #eef9ed;
+}
+
+.create-order form {
+    margin-top: 14px;
+}
+
+.create-order-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 12px 14px;
+}
+
+.create-order label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.create-order select,
+.create-order input[type="number"] {
+    border: 1px solid #c6d8c5;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+    background: #ffffff;
+}
+
+.checkbox-inline {
+    margin-top: 12px;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px !important;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.create-order-actions {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.create-order-actions button {
+    border: none;
+    border-radius: 8px;
+    background: #63ca60;
+    color: #ffffff;
+    padding: 10px 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.create-order-actions button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#createOrderMessage {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+#createOrderMessage.is-error {
+    color: #c53b3b;
+}
+
+#createOrderMessage.is-success {
+    color: #2f7d2d;
+}
+
 /* TABLE */
 #table{
     width: 100%;
@@ -88,4 +194,19 @@ main{
 #table .status-toggle-btn.is-done {
     background-color: #63ca60;
     color: #ffffff;
+}
+
+@media (max-width: 900px) {
+    .create-order-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .filters > div {
+        width: 100%;
+    }
 }

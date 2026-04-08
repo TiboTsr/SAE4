@@ -20,7 +20,7 @@
 
     <h1>INSCRIPTION</h1>
 
-    <?php if (isset($_SESSION['message'])): ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
@@ -58,9 +58,9 @@
             <h3>Total : <?= number_format($price, 2, ',', ' ') ?> €</h3>
             <h3>Total après réductions : <?= number_format($price * $user_reduction, 2, ',', ' ') ?> €</h3>
             <h3>
-                <?php if ($remainingPlaces === -1): ?>
+                <?php if ($remainingPlaces === -1) : ?>
                     Places restantes : Illimité
-                <?php else: ?>
+                <?php else : ?>
                     Places restantes : <?php echo max(0, $remainingPlaces); ?>
                 <?php endif; ?>
             </h3>

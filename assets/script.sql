@@ -68,7 +68,7 @@ CREATE TABLE COMMANDE(
                          paiement_commande VARCHAR(50) NOT NULL,
                          date_commande DATETIME NOT NULL,
                          qte_commande INT NOT NULL,
-                         id_membre INT NOT NULL,
+                         id_membre INT NULL,
                          id_article INT NOT NULL,
                          PRIMARY KEY(id_commande),
                          FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre),
@@ -386,7 +386,7 @@ SELECT
     COMMANDE.prix_commande AS montant
 FROM COMMANDE
 INNER JOIN ARTICLE ON ARTICLE.id_article = COMMANDE.id_article
-INNER JOIN MEMBRE ON MEMBRE.id_membre = COMMANDE.id_membre
+LEFT JOIN MEMBRE ON MEMBRE.id_membre = COMMANDE.id_membre
 
 UNION ALL -- Permet de joindre le resultat de deux reqetes SELECT
 

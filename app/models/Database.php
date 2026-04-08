@@ -42,8 +42,7 @@ class Database
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
 
@@ -60,8 +59,7 @@ class Database
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
         $stmt->execute();
@@ -79,4 +77,3 @@ class Database
         return htmlspecialchars((string) $input, ENT_QUOTES, 'UTF-8');
     }
 }
-?>
