@@ -43,10 +43,10 @@
         <div class="faq-list">
             <div class="faq-item">
                 <h3>Comment devenir membre de l'ADIIL ?</h3>
-                <p>Consultez la page A propos pour les conditions d'adhesion et le fonctionnement du bureau.</p>
+                <p>Consultez la page "A propos" pour les conditions d'adhesion et le fonctionnement du bureau.</p>
             </div>
             <div class="faq-item">
-                <h3>Ou voir les actualites ?</h3>
+                <h3>Où voir les actualités ?</h3>
                 <p>La page actualités centralise les dernieres publications et evenements.</p>
             </div>
             <div class="faq-item">
