@@ -52,6 +52,16 @@
         <!-- MAIN PROPERTIES -->
         <div id="main_content" style="display: none;">
 
+            <div class="propertie">
+                <div>
+                    <p>Date</p>
+                    <p>Date de la réunion</p>
+                </div>
+                <div>
+                    <input id="prop_date" type="date">
+                </div>
+            </div>
+
             <div class="reunion-btns">
                 <button class="btn-transparent btn-blue" id="download_btn"><img src="../ressources/download.svg" alt="Bouton de téléchargement">Télécharger</button>
                 <button class="btn-transparent btn-red" id="delete_btn"><img src="../ressources/delete.svg" alt="Bouton de suppression">Supprimer</button>
@@ -59,13 +69,17 @@
 
             <iframe id="pdf_preview" frameborder="0"></iframe>
 
+            <div class="saves-buttons">
+                <button class="btn-transparent btn-blue" id="save_btn"><img src="../ressources/save.svg" alt="Bouton de sauvegarde">Sauvegarder</button>
+            </div>
+
         </div>
 
     </main>
 
     <!-- SCRIPTS -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="module" src="../scripts/reunions.js"></script>
+    <script type="module" src="../scripts/reunions.js?v=3"></script>
     
 </body>
 </html>

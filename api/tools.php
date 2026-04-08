@@ -1,6 +1,6 @@
 <?php
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 
 class tools
 {
@@ -9,6 +9,19 @@ class tools
         'image/jpeg' => 'jpg',
         'image/png' => 'png',
         'image/webp' => 'webp',
+    ];
+    private const PERMISSION_TO_ROLE_COLUMN = [
+        'p_log' => 'p_log_role',
+        'p_boutique' => 'p_boutique_role',
+        'p_reunion' => 'p_reunion_role',
+        'p_utilisateur' => 'p_utilisateur_role',
+        'p_grade' => 'p_grade_role',
+        'p_role' => 'p_roles_role',
+        'p_actualite' => 'p_actualite_role',
+        'p_evenement' => 'p_evenements_role',
+        'p_comptabilite' => 'p_comptabilite_role',
+        'p_achat' => 'p_achats_role',
+        'p_moderation' => 'p_moderation_role',
     ];
 
     private static function normalizeUploadedExtension(string $fileName): ?string
@@ -141,13 +154,90 @@ class tools
         }
 
         $db = new \DB();
-        $perms = $db->select("SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = ?", 'i', [$_SESSION['userid']]);
+        try {
+            // Chemin nominal: vue LISTE_PERMISSIONS.
+            $perms = $db->select("SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = ?", 'i', [$_SESSION['userid']]);
 
-        if (count($perms) == 0 || !isset($perms[0][$permission]) || $perms[0][$permission] == 0) {
+            if (count($perms) > 0 && isset($perms[0][$permission]) && (int)$perms[0][$permission] === 1) {
+                return true;
+            }
+        } catch (\Throwable $error) {
+            // Fallback sur les tables ROLE/ASSIGNATION si la vue n'existe pas en prod.
+        }
+
+        if (!isset(self::PERMISSION_TO_ROLE_COLUMN[$permission])) {
             return false;
         }
 
-        return true;
+        $roleColumn = self::PERMISSION_TO_ROLE_COLUMN[$permission];
+
+        try {
+            $fallback = $db->select(
+                "SELECT MAX(CAST(COALESCE(R.$roleColumn, 0) AS UNSIGNED)) AS has_permission
+                 FROM ASSIGNATION A
+                 LEFT JOIN ROLE R ON R.id_role = A.id_role
+                 WHERE A.id_membre = ?",
+                'i',
+                [$_SESSION['userid']]
+            );
+
+            return isset($fallback[0]['has_permission']) && (int)$fallback[0]['has_permission'] === 1;
+        } catch (\Throwable $error) {
+            return false;
+        }
+    }
+
+    public static function isAdmin(): bool
+    {
+        if (!isset($_SESSION['userid'])) {
+            return false;
+        }
+
+        $db = new \DB();
+        try {
+            $result = $db->select(
+                "SELECT 1
+                 FROM ASSIGNATION
+                 WHERE id_membre = ?
+                 LIMIT 1",
+                'i',
+                [$_SESSION['userid']]
+            );
+
+            $isAdmin = count($result) > 0;
+            if ($isAdmin) {
+                $_SESSION['isAdmin'] = true;
+                return true;
+            }
+        } catch (\Throwable $error) {
+            // Fallback on LISTE_PERMISSIONS below.
+        }
+
+        try {
+            $permissions = $db->select(
+                "SELECT p_log, p_boutique, p_reunion, p_utilisateur, p_grade, p_role, p_actualite, p_evenement, p_comptabilite, p_achat, p_moderation
+                 FROM LISTE_PERMISSIONS
+                 WHERE id_membre = ?
+                 LIMIT 1",
+                'i',
+                [$_SESSION['userid']]
+            );
+
+            if (count($permissions) > 0) {
+                $row = $permissions[0];
+                foreach (self::PERMISSION_TO_ROLE_COLUMN as $permissionKey => $_unusedRoleColumn) {
+                    if (isset($row[$permissionKey]) && (int)$row[$permissionKey] === 1) {
+                        $_SESSION['isAdmin'] = true;
+                        return true;
+                    }
+                }
+            }
+        } catch (\Throwable $error) {
+            // No fallback left.
+        }
+
+        $_SESSION['isAdmin'] = false;
+        return false;
     }
 
     public static function checkPermission($permission): void

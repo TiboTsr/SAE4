@@ -234,6 +234,9 @@ function resolveAdminEventImage(storedValue) {
         return `${window.location.protocol}${value}`;
     }
 
-    const normalized = value.replace(/^.*?api\/files\//i, '').replace(/^\/+/, '');
-    return new URL(`../../api/files/${normalized}`, import.meta.url).href;
+    const normalized = value
+        .replace(/^.*?api\/files\//i, '')
+        .replace(/^.*?files\//i, '')
+        .replace(/^\/+/, '');
+    return new URL(`../../api/file.php?name=${encodeURIComponent(normalized)}`, import.meta.url).href;
 }

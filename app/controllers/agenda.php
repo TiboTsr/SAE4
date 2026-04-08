@@ -3,6 +3,7 @@
 require_once 'app/models/reunionModel.php';
 require_once 'app/models/agendaModel.php';
 require_once 'app/models/eventsModel.php';
+require_once 'app/models/files_save.php';
 
 // Récupérer toutes les réunions pour les afficher dans le calendrier
 $reunions = getAllReunions();
@@ -51,10 +52,7 @@ $calendarEvents = [];
 // Réunions locales
 foreach ($reunions as $reunion) {
     $fichier = $reunion['fichier_reunion'] ?? '';
-
-    if (!empty($fichier) && !preg_match('#^https?://#', $fichier)) {
-        $fichier = 'http://files.bdeinfo.fr/' . $fichier;
-    }
+    $fichier = resolveStoredFileSrc($fichier, '');
 
     $calendarEvents[] = [
         'title' => 'Réunion ADIIL',

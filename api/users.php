@@ -7,7 +7,7 @@ require_once 'models/Member.php';
 require_once 'models/File.php';
 require_once 'filter.php';
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 
 ini_set('display_errors', 0);
@@ -28,7 +28,11 @@ switch ($methode) {
         get_users();
         break;
     case 'POST':                     # CREATE
-        create_user();
+        if (isset($_GET['id'])) {
+            update_image();
+        } else {
+            create_user();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {

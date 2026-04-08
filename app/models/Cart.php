@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../../core/DB.php';
 
 class Cart {
 
@@ -15,7 +15,7 @@ class Cart {
             $_SESSION['cart']=array();
         }
 
-        $this->db = new Database();
+        $this->db = new DB();
 
         if(isset($_GET['del'])){
             $this->del($_GET['del']);

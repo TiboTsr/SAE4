@@ -6,7 +6,7 @@ use model\Role;
 
 require_once 'filter.php';
 require_once 'models/News.php';
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 require_once 'models/File.php';
 
@@ -26,7 +26,11 @@ switch ($methode) {
         get_news();
         break;
     case 'POST':                     # CREATE
-        create_news();
+        if (isset($_GET['id'])) {
+            update_image();
+        } else {
+            create_news();
+        }
         break;
     case 'PUT':                     # UPDATE (données)
         if (tools::methodAccepted('application/json')) {

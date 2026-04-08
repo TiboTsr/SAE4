@@ -1,13 +1,13 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 
 function getGrades() {
-    $db = new Database();
+    $db = new DB();
     return $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix_grade");
 }
 
 function userOwnsGrade($userId, $gradeId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT * FROM GRADE 
          INNER JOIN ADHESION ON GRADE.id_grade = ADHESION.id_grade 
@@ -21,7 +21,7 @@ function userOwnsGrade($userId, $gradeId) {
 
 
 function getGradeById($id_grade) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
     "SELECT * FROM GRADE WHERE id_grade = ?",
     "i",
@@ -31,7 +31,7 @@ function getGradeById($id_grade) {
 
 
 function getAdhesion($userid) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
     "SELECT * FROM ADHESION WHERE id_membre = ?",
     "i",
@@ -41,7 +41,7 @@ function getAdhesion($userid) {
 
 
 function deleteAdhesion($userid) {
-    $db = new Database();
+    $db = new DB();
     return $db->query(
     "DELETE FROM ADHESION WHERE id_membre = ?",
     "i",
@@ -50,7 +50,7 @@ function deleteAdhesion($userid) {
 }
 
 function insertAdhesion($userid, $id_grade, $prix, $mode_paiement) {
-    $db = new Database();
+    $db = new DB();
     return $db->query(
     "INSERT INTO ADHESION (id_membre, id_grade, prix_adhesion, paiement_adhesion, date_adhesion) VALUES (?, ?, ?, ?, NOW())",
     "iiss",

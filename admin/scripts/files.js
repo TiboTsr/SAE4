@@ -65,8 +65,17 @@ export async function openFileDialog(accept = 'image/*') {
  * @returns {string} The URL of the file.
  */
 export function getFileBucketUrl(filename) {
+    const externalUrl = normalizeExternalUrl(filename);
+    if (externalUrl) {
+        return externalUrl;
+    }
+
     const normalizedFileName = normalizeStoredFilename(filename);
-    return new URL(`../../api/files/${normalizedFileName}`, import.meta.url).href;
+    if (!normalizedFileName || normalizedFileName === 'N/A') {
+        return '';
+    }
+
+    return new URL(`../../api/file.php?name=${encodeURIComponent(normalizedFileName)}`, import.meta.url).href;
 }
 
 function normalizeStoredFilename(filename) {
@@ -84,8 +93,9 @@ function normalizeStoredFilename(filename) {
         return '';
     }
 
-    // Remove any leading path part up to and including api/files/.
+    // Remove any leading path part up to and including api/files/ or files/.
     normalized = normalized.replace(/^.*?api\/files\//i, '');
+    normalized = normalized.replace(/^.*?files\//i, '');
 
     return normalized.replace(/^\/+/, '');
 }

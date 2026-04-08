@@ -3,7 +3,7 @@ session_start();
 use model\File;
 use model\Item;
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Item.php';
@@ -21,7 +21,11 @@ switch ($methode) {
         get_items();
         break;
     case 'POST':                     # CREATE
+        if (isset($_GET['id'])) {
+            update_image();
+        } else {
             create_item();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {

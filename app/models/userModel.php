@@ -1,8 +1,8 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 
 function getUserInfo() {
-    $db = new Database();
+    $db = new DB();
     return $db->select("SELECT pp_membre, xp_membre, prenom_membre, nom_membre, email_membre, tp_membre, discord_token_membre, nom_grade, image_grade FROM MEMBRE LEFT JOIN ADHESION ON MEMBRE.id_membre = ADHESION.id_membre LEFT JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade WHERE MEMBRE.id_membre = ?;",
     "i",
     [$_SESSION['userid']]
@@ -10,14 +10,14 @@ function getUserInfo() {
 }
 
 function getPodium() {
-    $db = new Database();
+    $db = new DB();
     return $db->select("SELECT prenom_membre, xp_membre, pp_membre FROM MEMBRE ORDER BY xp_membre DESC LIMIT 3;");
 }
 
 
 
 function getUserInfoByMail($mail) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT id_membre FROM MEMBRE WHERE email_membre = ?",
         "s",
@@ -26,7 +26,7 @@ function getUserInfoByMail($mail) {
 }
 
 function insertUser($lname,$fname,$mail,$password) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "CALL creationCompte ( ? , ? , ? , ? , ? );",
         "sssss",
@@ -36,7 +36,7 @@ function insertUser($lname,$fname,$mail,$password) {
 
 
 function updateUserPp($fileName) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "UPDATE MEMBRE SET pp_membre = ? WHERE id_membre = ?",
         "si",
@@ -45,7 +45,7 @@ function updateUserPp($fileName) {
 }
 
 function getMinimalUserInfo() {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT prenom_membre, nom_membre, email_membre, tp_membre FROM MEMBRE WHERE id_membre = ?",
         "i",
@@ -55,7 +55,7 @@ function getMinimalUserInfo() {
 
 
 function isEmail($mail) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT id_membre FROM MEMBRE WHERE email_membre = ? AND id_membre != ?",
         "si",
@@ -64,7 +64,7 @@ function isEmail($mail) {
 }
 
 function updateUser($name, $lastName, $mail, $tp) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "UPDATE MEMBRE SET prenom_membre = ?, nom_membre = ?, email_membre = ?, tp_membre = ? WHERE id_membre = ?",
         "ssssi",
@@ -73,7 +73,7 @@ function updateUser($name, $lastName, $mail, $tp) {
 }
 
 function getPassword() {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT password_membre FROM MEMBRE WHERE id_membre = ?",
         "i",
@@ -82,7 +82,7 @@ function getPassword() {
 }
 
 function updatePassword($hashedPassword) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "UPDATE MEMBRE SET password_membre = ? WHERE id_membre = ?",
         "si",
@@ -91,7 +91,7 @@ function updatePassword($hashedPassword) {
 }
 
 function getLogin($mail) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT id_membre, email_membre, password_membre FROM MEMBRE WHERE email_membre = ?",
         "s",
@@ -100,7 +100,7 @@ function getLogin($mail) {
 }
 
 function isAdmin($id) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT 1 FROM ASSIGNATION WHERE id_membre = ? LIMIT 1;",
         "i",
@@ -109,7 +109,7 @@ function isAdmin($id) {
 }
 
 function deleteUser() {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "CALL suppressionCompte ( ? );",
         "i",
@@ -118,7 +118,7 @@ function deleteUser() {
 }
 
 function getHistoriqueAchats($userId, $viewAll = false) {
-    $db = new Database();
+    $db = new DB();
     $sql = "SELECT nom_article AS element, qte_commande AS quantite, prix_commande AS montant, paiement_commande AS mode_paiement, date_commande AS date_transaction,
             CASE WHEN statut_commande = 1 THEN 'Récupéré' ELSE 'Non récupéré' END AS statut
             FROM COMMANDE INNER JOIN ARTICLE ON ARTICLE.id_article = COMMANDE.id_article

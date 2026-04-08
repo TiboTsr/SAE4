@@ -1,5 +1,5 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 
 function eventColumnExists(string $columnName): bool {
     static $cache = [];
@@ -8,7 +8,7 @@ function eventColumnExists(string $columnName): bool {
         return $cache[$columnName];
     }
 
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT 1
          FROM INFORMATION_SCHEMA.COLUMNS
@@ -32,7 +32,7 @@ function eventTypeSelectExpr(): string
 }
 
 function getEventsToDisplay($sql_date) {
-    $db = new Database();
+    $db = new DB();
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect} FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC LIMIT 2;",
@@ -43,7 +43,7 @@ function getEventsToDisplay($sql_date) {
 
 
 function getAllEventsToDisplay($sql_date) {
-    $db = new Database();
+    $db = new DB();
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select("SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect} FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC;",
@@ -67,7 +67,7 @@ function getAllEventsForCalendar() {
 
 function getEventsByDateDesc(int $show): array
 {
-    $db = new Database();
+    $db = new DB();
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
@@ -84,7 +84,7 @@ function getEventsByDateDesc(int $show): array
 
 
 function getPassedEventsToDisplay($sql_date, $show) {
-    $db = new Database();
+    $db = new DB();
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
@@ -96,7 +96,7 @@ function getPassedEventsToDisplay($sql_date, $show) {
 }
 
 function isPlaceAvailable($eventId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT
             CASE
@@ -117,7 +117,7 @@ function isPlaceAvailable($eventId) {
 }
 
 function isUnlimitedEvent($eventId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT places_evenement = -1 AS isUnlimited
          FROM EVENEMENT
@@ -130,7 +130,7 @@ function isUnlimitedEvent($eventId) {
 }
 
 function isUserSubscribed($userId, $eventId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT MEMBRE.id_membre 
          FROM MEMBRE 
@@ -143,7 +143,7 @@ function isUserSubscribed($userId, $eventId) {
 }
 
 function getTitle($eventid) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
     "SELECT `nom_evenement` FROM EVENEMENT WHERE id_evenement = ? AND deleted = false",
     "i",
@@ -154,7 +154,7 @@ function getTitle($eventid) {
 
 
 function getEvent($eventid) {
-    $db = new Database();
+    $db = new DB();
     $imageSelect = eventColumnExists('image_evenement') ? "`image_evenement`" : "NULL AS `image_evenement`";
     $descriptionSelect = eventColumnExists('description_evenement')
         ? "COALESCE(`description_evenement`, '') AS `description_evenement`"
@@ -171,7 +171,7 @@ function getEvent($eventid) {
 }
 
 function getRemainingPlaces(int $eventId): int {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT
             CASE
@@ -193,7 +193,7 @@ function getRemainingPlaces(int $eventId): int {
 
 
 function getInscription($id, $userid) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT * FROM INSCRIPTION WHERE id_evenement = ? AND id_membre = ?;",
         "ii",
@@ -203,7 +203,7 @@ function getInscription($id, $userid) {
 
 
 function insertSubscription($userid, $eventid, $price, $mode_paiement) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "INSERT INTO `INSCRIPTION` (`id_membre`, `id_evenement`, `date_inscription`, `paiement_inscription`, `prix_inscription`)
         VALUES (?, ?, NOW(), ?, ?);",
@@ -213,7 +213,7 @@ function insertSubscription($userid, $eventid, $price, $mode_paiement) {
 }
 
 function deleteSubscription($userid, $eventid) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "DELETE FROM INSCRIPTION WHERE id_membre = ? AND id_evenement = ?;",
         "ii",
@@ -222,7 +222,7 @@ function deleteSubscription($userid, $eventid) {
 }
 
 function selectXpEvent($eventid) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ? AND deleted = false", 
         "i", 
@@ -233,7 +233,7 @@ function selectXpEvent($eventid) {
 
 
 function updateXp($xp, $userid) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
         "ii",
@@ -242,7 +242,7 @@ function updateXp($xp, $userid) {
 }
 
 function removeXp($xp, $userid) {
-    $db = new Database();
+    $db = new DB();
     $db->query(
         "UPDATE MEMBRE
          SET MEMBRE.xp_membre = GREATEST(0, MEMBRE.xp_membre - ?)
@@ -253,7 +253,7 @@ function removeXp($xp, $userid) {
 }
 
 function getEventSubscriptionInfo($eventId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT nom_evenement, xp_evenement, prix_evenement, reductions_evenement
          FROM EVENEMENT
@@ -267,7 +267,7 @@ function getEventSubscriptionInfo($eventId) {
 
 function getSubscribedEventsByUser(int $userId): array
 {
-    $db = new Database();
+    $db = new DB();
 
     return $db->select(
         "SELECT 
@@ -290,7 +290,7 @@ function getSubscribedEventsByUser(int $userId): array
 }
 
 function getUserReductionRate($userId) {
-    $db = new Database();
+    $db = new DB();
     $result = $db->select(
         "SELECT reduction_grade
          FROM ADHESION
@@ -311,7 +311,7 @@ function getUserReductionRate($userId) {
 
 function createEventSubscription($userId, $eventId, $price, $mode_paiement) {
     if (isUnlimitedEvent($eventId)) {
-        $db = new Database();
+        $db = new DB();
         try {
             $db->query("UPDATE EVENEMENT SET places_evenement = 2147483647 WHERE id_evenement = ?", "i", [$eventId]);
             insertSubscription($userId, $eventId, $price, $mode_paiement);

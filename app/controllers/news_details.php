@@ -1,6 +1,7 @@
 <?php
 
 require_once 'app/models/newsModel.php';
+require_once 'app/models/files_save.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $eventid = $_GET['id'];

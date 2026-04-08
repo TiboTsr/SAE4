@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 session_start();
 use model\Event;
 use model\File;
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Event.php';
@@ -22,9 +22,13 @@ switch ($methode) {
         get_events();
         break;
     case 'POST':                     # CREATE
-        create_event();
+        if (isset($_GET['id'])) {
+            update_image();
+        } else {
+            create_event();
+        }
         break;
-    case 'PUT':                      # UPDATE (donnÃ©es seulement)
+    case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {
             update_event();
         }
@@ -62,13 +66,13 @@ function get_events(): void
 function create_event(): void
 {
     $event = Event::create(
-        "Nouvel Ã©vÃ©nement",
-        "Description de l'Ã©vÃ©nement",
+        "Nouvel événement",
+        "Description de l'événement",
         0,
         -1,
         false,
         0,
-        "Lieu de l'Ã©vÃ©nement",
+        "Lieu de l'événement",
         date('Y-m-d'),
         'autre'
     );

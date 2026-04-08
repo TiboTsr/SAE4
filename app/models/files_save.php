@@ -1,5 +1,6 @@
 <?php
 const UPLOAD_DIRECTORY = 'api/files/';
+const LEGACY_UPLOAD_DIRECTORY = 'files/';
 const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx', 'mp4', 'webm', 'ogg', 'mov'];
 const ALLOWED_IMAGE_MIME_TYPES = [
     'image/jpeg' => 'jpg',
@@ -52,6 +53,11 @@ function getUploadPath(string $fileName): string
 
 function resolveStoredImageSrc(?string $storedValue, string $defaultSrc, string $basePath = UPLOAD_DIRECTORY): string
 {
+    return resolveStoredFileSrc($storedValue, $defaultSrc);
+}
+
+function resolveStoredFileSrc(?string $storedValue, string $defaultSrc): string
+{
     $storedValue = trim((string) $storedValue);
 
     if ($storedValue === '') {
@@ -62,16 +68,29 @@ function resolveStoredImageSrc(?string $storedValue, string $defaultSrc, string 
         return $storedValue;
     }
 
-    if (preg_match('~^(?:https?:)?//~i', $storedValue) === 1 || str_starts_with($storedValue, 'data:')) {
-        $storedValue = basename($storedValue);
+    if (preg_match('~^https?://~i', $storedValue) === 1 || str_starts_with($storedValue, '//') || str_starts_with($storedValue, 'data:')) {
+        return $storedValue;
     }
 
-    $storedValue = preg_replace('~^api/files/~i', '', $storedValue);
-    $storedValue = ltrim($storedValue, '/');
+    $normalized = str_replace('\\', '/', $storedValue);
+    $normalized = preg_replace('~^.*?api/files/~i', '', $normalized);
+    $normalized = preg_replace('~^.*?files/~i', '', $normalized);
+    $normalized = ltrim((string) $normalized, '/');
 
-    $fileSystemPath = dirname(__DIR__, 2) . '/' . $basePath . $storedValue;
-    if (is_file($fileSystemPath)) {
-        return $basePath . $storedValue;
+    if ($normalized === '' || str_contains($normalized, '..') || str_contains($normalized, '/')) {
+        return $defaultSrc;
+    }
+
+    $rootPath = dirname(__DIR__, 2);
+    $candidates = [
+        $rootPath . '/' . UPLOAD_DIRECTORY . $normalized,
+        $rootPath . '/' . LEGACY_UPLOAD_DIRECTORY . $normalized,
+    ];
+
+    foreach ($candidates as $candidate) {
+        if (is_file($candidate)) {
+            return 'api/file.php?name=' . rawurlencode($normalized);
+        }
     }
 
     return $defaultSrc;

@@ -3,7 +3,7 @@ session_start();
 use model\File;
 use model\Grade;
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Grade.php';
@@ -23,7 +23,11 @@ switch ($methode) {
         get_grades();
         break;
     case 'POST':                     # CREATE
-        create_grade();
+        if (isset($_GET['id'])) {
+            update_image();
+        } else {
+            create_grade();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {

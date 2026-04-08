@@ -8,7 +8,7 @@ require_once 'filter.php';
 require_once 'models/File.php';
 require_once 'models/Meeting.php';
 require_once 'models/Member.php';
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 
 ini_set('display_errors', 0);
@@ -25,6 +25,11 @@ switch ($methode) {
         break;
     case 'POST':                     # CREATE
             create_meeting();
+        break;
+    case 'PUT':                      # UPDATE (date)
+        if (tools::methodAccepted('application/json')) {
+            update_meeting();
+        }
         break;
     case 'DELETE':                   # DELETE
         delete_meeting();
@@ -102,5 +107,33 @@ function delete_meeting() : void
             echo json_encode(["message" => "Meeting file not found"]);
         }
     }
+}
+
+function update_meeting() : void
+{
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(["message" => "Missing id"]);
+        return;
+    }
+
+    $meeting = Meeting::getInstance(filter::int($_GET['id']));
+
+    if (!$meeting) {
+        http_response_code(404);
+        echo json_encode(["message" => "Meeting not found"]);
+        return;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($data) || !isset($data['date'])) {
+        http_response_code(400);
+        echo json_encode(["message" => "Missing date"]);
+        return;
+    }
+
+    $meeting->updateDate(filter::date($data['date']));
+    http_response_code(200);
+    echo json_encode($meeting);
 }
 

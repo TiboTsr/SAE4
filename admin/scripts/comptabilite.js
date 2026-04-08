@@ -70,7 +70,13 @@ function addAccountingElement(data){
 
     // Add download event
     download_button.onclick = () => {
-        window.open(getFileBucketUrl(data.url_comptabilite), '_blank');
+        const fileUrl = getFileBucketUrl(data.url_comptabilite);
+        if (!fileUrl) {
+            toast("Impossible de trouver l'URL du fichier.", true);
+            return;
+        }
+
+        window.open(fileUrl, '_blank');
     }
 
     // Add delete event
@@ -108,8 +114,12 @@ function addUpdloadButton(){
     // Add event listener
     upload_button.onclick = async () => {
 
-        // Get file
-        const file = await openFileDialog("document/*");
+        let file = null;
+        try {
+            file = await openFileDialog(".pdf,.xls,.xlsx");
+        } catch (error) {
+            return;
+        }
 
         // Ask name
         swal({
