@@ -12,9 +12,34 @@ main{
     margin-bottom: 20px;
 }
 
+.create-order-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
 .create-order h2 {
-    margin: 0 0 14px 0;
+    margin: 0;
     font-size: 1.1rem;
+}
+
+.create-order-header button {
+    border: 1px solid #93c893;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2f7d2d;
+    padding: 7px 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.create-order-header button:hover {
+    background: #eef9ed;
+}
+
+.create-order form {
+    margin-top: 14px;
 }
 
 .create-order-grid {
@@ -45,6 +70,8 @@ main{
     flex-direction: row !important;
     align-items: center;
     gap: 8px !important;
+    white-space: nowrap;
+    width: fit-content;
 }
 
 .create-order-actions {

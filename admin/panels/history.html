@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/general.css">
     <link rel="stylesheet" href="../styles/panels.css">
-    <link rel="stylesheet" href="../styles/historique.css?v=3">
+    <link rel="stylesheet" href="../styles/historique.css?v=4">
 </head>
 <body>
 
@@ -20,9 +20,14 @@
 
     <!-- MAIN -->
     <main>
-        <section class="create-order">
-            <h2>Créer une commande</h2>
-            <form id="createOrderForm">
+        <section class="create-order" id="createOrderSection">
+            <div class="create-order-header">
+                <h2>Créer une commande</h2>
+                <button type="button" id="toggleCreateOrder" aria-expanded="false" aria-controls="createOrderForm">
+                    Dérouler
+                </button>
+            </div>
+            <form id="createOrderForm" hidden>
                 <div class="create-order-grid">
                     <label>
                         Article
@@ -101,7 +106,7 @@
     
     <!-- SCRIPTS -->
     <script type="module" src="../scripts/toggle.js"></script>
-    <script type="module" src="../scripts/historique.js?v=3"></script>
+    <script type="module" src="../scripts/historique.js?v=4"></script>
 
 </body>
 </html>

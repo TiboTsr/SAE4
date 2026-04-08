@@ -9,6 +9,8 @@ const toggle_boutique = document.getElementById('toggle_boutique');
 const toggle_grades =  document.getElementById('toggle_grades');
 const toggle_events = document.getElementById('toggle_events');
 const userSearch = document.getElementById('userSearch');
+const createOrderSection = document.getElementById('createOrderSection');
+const toggleCreateOrder = document.getElementById('toggleCreateOrder');
 const createOrderForm = document.getElementById('createOrderForm');
 const orderArticle = document.getElementById('orderArticle');
 const orderQuantity = document.getElementById('orderQuantity');
@@ -164,6 +166,17 @@ function showCreateOrderMessage(message, isError = false) {
     createOrderMessage.classList.toggle('is-success', !isError);
 }
 
+function setCreateOrderFormVisibility(isOpen) {
+    if (!createOrderForm || !toggleCreateOrder || !createOrderSection) {
+        return;
+    }
+
+    createOrderForm.hidden = !isOpen;
+    createOrderSection.classList.toggle('is-open', isOpen);
+    toggleCreateOrder.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    toggleCreateOrder.textContent = isOpen ? 'Cacher' : 'Dérouler';
+}
+
 async function refreshHistory() {
     const data = await requestGET('/purchase.php');
     setHistoryData(data);
@@ -180,6 +193,14 @@ toggle_events.addEventListener('click', loadData);
 userSearch.addEventListener('input', loadData);
 
 if (createOrderForm) {
+    setCreateOrderFormVisibility(false);
+
+    if (toggleCreateOrder) {
+        toggleCreateOrder.addEventListener('click', () => {
+            setCreateOrderFormVisibility(createOrderForm.hidden);
+        });
+    }
+
     createOrderForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         createOrderButton.disabled = true;
