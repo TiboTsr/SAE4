@@ -75,7 +75,7 @@ export function getFileBucketUrl(filename) {
         return '';
     }
 
-    return new URL(`../../api/files/${normalizedFileName}`, import.meta.url).href;
+    return new URL(`../../api/file.php?name=${encodeURIComponent(normalizedFileName)}`, import.meta.url).href;
 }
 
 function normalizeStoredFilename(filename) {
@@ -93,8 +93,9 @@ function normalizeStoredFilename(filename) {
         return '';
     }
 
-    // Remove any leading path part up to and including api/files/.
+    // Remove any leading path part up to and including api/files/ or files/.
     normalized = normalized.replace(/^.*?api\/files\//i, '');
+    normalized = normalized.replace(/^.*?files\//i, '');
 
     return normalized.replace(/^\/+/, '');
 }

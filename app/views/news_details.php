@@ -24,7 +24,7 @@
         <?php if ($event['image_actualite'] == null) :?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'actualite">
         <?php else :?>
-            <img src="api/files/<?php echo $event['image_actualite']; ?>" alt="Image de l'actualite">
+            <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($event['image_actualite'], 'admin/ressources/default_images/event.jpg')); ?>" alt="Image de l'actualite">
         <?php endif?>
         <h1><?php echo strtoupper($event['titre_actualite']); ?></h1>
 
