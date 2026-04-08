@@ -49,12 +49,12 @@ class Event extends BaseModel implements JsonSerializable
                 {$imageSelect}, {$descriptionSelect}, {$typeSelect}, deleted";
     }
 
-    public function delete() : void
+    public function delete(): void
     {
         $this->DB->query("UPDATE EVENEMENT SET deleted=true WHERE id_evenement = ?", "i", [$this->id]);
     }
 
-    public function update(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type) : Event
+    public function update(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type): Event
     {
         $fields = ["nom_evenement = ?"];
         $types = "s";
@@ -108,7 +108,7 @@ class Event extends BaseModel implements JsonSerializable
         return $this;
     }
 
-    public function getImage() : File | null
+    public function getImage(): File | null
     {
         if (!self::hasColumn('image_evenement')) {
             return null;
@@ -120,7 +120,7 @@ class Event extends BaseModel implements JsonSerializable
         return File::getFile($imageName);
     }
 
-    public function updateImage(File $image) : Event
+    public function updateImage(File $image): Event
     {
         if (!self::hasColumn('image_evenement')) {
             return $this;
@@ -149,7 +149,7 @@ class Event extends BaseModel implements JsonSerializable
         return new Event($id);
     }
 
-    public static function create(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type) : Event
+    public static function create(string $nom, string $description, int $xp, int $places, bool $reductions, float $prix, string $lieu, string $date, string $type): Event
     {
         $DB = new \DB();
         $columns = ["nom_evenement"];
@@ -191,7 +191,7 @@ class Event extends BaseModel implements JsonSerializable
     }
 
 
-    public static function bulkFetch() : array
+    public static function bulkFetch(): array
     {
         $DB = new \DB();
         $sql = "SELECT " . self::selectClause() . " FROM EVENEMENT WHERE deleted=false";
@@ -201,10 +201,9 @@ class Event extends BaseModel implements JsonSerializable
     public function jsonSerialize(): array
     {
         return $this->DB->select("SELECT " . self::selectClause() . " FROM EVENEMENT WHERE id_evenement = ?", "i", [$this->id])[0];
-
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return json_encode($this);
     }

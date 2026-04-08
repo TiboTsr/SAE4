@@ -19,8 +19,8 @@
 <body>
     <?php
     require_once 'app/views/header.php';
-?>
-    <?php if (isset($_SESSION['message'])): ?>
+    ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
@@ -35,10 +35,10 @@
             <h2>
                 <?php echo date('d/m/Y', strtotime($event['date_evenement']));?>
             </h2>
-            <?php if($event_date < $current_date):?>
+            <?php if ($event_date < $current_date) :?>
                 <button class="subscription" id="passed_subscription">Passé</button>
-            <?php else:
-                if($isSubscribed):
+            <?php else :
+                if ($isSubscribed) :
                     echo '<button class="subscription" id="passed_subscription" type="button">Inscrit</button>';
                     ?>
                     <form class="subscription" action="index.php?page=event_subscription" method="post">
@@ -47,22 +47,22 @@
                         <button type="submit">Se desinscrire</button>
                     </form>
                     <?php
-                else:?>
-                    <?php if ($hasAvailablePlaces): ?>
-                        <?php if ((float) $event['prix_evenement'] <= 0): ?>
+                else :?>
+                    <?php if ($hasAvailablePlaces) : ?>
+                        <?php if ((float) $event['prix_evenement'] <= 0) : ?>
                             <form class="subscription" action="index.php?page=event_subscription" method="post">
                                 <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
                                 <input type="hidden" name="price" value="0">
                                 <input type="hidden" name="mode_paiement" value="gratuit">
                                 <button type="submit">Inscription</button>
                             </form>
-                        <?php else: ?>
+                        <?php else : ?>
                             <form class="subscription" action="index.php?page=event_subscription" method="post">
                                 <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
                                 <button type="submit">Inscription</button>
                             </form>
                         <?php endif; ?>
-                    <?php else: ?>
+                    <?php else : ?>
                         <button class="subscription" id="passed_subscription" type="button">Complet</button>
                     <?php endif; ?>
                 <?php endif;?>
@@ -85,15 +85,17 @@
             <li>
                 <div>
                     🪑<h3>
-                        <?php if ($remainingPlaces === -1): ?>
+                        <?php if ($remainingPlaces === -1) : ?>
                             Places restantes : Illimité
-                        <?php else: ?>
+                        <?php else : ?>
                             Places restantes : <?php echo max(0, $remainingPlaces); ?>
                         <?php endif; ?>
                     </h3>
                 </div>
             </li>
-            <?php if(boolval($event['reductions_evenement'])){echo "<li><div>💎<h3>-10% pour les membres Diamants</h3></div></li>";} ?>
+            <?php if (boolval($event['reductions_evenement'])) {
+                echo "<li><div>💎<h3>-10% pour les membres Diamants</h3></div></li>";
+            } ?>
         </ul>
 
         <p>
@@ -105,13 +107,12 @@
 
     <section class="gallery">
         <h2>GALLERIE</h2>
-        <?php if($isLoggedIn):?>
-
+        <?php if ($isLoggedIn) :?>
             <h3>Mes photos</h3>
             <div class="my-medias">
                 <?php
-                
-                foreach($mediasLogin as $media => $img):?>
+
+                foreach ($mediasLogin as $media => $img) :?>
                     <img src="api/files/<?php echo trim($img['url_media']);?>" alt="Image Personelle de l'événement">
                 <?php endforeach;?>
 
@@ -139,7 +140,7 @@
 
         <div class="general-medias">
 
-            <?php foreach($medias as $media => $img):?>
+            <?php foreach ($medias as $media => $img) :?>
                 <img src="api/files/<?php echo trim($img['url_media']);?>" alt="Image de l'événement">
             <?php endforeach;?>
 
@@ -155,7 +156,7 @@
 
             <form action="index.php?page=event_details" method="GET" style="display: inline;">
                 <input type="hidden" name="id" value="<?php echo $eventid?>">
-                <?php if($show >= 20): ?>
+                <?php if ($show >= 20) : ?>
                 <input type="hidden" name="show" value="<?php echo $show - 10?>">
                 <?php endif;?>
                 <button type="submit">Voir Moins</button>

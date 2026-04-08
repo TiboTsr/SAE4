@@ -68,9 +68,9 @@ require_once "app/views/header.php" ;
         <?php foreach ($products as $product) : ?>
                 <div id="one-product">
                     <div>
-                        <?php if($product['image_article'] == null):?>
+                        <?php if ($product['image_article'] == null) :?>
                             <img src="admin/ressources/default_images/boutique.png" alt="Illustration d'un article avec image indisponible"/>
-                        <?php else:?>
+                        <?php else :?>
                             <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($product['image_article'], 'admin/ressources/default_images/boutique.png')); ?>" alt="Illustration de l'article" />
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
@@ -78,18 +78,18 @@ require_once "app/views/header.php" ;
                         </h3>
                         <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € </p>
                         <p><?= htmlspecialchars($product['xp_article']) ?> XP
-                            <?php if (!(int)$product['reduction_article']){ ?>
+                            <?php if (!(int)$product['reduction_article']) { ?>
                             <span>    * </span>
                             <?php } ?>
                         </p>
                     </div>
                     <div>
                         <p id="stock-status">
-                            <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0): ?>
+                            <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0) : ?>
                                 <a class="addCart" id="add-to-cart-button" href="app/models/cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
                                     Ajouter au panier
                                 </a>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <button id="out-of-stock">Épuisé</button>
                             <?php endif; ?>
                         </p>

@@ -24,7 +24,7 @@
 
 <h1>MA COMMANDE</h1>
 
-<?php if (!empty($message)): ?>
+<?php if (!empty($message)) : ?>
     <?php $messageStyle = $messageType === 'error' ? 'error-message' : 'success-message'; ?>
     <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($message); ?></div>
 <?php endif; ?>
@@ -49,7 +49,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($cart_items as $product_id => $item): ?>
+                <?php foreach ($cart_items as $product_id => $item) : ?>
                     <tr>
                         <td><?php echo htmlspecialchars($item['nom_article']); ?></td>
                         <td><?php echo (int) $item['quantite']; ?></td>

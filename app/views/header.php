@@ -20,7 +20,7 @@
                 <a href="index.php?page=grade">Grades</a>
             </li>
             
-            <?php if ($isUserLoggedIn): ?>
+            <?php if ($isUserLoggedIn) : ?>
                 <li>
                     <a href="index.php?page=agenda">Agenda</a>
                 </li>
@@ -30,18 +30,18 @@
                 <a href="index.php?page=about">À propos</a>
             </li>
 
-            <?php if ($isUserLoggedIn): ?>
+            <?php if ($isUserLoggedIn) : ?>
                 <li>
                     <a href="index.php?page=account">Mon compte</a>
                 </li>
 
-                <?php if ($isAdmin): ?>
+                <?php if ($isAdmin) : ?>
                   <li>
                       <a id="header_admin" href="admin/admin.php">Panel Admin</a>
                   </li>
                 <?php endif; ?>
 
-            <?php else: ?>
+            <?php else : ?>
                 <li>
                     <a href="index.php?page=login">Se connecter</a>
                 </li>

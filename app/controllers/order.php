@@ -51,9 +51,9 @@ $products = getArticle($cart);
 
 $cart_items = [];
 foreach ($products as $product) {
-    if(
+    if (
         $product['stock_article'] > 0 && $_SESSION['cart'][$product['id_article']] > $product['stock_article']
-    ){
+    ) {
         $cart[$product['id_article']] = $product['stock_article'];
     }
     $cart_items[$product['id_article']] = [
@@ -65,7 +65,6 @@ foreach ($products as $product) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
         $allowedPaymentModes = ['carte_credit', 'paypal', 'Especes', 'especes'];
         $mode_paiement = $_POST['mode_paiement'];
@@ -87,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $_SESSION['cart'] = [];
-        
+
         $_SESSION['message'] = "Commande réalisée avec succès !";
         $_SESSION['message_type'] = "success";
 
@@ -99,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (!empty($_SESSION['userid'])) {
     // Vérifie l'adhésion de l'utilisateur
     $adherant = getReduction($userid);
-    
+
     //récupérer la réduction liée au grade
     if (!empty($adherant)) {
         $reductionGrade = floatval($adherant[0]["reduction_grade"] ?? 0);
@@ -113,7 +112,7 @@ if (!empty($_SESSION['userid'])) {
             } else {
                 $totalWithReduc += $product['prix_article'] * $cart[$product['id_article']];
             }
-        }       
+        }
     }
 }
 

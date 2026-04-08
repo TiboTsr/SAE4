@@ -82,7 +82,6 @@ require_once "app/views/header.php";
         <div id="paypal" class="mode_paiement_fields" style="display: none;">
             <form method="POST" action="index.php?page=grade_subscription&id=<?= $id_grade ?>">
                 <input type="hidden" name="mode_paiement" value="paypal">
-
                 <button type="button" id="paypal-button">Se connecter à PayPal</button><br><br>
                     
                 <button type="submit" id="finalise-order-button2">Valider l'adhésion</button>
@@ -97,7 +96,6 @@ require_once "app/views/header.php";
         </div>
     </div>
 </div>
-
 
 
 <script>
@@ -118,7 +116,6 @@ require_once "app/views/header.php";
         }
     });
 </script>
-
 <?php require_once "app/views/footer.php" ?>
 
 </body>

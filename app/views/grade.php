@@ -17,7 +17,7 @@
 
     <h1>Les grades</h1>
 
-    <?php if (isset($_SESSION['message'])): ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>">
             <?php echo htmlspecialchars($_SESSION['message']); ?>
@@ -25,15 +25,15 @@
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
 
-    <?php if (!empty($gradesDisplay)): ?>
+    <?php if (!empty($gradesDisplay)) : ?>
         <div id="product-list">
-            <?php foreach ($gradesDisplay as $item):
+            <?php foreach ($gradesDisplay as $item) :
                 $product = $item['data']; ?>
             <div id="one-product">
                 <div>
-                    <?php if (empty($product['image_grade'])): ?>
+                    <?php if (empty($product['image_grade'])) : ?>
                         <img src="admin/ressources/default_images/grade.webp" alt="Image du grade">
-                    <?php else: ?>
+                    <?php else : ?>
                         <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($product['image_grade'], 'admin/ressources/default_images/grade.webp')); ?>" alt="Image du grade">
                     <?php endif; ?>
 
@@ -41,7 +41,7 @@
                         <?php echo htmlspecialchars($product['nom_grade']); ?>
                     </h3>
 
-                    <?php if (!empty($product['description_grade'])): ?>
+                    <?php if (!empty($product['description_grade'])) : ?>
                         <p><?php echo htmlspecialchars($product['description_grade']); ?></p>
                     <?php endif; ?>
 
@@ -50,9 +50,9 @@
 
                 <div>
                     <p id="adhesion-status">
-                        <?php if ($item['ownsGrade']): ?>
+                        <?php if ($item['ownsGrade']) : ?>
                             <button id="detention">Vous détenez ce grade</button>
-                        <?php else: ?>
+                        <?php else : ?>
                             <a id="buy-button" href="index.php?page=grade_subscription&id=<?php echo htmlspecialchars($product['id_grade']); ?>">
                                 Acheter
                             </a>
@@ -62,7 +62,7 @@
             </div>
             <?php endforeach; ?>
         </div>
-    <?php else: ?>
+    <?php else : ?>
         <p>Aucun grade trouvé.</p>
     <?php endif; ?>
 

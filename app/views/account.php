@@ -17,7 +17,7 @@
 
     <h2>MON COMPTE</h2>
 
-    <?php if (isset($_SESSION['message'])): ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
@@ -30,9 +30,9 @@
             <div>
                 <form method="POST" enctype="multipart/form-data" id="pp-form">
                     <label id="cadre-pp" for="profilePictureInput">
-                        <?php if (empty($infoUser[0]['pp_membre'])): ?>
+                        <?php if (empty($infoUser[0]['pp_membre'])) : ?>
                             <img src="admin/ressources/default_images/user.jpg" alt="Photo de profil">
-                        <?php else: ?>
+                        <?php else : ?>
                             <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($infoUser[0]['pp_membre'], 'admin/ressources/default_images/user.jpg')); ?>" alt="Photo de profil">
                         <?php endif; ?>
                     </label>
@@ -51,13 +51,13 @@
 
             <!-- Grade -->
             <div id="cadre-grade">
-                <?php if (empty($infoUser[0]['nom_grade'])): ?>
+                <?php if (empty($infoUser[0]['nom_grade'])) : ?>
                     <p>Vous n'avez pas de grade</p>
-                <?php else: ?>
+                <?php else : ?>
                     <p><?php echo htmlspecialchars($infoUser[0]['nom_grade']); ?></p>
-                    <?php if (empty($infoUser[0]['image_grade'])): ?>
+                    <?php if (empty($infoUser[0]['image_grade'])) : ?>
                         <img src="admin/ressources/default_images/grade.webp" alt="Image du grade">
-                    <?php else: ?>
+                    <?php else : ?>
                         <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($infoUser[0]['image_grade'], 'admin/ressources/default_images/grade.webp')); ?>" alt="Image du grade">
                     <?php endif; ?>
                 <?php endif; ?>
@@ -76,13 +76,13 @@
                 <div>
                     <input type="email" id="mail" name="mail" placeholder="Adresse mail"
                         value="<?php echo htmlspecialchars($infoUser[0]['email_membre']); ?>" required>
-                    <?php if (!empty($infoUser[0]['tp_membre'])): ?>
+                    <?php if (!empty($infoUser[0]['tp_membre'])) : ?>
                     <select id="tp" name="tp">
                         <?php
                         $tpOptions = ['11A','11B','12C','12D','21A','21B','22C','22D','31A','31B','32C','32D'];
-                        foreach ($tpOptions as $tp):
+                        foreach ($tpOptions as $tp) :
                             $selected = $infoUser[0]['tp_membre'] === $tp ? 'selected' : '';
-                        ?>
+                            ?>
                             <option value="<?php echo $tp; ?>" <?php echo $selected; ?>>
                                 TP <?php echo substr($tp, 0, 2) . ' ' . substr($tp, 2); ?>
                             </option>
@@ -146,7 +146,7 @@
         <h2>MES ACHATS</h2>
         <div id="historique-achats">
 
-            <?php if (!empty($historiqueAchats)): ?>
+            <?php if (!empty($historiqueAchats)) : ?>
                 <table id="tab-historique-achats">
                     <thead>
                         <tr>
@@ -159,7 +159,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($historiqueAchats as $achat): ?>
+                        <?php foreach ($historiqueAchats as $achat) : ?>
                         <tr>
                             <td><?php echo htmlspecialchars($achat['date_transaction']); ?></td>
                             <td><?php echo htmlspecialchars($achat['element']); ?></td>
@@ -171,7 +171,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            <?php else: ?>
+            <?php else : ?>
                 <p>Vous n'avez effectué aucun achat pour le moment.</p>
             <?php endif; ?>
         </div>

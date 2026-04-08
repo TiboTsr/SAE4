@@ -47,15 +47,15 @@
         <section>
             <h2 class="titre_vertical">SCORES</h2>
             <div id="podium">
-                <?php foreach ([2, 1, 3] as $memberNumber):
+                <?php foreach ([2, 1, 3] as $memberNumber) :
                     $pod = $podium[$memberNumber - 1]; ?>
                 <div class="podium_unit">
                     <h3>#0<?php echo $memberNumber; ?></h3>
                     <h4><?php echo htmlspecialchars($pod['prenom_membre']); ?></h4>
                     <div>
-                        <?php if ($pod['pp_membre'] == null): ?>
+                        <?php if ($pod['pp_membre'] == null) : ?>
                             <img src="admin/ressources/default_images/user.jpg" alt="Profile Picture" class="profile_picture">
-                        <?php else: ?>
+                        <?php else : ?>
                             <img src="<?php echo htmlspecialchars(resolveStoredImageSrc($pod['pp_membre'], 'admin/ressources/default_images/user.jpg')); ?>" alt="Profile Picture" class="profile_picture">
                         <?php endif; ?>
                         <?php echo $pod['xp_membre']; ?> xp
@@ -68,32 +68,31 @@
         <section>
             <h2 class="titre_vertical">EVENT</h2>
                 <div class="events-display">
-                    <?php foreach ($eventsDisplay as $event): 
-    
+                    <?php foreach ($eventsDisplay as $event) :
                         if (!isset($event['data']) || $event['data'] === null) {
                             continue;
                         }
-                    
+
                         $data = $event['data'];
-                    
+
                         if (!isset($data["id_evenement"], $data["nom_evenement"], $data["lieu_evenement"], $data["date_evenement"])) {
                             continue;
                         }
-                    
+
                         $eventid = $data["id_evenement"];
                         $event_date_info = getdate(strtotime($data["date_evenement"]));
-                    ?>
+                        ?>
     
                     <div class="event" event-id="<?php echo $eventid;?>">
                         <div>
                             <h2><?php echo htmlspecialchars($data['nom_evenement']); ?></h2>
                             <p>
-                                <?php 
+                                <?php
                                 echo ucwords(
-                                    $event_date_info["mday"]." ".
-                                    $moisFr[$event_date_info['mon']].", ".
+                                    $event_date_info["mday"] . " " .
+                                    $moisFr[$event_date_info['mon']] . ", " .
                                     htmlspecialchars($data["lieu_evenement"])
-                                ); 
+                                );
                                 ?>
                             </p>
                         </div>
@@ -103,7 +102,7 @@
                         </h4>
                     </div>
                             
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                         
                 <h3><a href="index.php?page=events">Voir tous les événements</a></h3>
             </div>

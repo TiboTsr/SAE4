@@ -21,9 +21,9 @@
         require_once 'app/views/header.php';
     ?>
     <section class="event-details">
-        <?php if($event['image_actualite'] == null):?>
+        <?php if ($event['image_actualite'] == null) :?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'actualite">
-        <?php else:?>
+        <?php else :?>
             <img src="api/files/<?php echo $event['image_actualite']; ?>" alt="Image de l'actualite">
         <?php endif?>
         <h1><?php echo strtoupper($event['titre_actualite']); ?></h1>

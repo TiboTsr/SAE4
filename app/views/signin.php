@@ -13,7 +13,7 @@
 
 </head>
     <body>
-        <?php 
+        <?php
             require_once 'app/views/header.php';
         ?>
 
@@ -40,7 +40,7 @@
 
         <!-- Gestion de l'inscription -->
         <?php
-        if(!empty($selection_db)){
+        if (!empty($selection_db)) {
             echo 'Utilisateur déjà présent';
         }
         ?>

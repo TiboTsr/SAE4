@@ -17,17 +17,17 @@
     <?php require_once 'app/views/header.php'; ?>
 
     <h1>LES EVENEMENTS</h1>
-    <?php if (isset($_SESSION['message'])): ?>
+    <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
     <section>
         <div class="events-display">
-            <?php foreach ($eventsDisplay as $item):
+            <?php foreach ($eventsDisplay as $item) :
                 $event = $item['data'];
                 $eventDateInfo = $item['dateInfo'];
-            ?>
+                ?>
             <div class="event-box <?php echo $item['otherClasses']; ?>" id="<?php echo $item['closestId']; ?>">
                 <div class="timeline-event">
                     <h4><?php echo ucwords($joursFr[$eventDateInfo['wday']] . ' ' . $eventDateInfo['mday'] . ' ' . $moisFr[$eventDateInfo['mon']]); ?></h4>

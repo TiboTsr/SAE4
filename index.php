@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $isUserLoggedIn = isset($_SESSION['userid']);
@@ -14,4 +15,3 @@ if (isset($_GET['page'])) {
 }
 
 require 'app/controllers/home.php';
-

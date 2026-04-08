@@ -21,7 +21,7 @@
 <body class="body_margin">
 
 <!-- Importer les fichiers -->
-<?php 
+<?php
     require_once "app/views/header.php";
 ?>
 
