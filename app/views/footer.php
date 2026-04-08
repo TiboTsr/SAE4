@@ -1,4 +1,4 @@
-<!-- HEADER -->
+<!-- FOOTER -->
 <footer>
     <div>
         <a href="index.php?page=faq#instagram-posts">Voir les derniers posts Instagram</a>

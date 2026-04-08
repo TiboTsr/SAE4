@@ -54,12 +54,43 @@ header a:hover:not(#accueil){
 
 #accueil {
     height: 40px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 8px;
+    animation: header-home-hint 2.8s ease-in-out infinite;
 }
 
 #accueil img {
     margin: 0px;
     padding: 0px;
     height: 100%;
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+#accueil:hover img {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(119, 241, 190, 0.45));
+}
+
+#accueil:focus-visible {
+    outline: 2px solid rgb(119, 241, 190);
+    outline-offset: 3px;
+}
+
+@keyframes header-home-hint {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #accueil {
+        animation: none;
+    }
 }
 
 #header_admin{
