@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 
 ini_set('display_errors', 0);
 

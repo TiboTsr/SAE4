@@ -4,7 +4,7 @@ use model\Role;
 
 require_once 'filter.php';
 require_once 'models/Role.php';
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 
 ini_set('display_errors', 0);

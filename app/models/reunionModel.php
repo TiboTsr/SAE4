@@ -1,8 +1,8 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 
 function getAllReunions() {
-    $db = new Database();
+    $db = new DB();
     $query = "SELECT id_reunion, date_reunion, fichier_reunion, id_membre
               FROM reunion
               ORDER BY date_reunion DESC";
@@ -10,7 +10,7 @@ function getAllReunions() {
 }
 
 function getReunionById($id) {
-    $db = new Database();
+    $db = new DB();
     $query = "SELECT id_reunion, date_reunion, fichier_reunion, id_membre
               FROM reunion
               WHERE id_reunion = ?";

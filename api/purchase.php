@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once 'DB.php';
+require_once __DIR__ . '/../core/DB.php';
 require_once 'tools.php';
 require_once 'filter.php';
 

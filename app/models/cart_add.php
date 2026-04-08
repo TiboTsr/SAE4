@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/../../core/DB.php';
 require_once __DIR__ . '/Cart.php';
 
-$db = new Database();
+$db = new DB();
 $cart = new Cart($db);
 
 $json = array('error' => true);
