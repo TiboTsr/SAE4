@@ -174,13 +174,13 @@ h1 {
     align-items: center;
     justify-content: center;
     width: 80vw;
-    height: 75vh;
+    height: 15vh;
     border-radius: 15px;
     box-shadow: 10px 7px 4px rgba(0, 0, 0, 0.107);
     background-color: #000000;
     overflow: hidden;
-	margin-top: 2%;
-	margin-bottom: 1%;
+	  margin-top: 2%;
+	  margin-bottom: 1%;
 }
 
 #calendar {

@@ -74,6 +74,7 @@
             locale: 'fr',
             initialView: 'dayGridMonth',
             firstDay: 1,
+            aspectRatio: 3,
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
