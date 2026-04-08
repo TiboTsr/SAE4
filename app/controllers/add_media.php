@@ -3,7 +3,7 @@ require_once 'app/models/files_save.php';
 require_once 'app/models/galleryModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'], $_POST['userid'], $_POST['eventid'])) {
-    $fileName = saveImage();
+    $fileName = saveMedia();
         
     $date = new DateTime();
     $sqlDate = $date->format('Y-m-d H:i:s');

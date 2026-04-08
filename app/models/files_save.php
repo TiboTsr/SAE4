@@ -1,10 +1,19 @@
 <?php
 const UPLOAD_DIRECTORY = 'api/files/';
-const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx'];
+const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx', 'mp4', 'webm', 'ogg', 'mov'];
 const ALLOWED_IMAGE_MIME_TYPES = [
     'image/jpeg' => 'jpg',
     'image/png' => 'png',
     'image/webp' => 'webp',
+];
+const ALLOWED_MEDIA_MIME_TYPES = [
+    'image/jpeg' => 'jpg',
+    'image/png' => 'png',
+    'image/webp' => 'webp',
+    'video/mp4' => 'mp4',
+    'video/webm' => 'webm',
+    'video/ogg' => 'ogg',
+    'video/quicktime' => 'mov',
 ];
 
 function generateUUID(){
@@ -109,6 +118,30 @@ function saveImage() : string | null
         }
 
         $name = generateUUID() . '.' . ALLOWED_IMAGE_MIME_TYPES[$mimeType];
+
+        if (move_uploaded_file($tmpPath, getUploadPath($name))) {
+            return $name;
+        }
+
+        return null;
+    }
+
+function saveMedia() : string | null
+    {
+        // Vérifie et enregistre une image ou une vidéo.
+
+        $tmpPath = getUploadedFileTmpPath();
+        if ($tmpPath === null) {
+            return null;
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($tmpPath);
+        if (!array_key_exists($mimeType, ALLOWED_MEDIA_MIME_TYPES)) {
+            return null;
+        }
+
+        $name = generateUUID() . '.' . ALLOWED_MEDIA_MIME_TYPES[$mimeType];
 
         if (move_uploaded_file($tmpPath, getUploadPath($name))) {
             return $name;
