@@ -180,6 +180,18 @@ CREATE TABLE ADMIN_CHAT(
                             FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre)
 );
 
+CREATE TABLE ADMIN_AGENDA (
+                            id_agenda INT AUTO_INCREMENT,
+                            id_membre INT NOT NULL,
+                            url_edt VARCHAR(500) NOT NULL,
+                            format_source VARCHAR(20) NOT NULL DEFAULT 'ics',
+                            date_ajout DATETIME NOT NULL,
+                            date_modification DATETIME DEFAULT NULL,
+                            actif BOOLEAN NOT NULL DEFAULT TRUE,
+                            PRIMARY KEY(id_agenda),
+                            FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre) ON DELETE CASCADE
+);
+
 
 
 -- ---------------------------------------------
@@ -580,9 +592,6 @@ DELIMITER ;
 -- Le membre 1 a les permissions pour ajouter une actualit� donc l'actualit� va bien �tre cr��e
 -- INSERT INTO ACTUALITE (image_actualite, titre_actualite, contenu_actualite, date_actualite, id_membre) VALUES ('http://files.bdeinfo.fr/lougarou2024.jpg', 'Un loup garou qui a fait son effet', 'Hier soir a eu lieu le goup garou annuel et le moins qu''on puisse dire c''est qu''on va recommencer et bientot!', '2024-10-25 19:45:00', 1);
 -- SELECT* FROM ACTUALITE;
-
-
-
 
 
 
