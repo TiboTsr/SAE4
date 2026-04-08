@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/general.css">
     <link rel="stylesheet" href="../styles/panels.css">
-    <link rel="stylesheet" href="../styles/historique.css?v=2">
+    <link rel="stylesheet" href="../styles/historique.css?v=3">
 </head>
 <body>
 
@@ -20,6 +20,51 @@
 
     <!-- MAIN -->
     <main>
+        <section class="create-order">
+            <h2>Créer une commande</h2>
+            <form id="createOrderForm">
+                <div class="create-order-grid">
+                    <label>
+                        Article
+                        <select id="orderArticle" required>
+                            <option value="">Choisir un article</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Quantité
+                        <input type="number" id="orderQuantity" min="1" value="1" required>
+                    </label>
+
+                    <label>
+                        Paiement
+                        <select id="orderPayment" required>
+                            <option value="Especes">Especes</option>
+                            <option value="TPE">TPE</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Carte de credit">Carte de credit</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Utilisateur (optionnel)
+                        <select id="orderUser">
+                            <option value="">Client non inscrit</option>
+                        </select>
+                    </label>
+                </div>
+
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="orderRecovered">
+                    Déjà récupérée
+                </label>
+
+                <div class="create-order-actions">
+                    <button type="submit" id="createOrderButton">Créer la commande</button>
+                    <p id="createOrderMessage" aria-live="polite"></p>
+                </div>
+            </form>
+        </section>
 
         <!-- FILTERS -->
         <div class="filters">
@@ -56,7 +101,7 @@
     
     <!-- SCRIPTS -->
     <script type="module" src="../scripts/toggle.js"></script>
-    <script type="module" src="../scripts/historique.js?v=2"></script>
+    <script type="module" src="../scripts/historique.js?v=3"></script>
 
 </body>
 </html>
