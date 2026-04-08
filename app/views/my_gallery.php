@@ -20,6 +20,12 @@
 <?php
         require_once 'app/views/header.php';
 
+        $isVideoMedia = static function (string $mediaPath): bool {
+            $path = parse_url(trim($mediaPath), PHP_URL_PATH);
+            $extension = strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
+            return in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true);
+        };
+
 ?>
 
 
@@ -40,7 +46,7 @@
                 <input type="hidden" name="eventid" value="<?php echo $eventid?>">
                 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']?>">
 
-                <input type="file" id="file-picker" name="file" accept="image/jpeg, image/png, image/webp" hidden>
+                <input type="file" id="file-picker" name="file" accept="image/jpeg, image/png, image/webp, video/mp4, video/webm, video/ogg, video/quicktime" hidden>
                 <button type="submit" style="display:none;">Envoyer</button>
             </form>
 
@@ -50,7 +56,14 @@
 
             foreach ($medias as $media => $img) :?>
                 <div class="media-container">
-                    <img src="api/files/<?php echo trim($img['url_media']); ?>" alt="Image Personnelle de l'événement">
+                    <?php $mediaUrl = 'api/files/' . trim($img['url_media']); ?>
+                    <?php if ($isVideoMedia($img['url_media'])) : ?>
+                        <video controls preload="metadata">
+                            <source src="<?php echo htmlspecialchars($mediaUrl); ?>">
+                        </video>
+                    <?php else : ?>
+                        <img src="<?php echo htmlspecialchars($mediaUrl); ?>" alt="Image Personnelle de l'événement">
+                    <?php endif; ?>
                     <div class="delete-icon">
 
                         <form class="delete-media" action="index.php?page=delete_media" method="post">

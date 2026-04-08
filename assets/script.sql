@@ -69,7 +69,7 @@ CREATE TABLE COMMANDE(
                          paiement_commande VARCHAR(50) NOT NULL,
                          date_commande DATETIME NOT NULL,
                          qte_commande INT NOT NULL,
-                         id_membre INT NOT NULL,
+                         id_membre INT NULL,
                          id_article INT NOT NULL,
                          PRIMARY KEY(id_commande),
                          FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre),
@@ -179,6 +179,18 @@ CREATE TABLE ADMIN_CHAT(
                             date_message DATETIME NOT NULL,
                             PRIMARY KEY(id_message),
                             FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre)
+);
+
+CREATE TABLE ADMIN_AGENDA (
+                            id_agenda INT AUTO_INCREMENT,
+                            id_membre INT NOT NULL,
+                            url_edt VARCHAR(500) NOT NULL,
+                            format_source VARCHAR(20) NOT NULL DEFAULT 'ics',
+                            date_ajout DATETIME NOT NULL,
+                            date_modification DATETIME DEFAULT NULL,
+                            actif BOOLEAN NOT NULL DEFAULT TRUE,
+                            PRIMARY KEY(id_agenda),
+                            FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre) ON DELETE CASCADE
 );
 
 
@@ -375,7 +387,7 @@ SELECT
     COMMANDE.prix_commande AS montant
 FROM COMMANDE
 INNER JOIN ARTICLE ON ARTICLE.id_article = COMMANDE.id_article
-INNER JOIN MEMBRE ON MEMBRE.id_membre = COMMANDE.id_membre
+LEFT JOIN MEMBRE ON MEMBRE.id_membre = COMMANDE.id_membre
 
 UNION ALL -- Permet de joindre le resultat de deux reqetes SELECT
 
@@ -581,9 +593,6 @@ DELIMITER ;
 -- Le membre 1 a les permissions pour ajouter une actualit� donc l'actualit� va bien �tre cr��e
 -- INSERT INTO ACTUALITE (image_actualite, titre_actualite, contenu_actualite, date_actualite, id_membre) VALUES ('http://files.bdeinfo.fr/lougarou2024.jpg', 'Un loup garou qui a fait son effet', 'Hier soir a eu lieu le goup garou annuel et le moins qu''on puisse dire c''est qu''on va recommencer et bientot!', '2024-10-25 19:45:00', 1);
 -- SELECT* FROM ACTUALITE;
-
-
-
 
 
 

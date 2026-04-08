@@ -157,7 +157,8 @@ footer{
     gap: 24px;
 }
 
-.my-medias img{
+.my-medias img,
+.my-medias video{
     object-fit: cover;
     border-radius: 15px;
     width: 100%;
@@ -258,7 +259,8 @@ footer{
     transition: all 0.3s ease; /* Transition fluide */
 }
 
-.general-medias img{
+.general-medias img,
+.general-medias video{
 
     border: 2px solid rgba(0, 0, 0, 0.3);
     border-radius: 15px;
