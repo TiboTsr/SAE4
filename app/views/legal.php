@@ -25,29 +25,29 @@
         <h2>Editeur du site</h2>
         <p>Association ADIIL</p>
         <p>IUT de Laval - Departement Informatique</p>
-        <p>Email: aassociation.adiil@gmail.com</p>
+        <p>Email: association.adiil@gmail.com</p>
     </section>
 
     <section style="margin-bottom: 24px;">
         <h2>Hebergement</h2>
-        <p>Site heberge dans le cadre du projet ADIIL.</p>
+        <p>Site hebergé dans le cadre du projet ADIIL.</p>
     </section>
 
     <section style="margin-bottom: 24px;">
-        <h2>Propriete intellectuelle</h2>
-        <p>Les contenus (textes, images, logos) publies sur ce site restent la propriete de leurs auteurs respectifs.</p>
-        <p>Toute reproduction ou reutilisation sans autorisation prealable est interdite.</p>
+        <h2>Propriété intellectuelle</h2>
+        <p>Les contenus (textes, images, logos) publiés sur ce site restent la propriété de leurs auteurs respectifs.</p>
+        <p>Toute reproduction ou réutilisation sans autorisation préalable est interdite.</p>
     </section>
 
     <section style="margin-bottom: 24px;">
-        <h2>Donnees personnelles</h2>
-        <p>Les donnees collectees via le site sont utilisees uniquement pour le fonctionnement de l'association et des services proposes.</p>
-        <p>Pour toute demande relative a vos donnees, contactez l'association a l'adresse ci-dessus.</p>
+        <h2>Données personnelles</h2>
+        <p>Les données collectées via le site sont utilisées uniquement pour le fonctionnement de l'association et des services proposés.</p>
+        <p>Pour toute demande relative a vos données, contactez l'association à l'adresse dessus.</p>
     </section>
 
     <section style="margin-bottom: 40px;">
         <h2>Contact</h2>
-        <p>Pour toute question: <a href="mailto:aassociation.adiil@gmail.com">aassociation.adiil@gmail.com</a></p>
+        <p>Pour toute question: <a href="mailto:association.adiil@gmail.com">association.adiil@gmail.com</a></p>
     </section>
 </main>
 
