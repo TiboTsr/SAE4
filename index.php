@@ -4,9 +4,16 @@ session_start();
 
 $isUserLoggedIn = isset($_SESSION['userid']);
 
-if ($isUserLoggedIn && !array_key_exists('isAdmin', $_SESSION)) {
+if ($isUserLoggedIn) {
     require_once 'app/models/userModel.php';
-    $_SESSION['isAdmin'] = !empty(isAdmin((int)$_SESSION['userid']));
+    $isAdminFromDb = !empty(isAdmin((int)$_SESSION['userid']));
+
+    // Évite qu'un ancien état de session masque le bouton admin.
+    if ($isAdminFromDb) {
+        $_SESSION['isAdmin'] = true;
+    } elseif (!array_key_exists('isAdmin', $_SESSION)) {
+        $_SESSION['isAdmin'] = false;
+    }
 }
 
 $isAdmin = isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'];
