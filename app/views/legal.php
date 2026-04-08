@@ -24,13 +24,13 @@
     <section style="margin-bottom: 24px;">
         <h2>Editeur du site</h2>
         <p>Association ADIIL</p>
-        <p>IUT de Laval - Departement Informatique</p>
+        <p>IUT de Laval - Département Informatique</p>
         <p>Email: association.adiil@gmail.com</p>
     </section>
 
     <section style="margin-bottom: 24px;">
         <h2>Hebergement</h2>
-        <p>Site hebergé dans le cadre du projet ADIIL.</p>
+        <p>Site hébergé dans le cadre du projet ADIIL.</p>
     </section>
 
     <section style="margin-bottom: 24px;">
