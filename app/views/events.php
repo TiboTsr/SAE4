@@ -97,7 +97,6 @@
 
     <?php require_once 'app/views/footer.php'; ?>
     <script src="assets/scripts/event_details_redirect.js"></script>
-    <script src="assets/scripts/scroll_to_closest_event.js"></script>
 </body>
 
 </html>
