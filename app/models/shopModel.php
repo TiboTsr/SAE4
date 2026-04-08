@@ -1,8 +1,8 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 
 function getArticle($cart) {
-    $db = new Database();
+    $db = new DB();
     $product_ids = array_keys($cart);
     $placeholders = implode(",", array_fill(0, count($product_ids), "?"));
     $query = "SELECT * FROM ARTICLE WHERE id_article IN ($placeholders)";
@@ -11,7 +11,7 @@ function getArticle($cart) {
 }
 
 function purchaseItem($userid, $product_id, $quantite, $mode_paiement) {
-    $db = new Database();
+    $db = new DB();
     return $db->query(
         "CALL achat_article(?, ?, ?, ?)",
         "iiis",
@@ -20,7 +20,7 @@ function purchaseItem($userid, $product_id, $quantite, $mode_paiement) {
 }
 
 function getReduction($userId) {
-    $db = new Database();
+    $db = new DB();
     return $db->select(
         "SELECT * FROM ADHESION 
         INNER JOIN GRADE ON ADHESION.id_grade = GRADE.id_grade 
@@ -32,7 +32,7 @@ function getReduction($userId) {
 
 
 function getFilteredProducts($searchTerm, $filters, $orderBy) {
-    $db = new Database();
+    $db = new DB();
 
     $query = "SELECT * FROM ARTICLE";
     $whereClauses = ["deleted = false"];

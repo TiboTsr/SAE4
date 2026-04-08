@@ -1,5 +1,5 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 require_once 'app/models/userModel.php';
 require_once 'app/models/files_save.php';
 

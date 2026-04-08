@@ -1,10 +1,10 @@
 <?php
-require_once 'app/models/Database.php';
+require_once 'core/DB.php';
 require_once 'app/models/shopModel.php';
 require_once 'app/models/files_save.php';
 require_once 'app/models/Cart.php';
 
-$db   = new Database();
+$db   = new DB();
 $cart = new Cart($db);
 
 $filters    = [];
