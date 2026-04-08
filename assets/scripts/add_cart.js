@@ -1,7 +1,16 @@
 (() => {
     const toaster = document.createElement('div');
     const toastText = document.createElement('p');
+    const countElement = document.getElementById('count');
+
     let toastTimeout = null;
+    let burstAddedCount = 0;
+    let burstResetTimeout = null;
+    let highestCartCount = Number.parseInt(countElement ? countElement.textContent : '0', 10);
+
+    if (Number.isNaN(highestCartCount)) {
+        highestCartCount = 0;
+    }
 
     toaster.className = 'toast-container';
     toaster.setAttribute('aria-live', 'polite');
@@ -46,6 +55,33 @@
         }, 220);
     }
 
+    function resetBurstCounter() {
+        burstAddedCount = 0;
+        if (burstResetTimeout) {
+            clearTimeout(burstResetTimeout);
+            burstResetTimeout = null;
+        }
+    }
+
+    function showAddedCountToast() {
+        burstAddedCount += 1;
+
+        if (burstAddedCount === 1) {
+            showToast('1 article ajoute au panier.');
+        } else {
+            showToast(`${burstAddedCount} articles ajoutes au panier.`);
+        }
+
+        if (burstResetTimeout) {
+            clearTimeout(burstResetTimeout);
+        }
+
+        burstResetTimeout = setTimeout(() => {
+            burstAddedCount = 0;
+            burstResetTimeout = null;
+        }, 1400);
+    }
+
     async function addToCart(link) {
         try {
             const response = await fetch(link, {
@@ -65,6 +101,7 @@
             }
 
             if (!response.ok || !data || data.error) {
+                resetBurstCounter();
                 showToast((data && data.message) || "Impossible d'ajouter l'article au panier.", true);
                 return;
             }
@@ -73,14 +110,21 @@
             const total = document.getElementById('total');
 
             if (count && typeof data.count !== 'undefined') {
-                count.textContent = data.count;
+                const returnedCount = Number.parseInt(data.count, 10);
+                if (Number.isNaN(returnedCount)) {
+                    count.textContent = data.count;
+                } else {
+                    highestCartCount = Math.max(highestCartCount, returnedCount);
+                    count.textContent = String(highestCartCount);
+                }
             }
             if (total && typeof data.total !== 'undefined') {
                 total.textContent = data.total;
             }
 
-            showToast(data.message || 'Article ajoute au panier.');
+            showAddedCountToast();
         } catch {
+            resetBurstCounter();
             showToast("Impossible d'ajouter l'article au panier.", true);
         }
     }
