@@ -44,43 +44,6 @@
         <div id="calendar"></div>
     </div>
 
-
-    <!--<script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarEl = document.getElementById('calendar');
-
-            const events = <?= json_encode($calendarEvents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                locale: 'fr',
-                initialView: 'dayGridMonth',
-                firstDay: 1,
-                height: 'auto',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,listMonth'
-                },
-                buttonText: {
-                    today: 'Aujourd’hui',
-                    month: 'Mois',
-                    list: 'Liste'
-                },
-                events: events,
-                eventClick: function (info) {
-                    info.jsEvent.preventDefault();  // Toujours au début
-
-                    const fichier = info.event.extendedProps.fichier;
-
-                    if (fichier) {
-                        window.open(fichier, '_blank');
-                    }
-                }
-            });
-
-            calendar.render();
-        });
-    </script>-->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const calendarEl = document.getElementById('calendar');
@@ -111,6 +74,10 @@
                     const fichier = info.event.extendedProps.fichier;
                     if (fichier) {
                         window.open(fichier, '_blank');
+                    }
+
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
                     }
                 }
             });

@@ -252,6 +252,30 @@ function getEventSubscriptionInfo($eventId) {
     return $result[0] ?? null;
 }
 
+function getSubscribedEventsByUser(int $userId): array
+{
+    $db = new Database();
+
+    return $db->select(
+        "SELECT 
+            e.id_evenement,
+            e.nom_evenement,
+            e.description_evenement,
+            e.lieu_evenement,
+            e.date_evenement,
+            e.prix_evenement,
+            e.reductions_evenement,
+            e.xp_evenement
+         FROM EVENEMENT e
+         INNER JOIN INSCRIPTION i ON i.id_evenement = e.id_evenement
+         WHERE i.id_membre = ? 
+           AND e.deleted = false
+         ORDER BY e.date_evenement ASC",
+        "i",
+        [$userId]
+    );
+}
+
 function getUserReductionRate($userId) {
     $db = new Database();
     $result = $db->select(

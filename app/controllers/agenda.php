@@ -2,9 +2,13 @@
 
 require_once 'app/models/reunionModel.php';
 require_once 'app/models/agendaModel.php';
+require_once 'app/models/eventsModel.php';
 
 // Récupérer toutes les réunions pour les afficher dans le calendrier
 $reunions = getAllReunions();
+
+// Récupérer les événements auxquels on est inscrit à afficher dans le calendrier
+$eventsInscrits = getSubscribedEventsByUser($_SESSION['userid']);
 
 // Récupérer le lien de l'agenda externe de l'utilisateur pour pré-remplir le formulaire
 $urlEdt = '';
@@ -13,57 +17,6 @@ $error = '';
 $agendaUtilisateur = [];
 
 // Vérifier qu'un membre est connecté
-/*if (!isset($_SESSION['userid'])) {
-    $error = "Utilisateur non connecté.";
-} else {
-  
-    $idMembre = $_SESSION['userid'];
-    echo "ID MEMBRE: " . $idMembre . " (type: " . gettype($idMembre) . ")<br>";
-
-    $agendaUtilisateur = getAgendaByUserId($idMembre);
-
-    if (!empty($agendaUtilisateur)) {
-        $urlEdt = $agendaUtilisateur[0]['url_edt'];
-    }
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_edt'])) {
-        $urlEdtForm = trim($_POST['url_edt']);
-
-        if (!empty($urlEdtForm) && (filter_var($urlEdtForm, FILTER_VALIDATE_URL) || preg_match('/^https?:\/\//i', $urlEdtForm)))  {
-            if (!empty($agendaUtilisateur)) {
-                updateAgendaUtilisateur($idMembre, $urlEdtForm, 'ics');
-                $message = "Lien EDT mis à jour avec succès.";
-            } else {
-                insertAgendaUser($idMembre, $urlEdtForm, 'ics');
-                $message = "Lien EDT enregistré avec succès.";
-            }
-
-            $urlEdt = $urlEdtForm;
-        } else {
-            $error = "Le lien renseigné n'est pas valide.";
-        }
-    }
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_edt'])) {
-        echo '<div style="background:orange;color:white;padding:30px;">';
-        echo "🚀 INSERT BRUT SANS FILTRE<br>";
-
-        $urlEdtForm = trim($_POST['url_edt']);
-        echo "ID membre: $idMembre<br>";
-        echo "URL: " . htmlspecialchars($urlEdtForm) . "<br>";
-
-        // INSERT DIRECT sans aucune condition
-        $result = insertAgendaUser($idMembre, $urlEdtForm, 'ics');
-        echo "Résultat insertAgendaUser(): ";
-        var_dump($result);
-
-        // Vérif en base
-        $check = getAgendaByUserId($idMembre);
-        echo "Après insert en base: ";
-        var_dump($check);
-
-        echo '</div>';
-    }
-}*/
-
 if (!isset($_SESSION['userid'])) {
     $error = "Utilisateur non connecté.";
 } else {
@@ -111,6 +64,26 @@ foreach ($reunions as $reunion) {
         ],
         'backgroundColor' => '#11998e',
         'borderColor' => '#11998e',
+        'textColor' => '#ffffff'
+    ];
+}
+
+// Événements inscrits
+foreach ($eventsInscrits as $event) {
+    $calendarEvents[] = [
+        'title' => $event['nom_evenement'],
+        'start' => substr($event['date_evenement'], 0, 10),
+        'url' => 'index.php?page=event_details&id=' . $event['id_evenement'],
+        'extendedProps' => [
+            'type' => 'evenement',
+            'description' => $event['description_evenement'] ?? '',
+            'location' => $event['lieu_evenement'] ?? '',
+            'prix' => $event['prix_evenement'] ?? 0,
+            'xp' => $event['xp_evenement'] ?? 0
+        ],
+        'classNames' => ['event-orange'],
+        'backgroundColor' => '#f59e0b',
+        'borderColor' => '#f59e0b',
         'textColor' => '#ffffff'
     ];
 }
