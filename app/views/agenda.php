@@ -9,9 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!--<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet">-->
-
-
     <link rel="stylesheet" href="assets/styles/planner_style.css">
     <link rel="stylesheet" href="assets/styles/general_style.css">
     <link rel="stylesheet" href="assets/styles/header_style.css">

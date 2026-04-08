@@ -76,4 +76,24 @@ if (!$todayMarked && !empty($eventsDisplay)) {
     $eventsDisplay[0]['closestId'] = 'closest-event';
 }
 
+$events = getAllEventsForCalendar();
+
+$calendarEvents = [];
+
+foreach ($events as $event) {
+    $calendarEvents[] = [
+        'title' => $event['nom_evenement'],
+        'start' => substr($event['date_evenement'], 0, 10),
+        'allDay' => true,
+        'url' =>  'index.php?page=event_details&id=' . $event['id_evenement'],
+        'extendedProps' => [
+            'type' => $event['type_evenement'] ?? 'autre',
+            'location' => $event['lieu_evenement'] ?? ''
+        ],
+        'backgroundColor' => '#f59e0b',
+        'borderColor' => '#f59e0b',
+        'textColor' => '#ffffff'
+    ];
+}
+
 require_once 'app/views/events.php';
