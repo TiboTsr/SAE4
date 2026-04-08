@@ -125,7 +125,13 @@ async function requestPATCH(endpoint, data) {
     } catch (error) {
         // Certains serveurs/proxy refusent PATCH pour les uploads.
         if (data instanceof File || data instanceof Blob || data instanceof FormData) {
-            return request(endpoint, 'POST', data);
+            if (data instanceof FormData) {
+                return request(endpoint, 'POST', data);
+            }
+
+            const formData = new FormData();
+            formData.append('file', data, data.name ?? 'upload.bin');
+            return request(endpoint, 'POST', formData);
         }
         throw error;
     }

@@ -137,11 +137,7 @@ class File implements JsonSerializable
         $method = $_SERVER['REQUEST_METHOD'];
 
         // Gestion des requêtes POST (formulaires classiques)
-        if ($method === 'POST') {
-            if (!isset($_FILES['file'])) {
-                return null;
-            }
-
+        if ($method === 'POST' && isset($_FILES['file'])) {
             if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
                 error_log('File upload failed: ' . self::getPhpUploadErrorMessage((int)$_FILES['file']['error']));
                 return null;
@@ -166,8 +162,8 @@ class File implements JsonSerializable
             return null;
         }
 
-        // Gestion des requêtes PUT/PATCH
-        if ($method === 'PUT' || $method === 'PATCH') {
+        // Gestion des requêtes PUT/PATCH et POST brut (fallback legacy)
+        if ($method === 'PUT' || $method === 'PATCH' || $method === 'POST') {
             // Lecture du corps de la requête
             $putData = fopen('php://input', 'r');
 
@@ -222,11 +218,7 @@ class File implements JsonSerializable
     {
         $method = $_SERVER['REQUEST_METHOD'];
 
-        if ($method === 'POST') {
-            if (!isset($_FILES['file'])) {
-                return null;
-            }
-
+        if ($method === 'POST' && isset($_FILES['file'])) {
             if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
                 error_log('Image upload failed: ' . self::getPhpUploadErrorMessage((int)$_FILES['file']['error']));
                 return null;
@@ -253,7 +245,7 @@ class File implements JsonSerializable
             return null;
         }
 
-        if ($method !== 'PUT' && $method !== 'PATCH') {
+        if ($method !== 'PUT' && $method !== 'PATCH' && $method !== 'POST') {
             return null;
         }
 

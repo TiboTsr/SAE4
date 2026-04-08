@@ -23,7 +23,7 @@ switch ($methode) {
         get_grades();
         break;
     case 'POST':                     # CREATE
-        if (isset($_GET['id']) && isset($_FILES['file'])) {
+        if (isset($_GET['id'])) {
             update_image();
         } else {
             create_grade();

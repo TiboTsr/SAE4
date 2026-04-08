@@ -26,7 +26,7 @@ switch ($methode) {
         get_news();
         break;
     case 'POST':                     # CREATE
-        if (isset($_GET['id']) && isset($_FILES['file'])) {
+        if (isset($_GET['id'])) {
             update_image();
         } else {
             create_news();
