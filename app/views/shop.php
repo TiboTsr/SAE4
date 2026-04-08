@@ -76,12 +76,12 @@ require_once "app/views/header.php" ;
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>
                         </h3>
-                        <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € </p>
-                        <p><?= htmlspecialchars($product['xp_article']) ?> XP
+                        <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € 
                             <?php if (!(int)$product['reduction_article']) { ?>
                             <span>    * </span>
                             <?php } ?>
                         </p>
+                        <p><?= htmlspecialchars($product['xp_article']) ?> XP</p>
                     </div>
                     <div>
                         <p id="stock-status">
