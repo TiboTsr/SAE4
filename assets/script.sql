@@ -7,6 +7,7 @@
 DROP TABLE IF EXISTS ASSIGNATION;
 DROP TABLE IF EXISTS INSCRIPTION;
 DROP TABLE IF EXISTS ADMIN_CHAT;
+DROP TABLE IF EXISTS ADMIN_AGENDA;
 DROP TABLE IF EXISTS MEDIA;
 DROP TABLE IF EXISTS REUNION;
 DROP TABLE IF EXISTS ACTUALITE;
@@ -52,14 +53,15 @@ CREATE TABLE ROLE(
 );
 
 CREATE TABLE ARTICLE(
-                        id_article INT AUTO_INCREMENT,
-                        xp_article INT NOT NULL DEFAULT 1,
-                        nom_article VARCHAR(100) NOT NULL,
-                        stock_article INT NOT NULL,
-                        image_article VARCHAR(500) NOT NULL,
-                        reduction_article BIT NOT NULL DEFAULT 1,
-                        prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
-                        PRIMARY KEY(id_article)
+                         id_article INT AUTO_INCREMENT,
+                         xp_article INT NOT NULL DEFAULT 1,
+                         nom_article VARCHAR(100) NOT NULL,
+                         stock_article INT NOT NULL,
+                         image_article VARCHAR(500) NOT NULL,
+                         reduction_article BIT NOT NULL DEFAULT 1,
+                         prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
+                         deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                         PRIMARY KEY(id_article)
 );
 
 CREATE TABLE COMMANDE(
@@ -77,17 +79,18 @@ CREATE TABLE COMMANDE(
 );
 
 CREATE TABLE EVENEMENT(
-                          id_evenement INT AUTO_INCREMENT,
-                          nom_evenement VARCHAR(100) NOT NULL,
-                          description_evenement VARCHAR(1000),
-                          image_evenement VARCHAR(500),
-                          xp_evenement INT NOT NULL DEFAULT 10,
-                          places_evenement INT NOT NULL,
-                          prix_evenement INT NOT NULL,
-                          reductions_evenement BIT NOT NULL DEFAULT 1,
-                          lieu_evenement VARCHAR(50) NOT NULL,
-                          date_evenement DATETIME NOT NULL,
-                          PRIMARY KEY(id_evenement)
+                           id_evenement INT AUTO_INCREMENT,
+                           nom_evenement VARCHAR(100) NOT NULL,
+                           description_evenement VARCHAR(1000),
+                           image_evenement VARCHAR(500),
+                           xp_evenement INT NOT NULL DEFAULT 10,
+                           places_evenement INT NOT NULL,
+                           prix_evenement INT NOT NULL,
+                           reductions_evenement BIT NOT NULL DEFAULT 1,
+                           lieu_evenement VARCHAR(50) NOT NULL,
+                           date_evenement DATETIME NOT NULL,
+                           deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                           PRIMARY KEY(id_evenement)
 );
 
 CREATE TABLE COMPTABILITE(
@@ -101,13 +104,14 @@ CREATE TABLE COMPTABILITE(
 );
 
 CREATE TABLE GRADE(
-                      id_grade INT AUTO_INCREMENT,
-                      reduction_grade INT NOT NULL,
-                      image_grade VARCHAR(500) NOT NULL,
-                      prix_grade INT NOT NULL CHECK (prix_grade >= 0),
-                      description_grade VARCHAR(500),
-                      nom_grade VARCHAR(100) NOT NULL,
-                      PRIMARY KEY(id_grade)
+                       id_grade INT AUTO_INCREMENT,
+                       reduction_grade INT NOT NULL,
+                       image_grade VARCHAR(500) NOT NULL,
+                       prix_grade INT NOT NULL CHECK (prix_grade >= 0),
+                       description_grade VARCHAR(500),
+                       nom_grade VARCHAR(100) NOT NULL,
+                       deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                       PRIMARY KEY(id_grade)
 );
 
 CREATE TABLE ADHESION(
@@ -336,8 +340,8 @@ INSERT INTO REUNION (date_reunion, fichier_reunion, id_membre) VALUES
 
 -- Ajout des medias
 INSERT INTO MEDIA (url_media, date_media, id_membre, id_evenement) VALUES
-('http://files.bdeinfo.fr/hjrehr.mp4', '2024-10-21', 3, 2),
-('http://files.bdeinfo.fr/fhir.jpeg', '2024-10-21', 5, 2),
+('http://files.bdeinfo.fr/hjrehr.mp4', '2024-10-21', 3, 1),
+('http://files.bdeinfo.fr/fhir.jpeg', '2024-10-21', 5, 1),
 ('http://files.bdeinfo.fr/uyjhghg.mp4', '2024-11-05', 6, 3),
 ('http://files.bdeinfo.fr/rtuhght.jpeg', '2024-09-17', 3, 1),
 ('http://files.bdeinfo.fr/ytraztru.mp4', '2024-12-13', 8, 4),
@@ -941,7 +945,7 @@ SELECT*FROM MEMBRE;
 
 -- fixs for deployment
 ALTER TABLE EVENEMENT
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE EVENEMENT
     ADD COLUMN IF NOT EXISTS description_evenement VARCHAR(1000);
@@ -950,10 +954,10 @@ ALTER TABLE EVENEMENT
     ADD COLUMN IF NOT EXISTS image_evenement VARCHAR(500);
 
 ALTER TABLE GRADE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE ARTICLE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 
 DROP VIEW IF EXISTS LISTE_PERMISSIONS;

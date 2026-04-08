@@ -13,6 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     }
 
     $event = $event[0];
+
+    $adjacentNewsIds = getAdjacentNewsIds((int) $event['id_actualite'], $event['date_actualite']);
+    $olderNewsId = $adjacentNewsIds['older'];
+    $newerNewsId = $adjacentNewsIds['newer'];
 } else {
     header("Location: index.php");
     exit;
