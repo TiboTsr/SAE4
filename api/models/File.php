@@ -12,7 +12,7 @@ class File implements JsonSerializable
 {
     private string $fileName;
 
-    private const UPLOAD_DIRECTORY = 'files/';
+    private const UPLOAD_DIRECTORY = 'files';
     private const ALLOWED_UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'xls', 'xlsx'];
     private const ALLOWED_PUT_PATCH_MIME_TYPES = [
         'image/jpeg' => 'jpg',
@@ -30,9 +30,68 @@ class File implements JsonSerializable
         'image/gif' => 'gif',
     ];
 
+    private static function getUploadDirectoryPath(): string
+    {
+        return dirname(__DIR__) . DIRECTORY_SEPARATOR . self::UPLOAD_DIRECTORY;
+    }
+
+    private static function ensureUploadDirectory(): bool
+    {
+        $directory = self::getUploadDirectoryPath();
+
+        if (!is_dir($directory)) {
+            if (!@mkdir($directory, 0775, true) && !is_dir($directory)) {
+                error_log("Upload directory cannot be created: " . $directory);
+                return false;
+            }
+            @chmod($directory, 0775);
+        }
+
+        if (!is_writable($directory)) {
+            error_log("Upload directory is not writable: " . $directory);
+            return false;
+        }
+
+        return true;
+    }
+
     private static function getUploadPath(string $fileName): string
     {
-        return self::UPLOAD_DIRECTORY . $fileName;
+        return self::getUploadDirectoryPath() . DIRECTORY_SEPARATOR . $fileName;
+    }
+
+    private static function detectMimeType(string $path): ?string
+    {
+        if (class_exists('finfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($path);
+            if (is_string($mimeType) && $mimeType !== '') {
+                return $mimeType;
+            }
+        }
+
+        if (function_exists('mime_content_type')) {
+            $mimeType = mime_content_type($path);
+            if (is_string($mimeType) && $mimeType !== '') {
+                return $mimeType;
+            }
+        }
+
+        return null;
+    }
+
+    private static function getPhpUploadErrorMessage(int $error): string
+    {
+        return match ($error) {
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE form value',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'Upload stopped by extension',
+            default => 'Unknown upload error',
+        };
     }
 
     private static function normalizeUploadedExtension(string $fileName): ?string
@@ -79,12 +138,21 @@ class File implements JsonSerializable
 
         // Gestion des requêtes POST (formulaires classiques)
         if ($method === 'POST') {
-            if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            if (!isset($_FILES['file'])) {
+                return null;
+            }
+
+            if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+                error_log('File upload failed: ' . self::getPhpUploadErrorMessage((int)$_FILES['file']['error']));
                 return null;
             }
 
             $extension = self::normalizeUploadedExtension($_FILES['file']['name']);
             if ($extension === null) {
+                return null;
+            }
+
+            if (!self::ensureUploadDirectory()) {
                 return null;
             }
 
@@ -119,12 +187,16 @@ class File implements JsonSerializable
             fclose($tempHandle);
 
             // Détection du type de fichier
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->file($tempFile);
+            $mimeType = self::detectMimeType($tempFile);
 
             // Détermination de l'extension basée sur le type MIME
-            $extension = self::ALLOWED_PUT_PATCH_MIME_TYPES[$mimeType] ?? null;
+            $extension = $mimeType !== null ? (self::ALLOWED_PUT_PATCH_MIME_TYPES[$mimeType] ?? null) : null;
             if ($extension === null) {
+                @unlink($tempFile);
+                return null;
+            }
+
+            if (!self::ensureUploadDirectory()) {
                 @unlink($tempFile);
                 return null;
             }
@@ -151,14 +223,22 @@ class File implements JsonSerializable
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === 'POST') {
-            if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            if (!isset($_FILES['file'])) {
                 return null;
             }
 
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->file($_FILES['file']['tmp_name']);
-            $extension = self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null;
+            if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+                error_log('Image upload failed: ' . self::getPhpUploadErrorMessage((int)$_FILES['file']['error']));
+                return null;
+            }
+
+            $mimeType = self::detectMimeType($_FILES['file']['tmp_name']);
+            $extension = $mimeType !== null ? (self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null) : null;
             if ($extension === null) {
+                return null;
+            }
+
+            if (!self::ensureUploadDirectory()) {
                 return null;
             }
 
@@ -188,12 +268,16 @@ class File implements JsonSerializable
         file_put_contents($tmpFile, $rawData);
 
         // Vérification du type MIME
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($tmpFile);
-        $extension = self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null;
+        $mimeType = self::detectMimeType($tmpFile);
+        $extension = $mimeType !== null ? (self::ALLOWED_IMAGE_MIME_TYPES[$mimeType] ?? null) : null;
         if ($extension === null) {
             unlink($tmpFile); // Nettoyage
             return null; // Type non autorisé
+        }
+
+        if (!self::ensureUploadDirectory()) {
+            unlink($tmpFile);
+            return null;
         }
 
         $name = tools::generateUUID() . '.' . $extension;

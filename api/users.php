@@ -28,7 +28,11 @@ switch ($methode) {
         get_users();
         break;
     case 'POST':                     # CREATE
-        create_user();
+        if (isset($_GET['id']) && isset($_FILES['file'])) {
+            update_image();
+        } else {
+            create_user();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {

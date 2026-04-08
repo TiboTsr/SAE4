@@ -56,7 +56,8 @@
 
             foreach ($medias as $media => $img) :?>
                 <div class="media-container">
-                    <?php $mediaUrl = 'api/files/' . trim($img['url_media']); ?>
+                    <?php $mediaFileName = trim((string) $img['url_media']); ?>
+                    <?php $mediaUrl = resolveStoredFileSrc($mediaFileName, 'api/file.php?name=' . rawurlencode($mediaFileName)); ?>
                     <?php if ($isVideoMedia($img['url_media'])) : ?>
                         <video controls preload="metadata">
                             <source src="<?php echo htmlspecialchars($mediaUrl); ?>">

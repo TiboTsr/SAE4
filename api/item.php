@@ -21,7 +21,11 @@ switch ($methode) {
         get_items();
         break;
     case 'POST':                     # CREATE
+        if (isset($_GET['id']) && isset($_FILES['file'])) {
+            update_image();
+        } else {
             create_item();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {

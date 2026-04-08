@@ -119,8 +119,16 @@ function requestPUT(endpoint, data) {
  * @param {FormData} data - Les données à envoyer.
  * @returns {Promise}
  */
-function requestPATCH(endpoint, data) {
-    return request(endpoint, 'PATCH', data);
+async function requestPATCH(endpoint, data) {
+    try {
+        return await request(endpoint, 'PATCH', data);
+    } catch (error) {
+        // Certains serveurs/proxy refusent PATCH pour les uploads.
+        if (data instanceof File || data instanceof Blob || data instanceof FormData) {
+            return request(endpoint, 'POST', data);
+        }
+        throw error;
+    }
 }
 
 /**

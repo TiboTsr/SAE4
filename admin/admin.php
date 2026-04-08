@@ -9,6 +9,22 @@ if (!isset($_SESSION['userid'])) {
     exit();
 }
 if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
+    $hasAnyAdminPermission =
+        tools::hasPermission('p_log') ||
+        tools::hasPermission('p_boutique') ||
+        tools::hasPermission('p_reunion') ||
+        tools::hasPermission('p_utilisateur') ||
+        tools::hasPermission('p_grade') ||
+        tools::hasPermission('p_role') ||
+        tools::hasPermission('p_actualite') ||
+        tools::hasPermission('p_evenement') ||
+        tools::hasPermission('p_comptabilite') ||
+        tools::hasPermission('p_achat') ||
+        tools::hasPermission('p_moderation');
+
+    $_SESSION['isAdmin'] = tools::isAdmin() || $hasAnyAdminPermission;
+}
+if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
     header('Location: panels/unauthorized.html');
     exit();
 }

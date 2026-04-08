@@ -26,7 +26,11 @@ switch ($methode) {
         get_news();
         break;
     case 'POST':                     # CREATE
-        create_news();
+        if (isset($_GET['id']) && isset($_FILES['file'])) {
+            update_image();
+        } else {
+            create_news();
+        }
         break;
     case 'PUT':                     # UPDATE (données)
         if (tools::methodAccepted('application/json')) {

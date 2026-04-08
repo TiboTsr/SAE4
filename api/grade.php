@@ -23,7 +23,11 @@ switch ($methode) {
         get_grades();
         break;
     case 'POST':                     # CREATE
-        create_grade();
+        if (isset($_GET['id']) && isset($_FILES['file'])) {
+            update_image();
+        } else {
+            create_grade();
+        }
         break;
     case 'PUT':                      # UPDATE (données seulement)
         if (tools::methodAccepted('application/json')) {
