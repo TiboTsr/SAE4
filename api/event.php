@@ -22,7 +22,11 @@ switch ($methode) {
         get_events();
         break;
     case 'POST':                     # CREATE
-        create_event();
+        if (isset($_GET['id']) && isset($_FILES['file'])) {
+            update_image();
+        } else {
+            create_event();
+        }
         break;
     case 'PUT':                      # UPDATE (donnÃ©es seulement)
         if (tools::methodAccepted('application/json')) {
