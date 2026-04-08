@@ -236,9 +236,9 @@ INSERT INTO ASSIGNATION (id_membre, id_role) VALUES
 
 -- Ajout des grades
 INSERT INTO `GRADE` (`id_grade`, `reduction_grade`, `image_grade`, `prix_grade`, `description_grade`, `nom_grade`, `deleted`) VALUES
-(1, 0, '27f050a0c9974411ad7d34299daea81b.webp', 5, 'Un grade de base en fer.', 'Fer', 0),
-(2, 0, '8f0e40b2f0504898b08140fc48cf709e.jpg', 10, 'Un grade sup�rieur en or.', 'Or', 0),
-(3, 10, 'c2fe8611ece9404c98aed82495324869.png', 13, 'Le grade ultime en diamant.', 'Diamant', 0);
+(1, 10, '27f050a0c9974411ad7d34299daea81b.webp', 5, 'Un grade de base en fer. 10% de réduction sur tous le site', 'Fer', 0),
+(2, 15, '8f0e40b2f0504898b08140fc48cf709e.jpg', 10, 'Un grade supérieur en or. 15% de réduction sur tous le site', 'Or', 0),
+(3, 20, 'c2fe8611ece9404c98aed82495324869.png', 15, 'Le grade ultime en diamant. 20% de réduction sur tous le site', 'Diamant', 0);
 
 -- Insertion des adh�sions
 INSERT INTO `ADHESION` (`id_adhesion`, `date_adhesion`, `prix_adhesion`, `paiement_adhesion`, `id_membre`, `id_grade`) VALUES

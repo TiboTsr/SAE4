@@ -61,7 +61,7 @@ require_once "app/views/header.php" ;
 </div>
 
 <p id='message-reduc'>
-    * Articles non éligibles aux réductions de grade
+    * Articles non éligibles aux réductions de grade <a href="index.php?page=grade">En savoir plus</a>
 </p>
 <?php if (!empty($products)) : ?>
     <div id="product-list">
