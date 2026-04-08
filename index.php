@@ -3,7 +3,13 @@
 session_start();
 
 $isUserLoggedIn = isset($_SESSION['userid']);
-$isAdmin = isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'] ;
+
+if ($isUserLoggedIn) {
+    require_once 'app/models/userModel.php';
+    $_SESSION['isAdmin'] = !empty(isAdmin((int)$_SESSION['userid']));
+}
+
+$isAdmin = isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'];
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];

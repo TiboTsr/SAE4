@@ -8,7 +8,7 @@ require_once 'filter.php';
 ini_set('display_errors', 0);
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['userid']) || !(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
+if (!isset($_SESSION['userid']) || !tools::isAdmin()) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;

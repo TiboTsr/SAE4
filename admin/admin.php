@@ -9,6 +9,9 @@ if (!isset($_SESSION['userid'])) {
     exit();
 }
 if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
+    $_SESSION['isAdmin'] = tools::isAdmin();
+}
+if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
     header('Location: panels/unauthorized.html');
     exit();
 }
