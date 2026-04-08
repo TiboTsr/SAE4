@@ -205,11 +205,39 @@ class tools
             );
 
             $isAdmin = count($result) > 0;
-            $_SESSION['isAdmin'] = $isAdmin;
-            return $isAdmin;
+            if ($isAdmin) {
+                $_SESSION['isAdmin'] = true;
+                return true;
+            }
         } catch (\Throwable $error) {
-            return false;
+            // Fallback on LISTE_PERMISSIONS below.
         }
+
+        try {
+            $permissions = $db->select(
+                "SELECT p_log, p_boutique, p_reunion, p_utilisateur, p_grade, p_role, p_actualite, p_evenement, p_comptabilite, p_achat, p_moderation
+                 FROM LISTE_PERMISSIONS
+                 WHERE id_membre = ?
+                 LIMIT 1",
+                'i',
+                [$_SESSION['userid']]
+            );
+
+            if (count($permissions) > 0) {
+                $row = $permissions[0];
+                foreach (self::PERMISSION_TO_ROLE_COLUMN as $permissionKey => $_unusedRoleColumn) {
+                    if (isset($row[$permissionKey]) && (int)$row[$permissionKey] === 1) {
+                        $_SESSION['isAdmin'] = true;
+                        return true;
+                    }
+                }
+            }
+        } catch (\Throwable $error) {
+            // No fallback left.
+        }
+
+        $_SESSION['isAdmin'] = false;
+        return false;
     }
 
     public static function checkPermission($permission): void

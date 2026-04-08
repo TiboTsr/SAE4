@@ -59,6 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = isAdmin($_SESSION['userid']);
 
             $_SESSION["isAdmin"] = !empty($result);
+            if (!$_SESSION["isAdmin"]) {
+                require_once 'api/tools.php';
+                $_SESSION["isAdmin"] = tools::isAdmin();
+            }
 
             $redirectTarget = $_SESSION['login_redirect'] ?? 'index.php';
             unset($_SESSION['login_redirect']);

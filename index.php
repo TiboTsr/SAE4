@@ -4,7 +4,7 @@ session_start();
 
 $isUserLoggedIn = isset($_SESSION['userid']);
 
-if ($isUserLoggedIn) {
+if ($isUserLoggedIn && !array_key_exists('isAdmin', $_SESSION)) {
     require_once 'app/models/userModel.php';
     $_SESSION['isAdmin'] = !empty(isAdmin((int)$_SESSION['userid']));
 }
