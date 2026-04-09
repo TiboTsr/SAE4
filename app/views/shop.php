@@ -39,10 +39,16 @@ require_once "app/views/header.php" ;
         <details>
             <summary>Catégories</summary>
             <fieldset>
-                <label><input type="checkbox" name="category[]" value="Sucré" <?= in_array('Sucré', $filters) ? 'checked' : '' ?>> Sucré</label><br>
-                <label><input type="checkbox" name="category[]" value="Salé" <?= in_array('Salé', $filters) ? 'checked' : '' ?>> Salé</label><br>
-                <label><input type="checkbox" name="category[]" value="Boisson" <?= in_array('Boisson', $filters) ? 'checked' : '' ?>> Boisson</label><br>
-                <label><input type="checkbox" name="category[]" value="Merch" <?= in_array('Merch', $filters) ? 'checked' : '' ?>> Merch</label>
+                <?php if (!empty($availableCategories)) : ?>
+                    <?php foreach ($availableCategories as $category) : ?>
+                        <label>
+                            <input type="checkbox" name="category[]" value="<?= htmlspecialchars($category) ?>" <?= in_array($category, $filters, true) ? 'checked' : '' ?>>
+                            <?= htmlspecialchars($category) ?>
+                        </label><br>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p>Aucune catégorie disponible.</p>
+                <?php endif; ?>
             </fieldset>
         </details>
         <div>

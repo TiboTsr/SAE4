@@ -10,6 +10,7 @@ $cart = new Cart($db);
 $filters    = [];
 $orderBy    = 'name_asc';
 $searchTerm = '';
+$availableCategories = getProductCategories();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['reset'])) {
@@ -17,8 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $orderBy    = 'name_asc';
         $searchTerm = '';
     } else {
-        if (isset($_POST['category'])) {
-            $filters = $_POST['category'];
+        if (isset($_POST['category']) && is_array($_POST['category'])) {
+            $rawFilters = array_values(
+                array_filter(
+                    array_map(static fn($value): string => trim((string)$value), $_POST['category']),
+                    static fn(string $value): bool => $value !== ''
+                )
+            );
+
+            if (!empty($availableCategories)) {
+                $filters = array_values(array_intersect($rawFilters, $availableCategories));
+            }
         }
         if (isset($_POST['sort'])) {
             $orderBy = $_POST['sort'];

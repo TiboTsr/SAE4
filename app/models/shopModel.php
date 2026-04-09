@@ -1,6 +1,43 @@
 <?php
 require_once 'core/DB.php';
 
+function hasArticleCategoryColumn(): bool
+{
+    $db = new DB();
+    $result = $db->select(
+        "SELECT 1
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = 'ARTICLE'
+           AND COLUMN_NAME = 'categorie_article'
+         LIMIT 1"
+    );
+
+    return !empty($result);
+}
+
+function getProductCategories(): array
+{
+    if (!hasArticleCategoryColumn()) {
+        return [];
+    }
+
+    $db = new DB();
+    $rows = $db->select(
+        "SELECT DISTINCT TRIM(categorie_article) AS categorie
+         FROM ARTICLE
+         WHERE deleted = false
+           AND categorie_article IS NOT NULL
+           AND TRIM(categorie_article) <> ''
+         ORDER BY categorie ASC"
+    );
+
+    return array_map(
+        static fn(array $row): string => (string) $row['categorie'],
+        $rows
+    );
+}
+
 function getArticle($cart) {
     $db = new DB();
     $product_ids = array_keys($cart);
@@ -33,6 +70,7 @@ function getReduction($userId) {
 
 function getFilteredProducts($searchTerm, $filters, $orderBy) {
     $db = new DB();
+    $hasCategoryColumn = hasArticleCategoryColumn();
 
     $query = "SELECT * FROM ARTICLE";
     $whereClauses = ["deleted = false"];
@@ -43,7 +81,7 @@ function getFilteredProducts($searchTerm, $filters, $orderBy) {
         $params[] = '%' . $searchTerm . '%';
     }
 
-    if (!empty($filters)) {
+    if ($hasCategoryColumn && !empty($filters)) {
         $placeholders = implode(", ", array_fill(0, count($filters), "?"));
         $whereClauses[] = "categorie_article IN ($placeholders)";
         $params = array_merge($params, $filters);

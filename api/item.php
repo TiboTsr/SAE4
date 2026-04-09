@@ -69,7 +69,7 @@ function get_items() : void
 function create_item() : void
 {
    $item = Item::create(
-       "Nouvel article", 1, 0, true, 1.99, null, "Non défini");
+       "Nouvel article", 1, 0, true, 1.99, null, "Autre");
 
    http_response_code(201);
    echo $item;
@@ -79,7 +79,10 @@ function update_item() : void
 {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!isset($_GET['id'], $data['name'], $data['xp'], $data['stocks'], $data['reduction'], $data['price'], $data['categorie']))
+    if (
+        !is_array($data) ||
+        !isset($_GET['id'], $data['name'], $data['xp'], $data['stocks'], $data['reduction'], $data['price'], $data['categorie'])
+    )
     {
         http_response_code(400);
         echo json_encode(['error' => 'Missing parameters']);

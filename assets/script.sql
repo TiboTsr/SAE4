@@ -56,6 +56,7 @@ CREATE TABLE ARTICLE(
                          id_article INT AUTO_INCREMENT,
                          xp_article INT NOT NULL DEFAULT 1,
                          nom_article VARCHAR(100) NOT NULL,
+                         categorie_article VARCHAR(100) NOT NULL DEFAULT 'Autre',
                          stock_article INT NOT NULL,
                          image_article VARCHAR(500) NOT NULL,
                          reduction_article BIT NOT NULL DEFAULT 1,
@@ -90,7 +91,7 @@ CREATE TABLE EVENEMENT(
                            lieu_evenement VARCHAR(50) NOT NULL,
                            date_evenement DATETIME NOT NULL,
                            deleted BOOLEAN NOT NULL DEFAULT FALSE,
-                           type_evenement VARCHAR(50) NOT NULL DEFAULT 'autre';
+                           type_evenement VARCHAR(50) NOT NULL DEFAULT 'autre',
                            PRIMARY KEY(id_evenement)
 );
 
@@ -254,17 +255,17 @@ INSERT INTO `ADMIN_CHAT` (`id_message`, `id_membre`, `contenu_message`, `date_me
 (2, 1, 'Salut', '2026-04-08 11:30:28');
 
 -- Ajout des articles de la boutique
-INSERT INTO `ARTICLE` (`id_article`, `xp_article`, `nom_article`, `stock_article`, `image_article`, `reduction_article`, `prix_article`, `deleted`) VALUES
-(1, 1, 'Canette de Coca', 47, 'df2ac11f3037475a8811ad79b5c4cda2.png', b'0', 1.5, 0),
-(2, 1, 'Coca Cherry', 26, '7e9de75273464d6b931d1d2c6ed8687d.png', b'0', 1.75, 0),
-(3, 20, 'Lipton Ice Tea', 40, '13190239ee9a4fa7a7d774598192590a.webp', b'0', 1.5, 0),
-(4, 1, 'Formule Cafe', 20, 'da86f1a48487490fad293a2627913826.png', b'0', 2, 0),
-(5, 1, 'Bueno White', 30, 'c8cfd92d058e4e1dbee210fc03aaf315.jpg', b'1', 1.2, 0),
-(6, 1, 'Bueno', 34, 'c0a5e47c63694df986d8db4b5cfd19c5.jpg', b'1', 1.2, 0),
-(7, 10, 'Snack Chips', 60, '9309f9b0712b41d991d9db7857216d30.png', b'0', 1, 0),
-(8, 1, 'Barre de Chocolat', 0, 'http://files.bdeinfo.fr/chocolat.jpg', b'0', 1.5, 1),
-(9, 1, 'Jus d Orange', 55, '1d1c3c41fbbc4f898a74d60f3ef0001c.png', b'0', 1.3, 0),
-(10, 30, 'Volvic', 70, '0c39651172c04906a071b45584552be1.webp', b'0', 0.8, 0);
+INSERT INTO `ARTICLE` (`id_article`, `xp_article`, `nom_article`, `categorie_article`, `stock_article`, `image_article`, `reduction_article`, `prix_article`, `deleted`) VALUES
+(1, 1, 'Canette de Coca', 'Boisson', 47, 'df2ac11f3037475a8811ad79b5c4cda2.png', b'0', 1.5, 0),
+(2, 1, 'Coca Cherry', 'Boisson', 26, '7e9de75273464d6b931d1d2c6ed8687d.png', b'0', 1.75, 0),
+(3, 20, 'Lipton Ice Tea', 'Boisson', 40, '13190239ee9a4fa7a7d774598192590a.webp', b'0', 1.5, 0),
+(4, 1, 'Formule Cafe', 'Boisson', 20, 'da86f1a48487490fad293a2627913826.png', b'0', 2, 0),
+(5, 1, 'Bueno White', 'Sucré', 30, 'c8cfd92d058e4e1dbee210fc03aaf315.jpg', b'1', 1.2, 0),
+(6, 1, 'Bueno', 'Sucré', 34, 'c0a5e47c63694df986d8db4b5cfd19c5.jpg', b'1', 1.2, 0),
+(7, 10, 'Snack Chips', 'Salé', 60, '9309f9b0712b41d991d9db7857216d30.png', b'0', 1, 0),
+(8, 1, 'Barre de Chocolat', 'Sucré', 0, 'http://files.bdeinfo.fr/chocolat.jpg', b'0', 1.5, 1),
+(9, 1, 'Jus d Orange', 'Boisson', 55, '1d1c3c41fbbc4f898a74d60f3ef0001c.png', b'0', 1.3, 0),
+(10, 30, 'Volvic', 'Boisson', 70, '0c39651172c04906a071b45584552be1.webp', b'0', 0.8, 0);
 
 -- Ajout des commandes
 INSERT INTO COMMANDE (statut_commande, prix_commande, paiement_commande, date_commande, qte_commande, id_membre, id_article) VALUES
@@ -959,6 +960,9 @@ ALTER TABLE GRADE
 
 ALTER TABLE ARTICLE
     ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE ARTICLE
+    ADD COLUMN IF NOT EXISTS categorie_article VARCHAR(100) NOT NULL DEFAULT 'Autre';
 
 
 DROP VIEW IF EXISTS LISTE_PERMISSIONS;

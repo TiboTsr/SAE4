@@ -34,6 +34,8 @@ async function fetchData() {
         toast('Erreur lors du chargement des articles.', true);
     }
 
+    refreshCategoryOptions(articles);
+
     // Transform data to navbar items
     return articles.map(article => ({label: article.nom_article, id: article.id_article}));
 
@@ -56,7 +58,7 @@ async function saveArticle(id_article){
         xp: prop_xp.value,
         stocks: prop_qte.value,
         price: prop_price.value,
-        categorie: prop_categorie.value,
+        categorie: normalizeCategory(prop_categorie.value),
         reduction: getToggleStatus(prop_reductions)
     };
 
@@ -120,7 +122,7 @@ async function selectArticle(id_article, li){
     prop_name.value = article.nom_article;
     prop_xp.value = article.xp_article;
     prop_qte.value = article.stock_article;
-    prop_categorie.value = article.categorie_article ?? '';
+    prop_categorie.value = normalizeCategory(article.categorie_article);
     prop_price.value = article.prix_article;
     updateToggleStatus(prop_reductions, article.reduction_article);
 
@@ -203,6 +205,48 @@ new_btn.onclick = async ()=>{
 
 // Load navbar
 refreshNavbar(fetchData, selectArticle);
+
+function normalizeCategory(value) {
+    const category = String(value ?? '').trim();
+    return category === '' ? 'Autre' : category;
+}
+
+function refreshCategoryOptions(articles) {
+    if (!prop_categorie) {
+        return;
+    }
+
+    const currentValue = normalizeCategory(prop_categorie.value);
+    const defaultCategories = Array.from(prop_categorie.options).map((option) => normalizeCategory(option.value));
+    const categories = new Set(defaultCategories);
+
+    for (const article of articles) {
+        const category = normalizeCategory(article.categorie_article);
+        if (category !== '') {
+            categories.add(category);
+        }
+    }
+
+    while (prop_categorie.firstChild) {
+        prop_categorie.removeChild(prop_categorie.firstChild);
+    }
+
+    for (const category of categories) {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        option.selected = category === currentValue;
+        prop_categorie.appendChild(option);
+    }
+
+    if (!categories.has(currentValue)) {
+        const selectedOption = document.createElement('option');
+        selectedOption.value = currentValue;
+        selectedOption.textContent = currentValue;
+        selectedOption.selected = true;
+        prop_categorie.appendChild(selectedOption);
+    }
+}
 
 function resolveAdminArticleImage(storedValue) {
     if (typeof storedValue !== 'string') {
