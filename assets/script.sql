@@ -90,6 +90,7 @@ CREATE TABLE EVENEMENT(
                            lieu_evenement VARCHAR(50) NOT NULL,
                            date_evenement DATETIME NOT NULL,
                            deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                           type_evenement VARCHAR(50) NOT NULL DEFAULT 'autre';
                            PRIMARY KEY(id_evenement)
 );
 

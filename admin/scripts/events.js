@@ -31,14 +31,14 @@ async function fetchData() {
 
     // Fetch data
     let events = [];
-    try{
+    try {
         events = await requestGET('/event.php');
     } catch (error) {
         toast('Erreur lors du chargement des evenements.', true);
     }
 
     // Transform data to navbar items
-    return events.map(event => ({label: event.nom_evenement, id: event.id_evenement}));
+    return events.map(event => ({ label: event.nom_evenement, id: event.id_evenement }));
 
 }
 
@@ -48,7 +48,7 @@ async function fetchData() {
  * @param {number} id_event - The ID of the event to be saved.
  * @returns {Promise<void>} A promise that resolves when the event is successfully saved.
  */
-async function saveEvent(id_event){
+async function saveEvent(id_event) {
 
     // Show loader
     showLoader();
@@ -83,14 +83,14 @@ async function saveEvent(id_event){
 /**
  * Deletes the event from the DB.
 */
-async function deleteEvent(id_event){
+async function deleteEvent(id_event) {
 
     // Show loader
     showLoader();
 
     // Send request
     await requestDELETE(`/event.php?id=${id_event}`);
-    
+
     /// Update navbar
     refreshNavbar(fetchData, selectEvent);
 
@@ -105,7 +105,7 @@ async function deleteEvent(id_event){
  * @param {number} id_event - The ID of the event to be selected.
  * @returns {Promise<void>} A promise that resolves when the event information has been fetched and displayed.
  */
-async function selectEvent(id_event, li){
+async function selectEvent(id_event, li) {
 
     // Show skeleton
     showPropertieSkeleton();
@@ -126,6 +126,8 @@ async function selectEvent(id_event, li){
     prop_desc.value = event.description_evenement ?? '';
     const eventType = String(event.type_evenement ?? 'autre').toLowerCase();
     prop_type.value = [...prop_type.options].some(option => option.value === eventType) ? eventType : 'autre';
+    console.log('type renvoyé API =', event.type_evenement);
+    console.log('options disponibles =', [...prop_type.options].map(o => o.value));
     prop_xp.value = event.xp_evenement;
     prop_places.value = event.places_evenement;
     prop_price.value = event.prix_evenement;
@@ -134,33 +136,33 @@ async function selectEvent(id_event, li){
     prop_date.value = event.date_evenement.split(' ')[0]; // Because barnabé want to return a date and an hour on the api
 
     // Update save button
-    save_btn.onclick = ()=>{
+    save_btn.onclick = () => {
         saveEvent(id_event);
     };
 
     // Delete button
-    delete_btn.onclick = ()=>{
+    delete_btn.onclick = () => {
         swal({
             title: "Êtes vous sûr ?",
             text: "Cette action est définitive",
             icon: "warning",
             buttons: true,
             dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-                deleteEvent(id_event);
-            }
-          });
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    deleteEvent(id_event);
+                }
+            });
     };
 
     // Update name
-    prop_name.onkeyup = ()=>{
+    prop_name.onkeyup = () => {
         li.textContent = prop_name.value;
     };
 
     // Update image
-    document.getElementById('prop_image_edit').onclick = async ()=>{
+    document.getElementById('prop_image_edit').onclick = async () => {
         // Get file form
         const image = await openFileDialog();
 
@@ -193,11 +195,11 @@ async function selectEvent(id_event, li){
 
     // Hide skeleton
     hidePropertieSkeleton();
-    
+
 }
 
 // Handle new event
-new_btn.onclick = async ()=>{
+new_btn.onclick = async () => {
 
     // Show loader
     showLoader();

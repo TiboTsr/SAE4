@@ -27,6 +27,18 @@
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
+    <?php
+    $eventTypes = [
+        'repas' => 'Repas',
+        'fete' => 'Fête',
+        'jeux' => 'Jeux',
+        'soiree' => 'Soirée',
+        'atelier' => 'Atelier',
+        'conference' => 'Conférence',
+        'sport' => 'Sport',
+        'autre' => 'Autre'
+    ];
+    ?>
 
     <div class="calendar-filters">
         <label for="filter-date">Date :</label>
@@ -35,10 +47,12 @@
         <label for="filter-type">Type :</label>
         <select id="filter-type">
             <option value="all">Tous</option>
-            <option value="soirée">Soirée</option>
-            <option value="sport">Sport</option>
-            <option value="réunion">Réunion</option>
-            <option value="autre">Autre</option>
+            <?php foreach ($eventTypes as $value => $label): ?>
+                <option value="<?= htmlspecialchars($value) ?>">
+                    <?= htmlspecialchars($label) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
         </select>
 
         <button type="button" id="reset-filters">Réinitialiser</button>
