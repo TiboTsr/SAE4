@@ -93,5 +93,9 @@ function setUserRoles() : void
             echo json_encode(["message" => "Error while updating roles"]);
         }
 
+        return;
     }
+
+    http_response_code(400);
+    echo json_encode(["message" => "Missing id"]);
 }

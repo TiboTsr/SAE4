@@ -59,10 +59,6 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
             </a>
         </div>
 
-        <a id="accueil" href="../index.php">
-            <img src="../assets/images/logo.png" alt="Logo de l'ADIIL">
-        </a>
-
         <ul>
 
             <li perm="chat">

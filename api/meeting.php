@@ -93,19 +93,22 @@ function create_meeting() : void
 
 function delete_meeting() : void
 {
-    if (isset($_GET['id'])) {
-        $id = filter::int($_GET['id']);
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(["message" => "Missing id"]);
+        return;
+    }
 
-        $meeting = Meeting::getInstance($id);
+    $id = filter::int($_GET['id']);
+    $meeting = Meeting::getInstance($id);
 
-        if ($meeting) {
-            $meeting->delete();
-            http_response_code(200);
-            echo json_encode(["message" => "Meeting file deleted"]);
-        } else {
-            http_response_code(404);
-            echo json_encode(["message" => "Meeting file not found"]);
-        }
+    if ($meeting) {
+        $meeting->delete();
+        http_response_code(200);
+        echo json_encode(["message" => "Meeting file deleted"]);
+    } else {
+        http_response_code(404);
+        echo json_encode(["message" => "Meeting file not found"]);
     }
 }
 

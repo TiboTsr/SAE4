@@ -15,19 +15,19 @@ class Item extends BaseModel implements JsonSerializable
                 '' AS categorie_article, deleted";
     }
 
-    public static function create(string $name, int $xp, int $stocks, float $reduction, float $price, File | null $image, string $categorie_article): Item
+    public static function create(string $name, int $xp, int $stocks, bool $reduction, float $price, File | null $image, string $categorie_article): Item
     {
         $DB = new \DB();
         $imageFileName = $image?->getFileName() ?? 'N/A';
 
         $id = $DB->query("INSERT INTO ARTICLE (nom_article, xp_article, stock_article, reduction_article, prix_article, image_article)
-                    VALUES (?, ?, ?, ?, ?, ?)", "siiids", [$name, $xp, $stocks, $reduction, $price, $imageFileName]);
+                    VALUES (?, ?, ?, ?, ?, ?)", "siiids", [$name, $xp, $stocks, (int) $reduction, $price, $imageFileName]);
         return new Item($id);
     }
 
-    public function update(string $name, int $xp, int $stocks, float $reduction, float $price, string $categorie_article): Item
+    public function update(string $name, int $xp, int $stocks, bool $reduction, float $price, string $categorie_article): Item
     {
-        $this->DB->query("UPDATE ARTICLE SET nom_article = ?, xp_article = ?, stock_article = ?, reduction_article = ?, prix_article = ? WHERE id_article = ?", "siiidi", [$name, $xp, $stocks, $reduction, $price, $this->id]);
+        $this->DB->query("UPDATE ARTICLE SET nom_article = ?, xp_article = ?, stock_article = ?, reduction_article = ?, prix_article = ? WHERE id_article = ?", "siiidi", [$name, $xp, $stocks, (int) $reduction, $price, $this->id]);
 
         return $this;
     }
