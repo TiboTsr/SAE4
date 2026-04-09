@@ -180,16 +180,12 @@ function create_purchase() : void {
     }
 
     $db = new DB();
+    $conn = $db->connect();
 
     try {
-        $hasDeletedColumnRows = $db->select(
-            "SELECT COUNT(*) AS count_deleted
-             FROM INFORMATION_SCHEMA.COLUMNS
-             WHERE TABLE_SCHEMA = DATABASE()
-               AND TABLE_NAME = 'ARTICLE'
-               AND COLUMN_NAME = 'deleted'"
-        );
-        $hasDeletedColumn = ((int)($hasDeletedColumnRows[0]['count_deleted'] ?? 0)) > 0;
+        $conn->begin_transaction();
+
+        $hasDeletedColumn = has_column($conn, 'ARTICLE', 'deleted');
 
         $articleQuery = "
             SELECT id_article, prix_article, stock_article, xp_article, reduction_article
@@ -199,25 +195,27 @@ function create_purchase() : void {
         if ($hasDeletedColumn) {
             $articleQuery .= " AND deleted = FALSE";
         }
+        $articleQuery .= " FOR UPDATE";
 
-        $articleRows = $db->select($articleQuery, "i", [$idArticle]);
-        if (count($articleRows) === 0) {
+        $article = db_select_one($conn, $articleQuery, "i", [$idArticle]);
+        if ($article === null) {
+            $conn->rollback();
             http_response_code(404);
             echo json_encode(['error' => 'Article not found']);
             return;
         }
 
-        $article = $articleRows[0];
-
         if ((int)$article['stock_article'] >= 0 && $quantite > (int)$article['stock_article']) {
+            $conn->rollback();
             http_response_code(409);
             echo json_encode(['error' => 'Not enough stock']);
             return;
         }
 
         if ($idMembre !== null) {
-            $memberRows = $db->select("SELECT id_membre FROM MEMBRE WHERE id_membre = ?", "i", [$idMembre]);
-            if (count($memberRows) === 0) {
+            $member = db_select_one($conn, "SELECT id_membre FROM MEMBRE WHERE id_membre = ? FOR UPDATE", "i", [$idMembre]);
+            if ($member === null) {
+                $conn->rollback();
                 http_response_code(404);
                 echo json_encode(['error' => 'User not found']);
                 return;
@@ -226,7 +224,8 @@ function create_purchase() : void {
 
         $reductionFactor = 1.0;
         if ($idMembre !== null && (int)$article['reduction_article'] === 1) {
-            $gradeRows = $db->select(
+            $grade = db_select_one(
+                $conn,
                 "SELECT G.reduction_grade
                  FROM ADHESION A
                  INNER JOIN GRADE G ON G.id_grade = A.id_grade
@@ -237,8 +236,8 @@ function create_purchase() : void {
                 [$idMembre]
             );
 
-            if (count($gradeRows) > 0) {
-                $gradeReduction = (float)$gradeRows[0]['reduction_grade'];
+            if ($grade !== null) {
+                $gradeReduction = (float)$grade['reduction_grade'];
                 if ($gradeReduction > 0) {
                     $reductionFactor = max(0.0, 1 - ($gradeReduction / 100));
                 }
@@ -249,19 +248,21 @@ function create_purchase() : void {
         $isAnonymousOrder = ($idMembre === null);
         $effectiveMemberId = $idMembre;
 
-        if ($isAnonymousOrder && !is_column_nullable($db, 'COMMANDE', 'id_membre')) {
-            $effectiveMemberId = get_or_create_anonymous_member_id($db);
+        if ($isAnonymousOrder && !is_column_nullable($conn, 'COMMANDE', 'id_membre')) {
+            $effectiveMemberId = get_or_create_anonymous_member_id($conn);
         }
 
         if ($effectiveMemberId === null) {
-            $idCommande = $db->query(
+            $idCommande = db_insert(
+                $conn,
                 "INSERT INTO COMMANDE (statut_commande, prix_commande, paiement_commande, date_commande, qte_commande, id_membre, id_article)
                  VALUES (?, ?, ?, NOW(), ?, NULL, ?)",
                 "idsii",
                 [$recupere, $prixCommande, $modePaiement, $quantite, $idArticle]
             );
         } else {
-            $idCommande = $db->query(
+            $idCommande = db_insert(
+                $conn,
                 "INSERT INTO COMMANDE (statut_commande, prix_commande, paiement_commande, date_commande, qte_commande, id_membre, id_article)
                  VALUES (?, ?, ?, NOW(), ?, ?, ?)",
                 "idsiii",
@@ -270,7 +271,8 @@ function create_purchase() : void {
         }
 
         if ((int)$article['stock_article'] >= 0) {
-            $db->query(
+            db_execute(
+                $conn,
                 "UPDATE ARTICLE SET stock_article = stock_article - ? WHERE id_article = ?",
                 "ii",
                 [$quantite, $idArticle]
@@ -279,12 +281,15 @@ function create_purchase() : void {
 
         if (!$isAnonymousOrder && $idMembre !== null) {
             $xpGagne = (int)$article['xp_article'] * $quantite;
-            $db->query(
+            db_execute(
+                $conn,
                 "UPDATE MEMBRE SET xp_membre = xp_membre + ? WHERE id_membre = ?",
                 "ii",
                 [$xpGagne, $idMembre]
             );
         }
+
+        $conn->commit();
 
         http_response_code(201);
         echo json_encode([
@@ -292,8 +297,11 @@ function create_purchase() : void {
             'id_commande' => $idCommande,
         ]);
     } catch (\Throwable $error) {
+        $conn->rollback();
         http_response_code(500);
         echo json_encode(['error' => 'Failed to create purchase']);
+    } finally {
+        $conn->close();
     }
 }
 
@@ -347,9 +355,77 @@ function normalize_payment_mode(string $mode): string
     return $mode;
 }
 
-function is_column_nullable(DB $db, string $table, string $column): bool
+function db_select_one(mysqli $conn, string $sql, string $types = "", array $args = []): ?array
 {
-    $columnRows = $db->select(
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        throw new RuntimeException("Database query preparation failed");
+    }
+
+    if ($types !== "") {
+        $stmt->bind_param($types, ...$args);
+    }
+
+    if (!$stmt->execute()) {
+        $stmt->close();
+        throw new RuntimeException("Database query execution failed");
+    }
+
+    $result = $stmt->get_result();
+    $row = $result ? $result->fetch_assoc() : null;
+    $stmt->close();
+
+    return is_array($row) ? $row : null;
+}
+
+function db_execute(mysqli $conn, string $sql, string $types = "", array $args = []): int
+{
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        throw new RuntimeException("Database query preparation failed");
+    }
+
+    if ($types !== "") {
+        $stmt->bind_param($types, ...$args);
+    }
+
+    if (!$stmt->execute()) {
+        $stmt->close();
+        throw new RuntimeException("Database query execution failed");
+    }
+
+    $affected = $stmt->affected_rows;
+    $stmt->close();
+
+    return (int)$affected;
+}
+
+function db_insert(mysqli $conn, string $sql, string $types = "", array $args = []): int
+{
+    db_execute($conn, $sql, $types, $args);
+    return (int)$conn->insert_id;
+}
+
+function has_column(mysqli $conn, string $table, string $column): bool
+{
+    $columnRow = db_select_one(
+        $conn,
+        "SELECT COUNT(*) AS count_column
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = ?
+           AND COLUMN_NAME = ?",
+        "ss",
+        [$table, $column]
+    );
+
+    return ((int)($columnRow['count_column'] ?? 0)) > 0;
+}
+
+function is_column_nullable(mysqli $conn, string $table, string $column): bool
+{
+    $columnRow = db_select_one(
+        $conn,
         "SELECT IS_NULLABLE
          FROM INFORMATION_SCHEMA.COLUMNS
          WHERE TABLE_SCHEMA = DATABASE()
@@ -359,27 +435,30 @@ function is_column_nullable(DB $db, string $table, string $column): bool
         [$table, $column]
     );
 
-    return count($columnRows) > 0 && strtoupper((string)$columnRows[0]['IS_NULLABLE']) === 'YES';
+    return $columnRow !== null && strtoupper((string)$columnRow['IS_NULLABLE']) === 'YES';
 }
 
-function get_or_create_anonymous_member_id(DB $db): int
+function get_or_create_anonymous_member_id(mysqli $conn): int
 {
-    $existing = $db->select(
+    $existing = db_select_one(
+        $conn,
         "SELECT id_membre
          FROM MEMBRE
          WHERE nom_membre = 'N/A' AND prenom_membre = 'N/A'
          ORDER BY id_membre ASC
-         LIMIT 1"
+         LIMIT 1
+         FOR UPDATE"
     );
 
-    if (count($existing) > 0) {
-        return (int)$existing[0]['id_membre'];
+    if ($existing !== null) {
+        return (int)$existing['id_membre'];
     }
 
-    $anonymousEmail = 'anonymous.order@bde.local';
+    $anonymousEmail = 'anonymous.order.' . tools::generateUUID() . '@bde.local';
     $anonymousPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
 
-    return $db->query(
+    return db_insert(
+        $conn,
         "INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, password_membre, xp_membre, discord_token_membre, pp_membre, tp_membre)
          VALUES ('N/A', 'N/A', ?, ?, 0, NULL, 'N/A', NULL)",
         "ss",

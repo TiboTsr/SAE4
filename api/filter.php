@@ -13,10 +13,16 @@ class Filter
 
     public static function string(mixed $value, int $minLenght = 0, int $maxLenght = 5000): string
     {
-        // On retire la "merde" de la chaine
-        $filtered = htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8');
+        if (!is_scalar($value)) {
+            self::deny($value, "string");
+        }
 
-        if (strlen($filtered) < $minLenght || strlen($filtered) > $maxLenght) {
+        $filtered = (string)$value;
+        $length = function_exists('mb_strlen')
+            ? mb_strlen($filtered, 'UTF-8')
+            : strlen($filtered);
+
+        if ($length < $minLenght || $length > $maxLenght) {
             self::deny($value, "string");
         }
 
@@ -69,9 +75,18 @@ class Filter
 
     public static function date(mixed $value): string
     {
-        $exp = '/^(\d{4})-(\d{2})-(\d{2})$/';
+        if (!is_string($value)) {
+            self::deny($value, "date");
+        }
 
-        if (!preg_match($exp, $value)) {
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        $errors = \DateTimeImmutable::getLastErrors();
+
+        if (
+            $date === false ||
+            ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
+            $date->format('Y-m-d') !== $value
+        ) {
             self::deny($value, "date");
         }
 

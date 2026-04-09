@@ -35,13 +35,13 @@ class Meeting extends BaseModel implements JsonSerializable
         return File::getFile($data['fichier_reunion']);
     }
 
-    public function getUser(): Member
+    public function getUser(): ?Member
     {
         $data = $this->DB->select("SELECT id_membre
                                  FROM REUNION
                                  WHERE id_reunion = ?", "i", [$this->id])[0];
 
-        return new Member($data['id_membre']);
+        return Member::getInstance((int) $data['id_membre']);
     }
 
     public static function create(string $date, File $file, Member $member): Meeting

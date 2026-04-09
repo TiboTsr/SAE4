@@ -39,7 +39,13 @@ class Accounting extends BaseModel implements JsonSerializable
     {
         $data = $this->DB->select("SELECT * FROM COMPTABILITE WHERE id_comptabilite = ?", "i", [$this->id])[0];
 
-        $data['user'] = $this->DB->select("SELECT * FROM MEMBRE WHERE id_membre = ?", "i", [$data['id_membre']])[0];
+        $data['user'] = $this->DB->select(
+            "SELECT id_membre, nom_membre, prenom_membre, email_membre, xp_membre, discord_token_membre, pp_membre, tp_membre
+             FROM MEMBRE
+             WHERE id_membre = ?",
+            "i",
+            [$data['id_membre']]
+        )[0];
 
         unset($data['id_membre']);
 

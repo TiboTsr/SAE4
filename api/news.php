@@ -12,8 +12,7 @@ require_once 'models/File.php';
 
 header('Content-Type: application/json');
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
 tools::checkPermission('p_actualite');
 
@@ -61,7 +60,7 @@ function get_news() : void
 
         if ($news == null) {
             http_response_code(404);
-            echo json_encode(['error' => 'Role not found']);
+            echo json_encode(['error' => 'News not found']);
             return;
         }
         echo $news;
@@ -87,19 +86,31 @@ function create_news() : void
 
 function update_news() : void
 {
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
 
     if ($news == null) {
         http_response_code(404);
-        echo json_encode(['error' => 'Role not found']);
+        echo json_encode(['error' => 'News not found']);
         return;
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($data) || !isset($data['name'], $data['description'], $data['date'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing required fields']);
+        return;
+    }
+
     $name = filter::string($data['name'], maxLenght: 100);
     $description = filter::string($data['description'], maxLenght: 1000);
-    $date = filter::string($data['date']);
+    $date = filter::date($data['date']);
     $id_membre = filter::int($_SESSION['userid']);
 
     $news->update($name, $description, $date, $id_membre);
@@ -109,12 +120,18 @@ function update_news() : void
 
 function update_image() : void
 {
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
 
     if ($news == null) {
         http_response_code(404);
-        echo json_encode(['error' => 'Role not found']);
+        echo json_encode(['error' => 'News not found']);
         return;
     }
 
@@ -133,6 +150,12 @@ function update_image() : void
 
 function delete_news() : void
 {
+    if (!isset($_GET['id'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing id']);
+        return;
+    }
+
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
 

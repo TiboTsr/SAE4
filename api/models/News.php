@@ -58,7 +58,7 @@ class News extends BaseModel implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $data = $this->DB->select("SELECT A.*, M.prenom_membre, M.prenom_membre FROM ACTUALITE as A INNER JOIN MEMBRE M on A.id_membre = M.id_membre WHERE id_actualite = ?", "i", [$this->id]);
+        $data = $this->DB->select("SELECT A.*, M.nom_membre, M.prenom_membre FROM ACTUALITE as A INNER JOIN MEMBRE M on A.id_membre = M.id_membre WHERE id_actualite = ?", "i", [$this->id]);
 
         return $data[0];
     }

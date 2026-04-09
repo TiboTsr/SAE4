@@ -89,6 +89,24 @@ function update_event(): void
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
+    if (
+        !is_array($data) ||
+        !isset(
+            $data['nom'],
+            $data['description'],
+            $data['xp'],
+            $data['places'],
+            $data['reductions'],
+            $data['prix'],
+            $data['lieu'],
+            $data['date']
+        )
+    ) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing required fields']);
+        return;
+    }
+
     $event = Event::getInstance(filter::int($_GET['id']));
 
     if (!$event) {

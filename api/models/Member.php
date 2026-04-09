@@ -59,7 +59,7 @@ class Member extends BaseModel implements JsonSerializable
     public static function getInstance($id) : ?Member
     {
         $DB = new \DB();
-        $result = $DB->select("SELECT * FROM MEMBRE WHERE id_membre = ?", "i", [$id]);
+        $result = $DB->select("SELECT id_membre FROM MEMBRE WHERE id_membre = ?", "i", [$id]);
 
         if (count($result) == 0) {
             return null;
@@ -98,14 +98,24 @@ class Member extends BaseModel implements JsonSerializable
 
     public static function bulkFetch(): array
     {
-        // Retourne un tableau de tous les membres au format JSON, et non sous forme d'objet
-        // Les roles ne sont pas inclus non plus.
-        // Il faut utiliser la méthode fetch() pour obtenir l'objet membre, ainsi que les roles
-
         $DB = new \DB();
-        $result = $DB->select("SELECT * FROM MEMBRE");
-
-        return $result;
+        return $DB->select(
+            "SELECT
+                M.id_membre,
+                M.nom_membre,
+                M.prenom_membre,
+                M.email_membre,
+                M.xp_membre,
+                M.discord_token_membre,
+                M.pp_membre,
+                M.tp_membre,
+                (
+                    SELECT COUNT(*)
+                    FROM ASSIGNATION A
+                    WHERE A.id_membre = M.id_membre
+                ) AS nb_roles
+             FROM MEMBRE M"
+        );
     }
 
     /**

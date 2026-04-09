@@ -1,6 +1,7 @@
 section {
   height: fit-content;
 }
+
 h1 {
   margin: 0 0 12px 2vw;
   padding: 0;
@@ -14,22 +15,25 @@ h1 {
 .event-subscribed {
   background-color: rgb(38, 100, 49);
 }
+
 .event-not-subscribed {
   background-color: #c3161675;
 }
+
 .event-full {
   background-color: #5d5757;
 }
 
 .events-display {
-    width: min(100%, 1100px);
+  width: min(100%, 1100px);
 
-    margin: auto;
-    margin-bottom: 5vh;
+  margin: auto;
+  margin-bottom: 5vh;
 
-    padding: 20px;
+  padding: 20px;
 
-    height: fit-content; /* Limite la hauteur pour permettre le défilement */
+  height: fit-content;
+  /* Limite la hauteur pour permettre le défilement */
 
     display: flex;
     flex-direction: column;
@@ -38,9 +42,9 @@ h1 {
     align-items: stretch;
     align-self: center;
 
-    position: relative;
-  }
-  
+  position: relative;
+}
+
 .event {
   display: flex;
   justify-content: space-between;
@@ -60,23 +64,28 @@ h1 {
   transition: all 0.3s ease-in-out;
 
 }
+
 .event:hover {
   background-color: #333333;
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease-in-out;
 }
-.event > div {
+
+.event>div {
   width: 100%;
   overflow: hidden;
 }
-.event > * {
+
+.event>* {
   margin-left: 1vw;
   margin-right: 1vw;
 }
-.event > div h2 {
+
+.event>div h2 {
   margin-bottom: 10px;
 }
+
 .event h4 {
   width: 125px;
   border-radius: 20px;
@@ -84,6 +93,7 @@ h1 {
   text-align: center;
   padding: 12px;
 }
+
 .event-box {
   display: flex;
   align-items: center;
@@ -91,25 +101,30 @@ h1 {
   width: 100%;
   justify-content: center;
 }
+
 .passed {
   opacity: 60%;
 }
+
 .timeline-event {
   display: flex;
   align-items: center;
   margin-right: 25px;
 }
+
 .timeline-event p {
   font-size: 1em;
   text-align: left;
   margin: auto 25px;
   width: 75px;
 }
+
 .timeline-event h4 {
   font-size: 1.2em;
   text-align: right;
   padding-right: 10px;
 }
+
 .timeline-marker {
   width: 15px;
   height: 15px;
@@ -118,20 +133,23 @@ h1 {
   background-color: transparent;
   position: relative;
 }
+
 .timeline-marker.passed {
   background-color: rgb(155, 140, 140);
 }
+
 .timeline-marker.today {
   background-color: rgb(64, 180, 141);
 }
 
-.timeline-marker.today + p {
-    font-weight: 900;
+.timeline-marker.today+p {
+  font-weight: 900;
 }
 
 .timeline-marker.upcoming {
   background-color: rgb(38, 100, 49);
 }
+
 .vertical-line {
   width: 2px;
   height: 100px;
@@ -159,9 +177,10 @@ h1 {
   transition: all 0.3s ease-in-out;
   text-decoration: none;
 
-  margin: 8vh auto 8vh auto ;
+  margin: 8vh auto 8vh auto;
   margin-bottom: 30px;
 }
+
 .show-more:hover {
   background-color: rgb(98, 207, 162);
   color: black;
@@ -188,87 +207,87 @@ h1 {
 }
 
 #calendar {
-    width: 100%;
-    height: 100%;
-    color: white;
-    padding: 2%;
+  width: 100%;
+  height: 100%;
+  color: white;
+  padding: 2%;
 }
 
 .fc {
-    --fc-page-bg-color: #1E1E1E;
-    --fc-neutral-bg-color: #2a2a2a;
-    --fc-neutral-text-color: #fff;
-    --fc-border-color: #444;
-    --fc-button-text-color: #fff;
-    --fc-button-bg-color: #444;
-    --fc-button-border-color: #555;
-    --fc-button-hover-bg-color: #555;
-    --fc-daygrid-event-bg-color: #11998e;
-    --fc-daygrid-event-border-color: #11998e;
-    font-family: "Inter", sans-serif;
+  --fc-page-bg-color: #1E1E1E;
+  --fc-neutral-bg-color: #2a2a2a;
+  --fc-neutral-text-color: #fff;
+  --fc-border-color: #444;
+  --fc-button-text-color: #fff;
+  --fc-button-bg-color: #444;
+  --fc-button-border-color: #555;
+  --fc-button-hover-bg-color: #555;
+  --fc-daygrid-event-bg-color: #11998e;
+  --fc-daygrid-event-border-color: #11998e;
+  font-family: "Inter", sans-serif;
 }
 
 /* Titre du calendrier*/
 .fc .fc-toolbar-title {
-    font-family: "Koulen", sans-serif !important;
-    font-size: 2.5rem;
-    letter-spacing: 5px;
-    font-weight: 500;
-    color: white;
+  font-family: "Koulen", sans-serif !important;
+  font-size: 2.5rem;
+  letter-spacing: 5px;
+  font-weight: 500;
+  color: white;
 }
 
 /* Boutons navigation */
 .fc .fc-button {
-    border-radius: 8px;
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 0.85em;
+  border-radius: 8px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 0.85em;
 }
 
 .fc .fc-button-primary {
-    background-color: #11998e !important;
-    border-color: #11998e !important;
+  background-color: #11998e !important;
+  border-color: #11998e !important;
 }
 
 .fc .fc-button-primary:hover {
-    background-color: #0e7a6e !important;
-    border-color: #0e7a6e !important;
+  background-color: #0e7a6e !important;
+  border-color: #0e7a6e !important;
 }
 
 .fc .fc-button-primary.fc-button-active {
-    background-color: white !important;
-    border-color: #0e7a6e !important;
-    color: #0e7a6e !important;
+  background-color: white !important;
+  border-color: #0e7a6e !important;
+  color: #0e7a6e !important;
 }
 
 /* Grille des jours */
 .fc .fc-daygrid-day-number {
-    color: #ccc;
+  color: #ccc;
 }
 
 .fc .fc-daygrid-day {
-    border-color: #444;
-    background-color: transparent;
+  border-color: #444;
+  background-color: transparent;
 }
 
 .fc .fc-daygrid-day-top {
-    color: #fff;
+  color: #fff;
 }
 
 /* Evénements */
 .fc .fc-daygrid-event {
-    border-radius: 6px;
-    font-size: 0.9em;
-    padding: 2px 6px;
-    background-color: #f59e0b !important;
-    border: 1px solid #f59e0b !important;
-    color: #ffffff !important;
+  border-radius: 6px;
+  font-size: 0.9em;
+  padding: 2px 6px;
+  background-color: #f59e0b !important;
+  border: 1px solid #f59e0b !important;
+  color: #ffffff !important;
 }
 
 /* Aujourd'hui */
 .fc-today {
-    background-color: rgba(17, 153, 142, 0.2) !important;
-    border-color: #11998e !important;
+  background-color: rgba(17, 153, 142, 0.2) !important;
+  border-color: #11998e !important;
 }
 
 /******************************
@@ -288,17 +307,24 @@ h1 {
 .calendar-filters input,
 .calendar-filters select,
 .calendar-filters button {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid rgb(119, 241, 190);
-    background-color: #1e1e1e;
-    color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(119, 241, 190);
+  background-color: #1e1e1e;
+  color: white;
 }
 
 .calendar-filters button {
-    background-color: #11998e;
-    border-color: #11998e;
-    cursor: pointer;
+  background-color: #11998e;
+  border-color: #11998e;
+  cursor: pointer;
+}
+
+#filter-date::-webkit-calendar-picker-indicator {
+  border-radius: 35%;
+  background-color: rgb(119, 241, 190) !important;
+  color: rgb(119, 241, 190) !important;
+  -webkit-mask-image: none !important;
 }
 
 /* Responsive */
@@ -366,14 +392,12 @@ h1 {
         gap: 12px;
     }
 
-    .fc .fc-toolbar-title {
-        font-size: 1.8rem !important;
-        letter-spacing: 2px;
-    }
+  .fc .fc-toolbar-title {
+    font-size: 1.8rem !important;
+    letter-spacing: 2px;
+  }
 
-    #calendar {
-        font-size: 0.9em;
-    }
+  #calendar {
+    font-size: 0.9em;
+  }
 }
-
-
