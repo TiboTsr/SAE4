@@ -131,6 +131,27 @@ H1 {
 
 }
 
+#message-reduc a {
+    color: rgb(119, 241, 190);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#message-reduc a:hover {
+    background-color: rgba(119, 241, 190, 0.18);
+    color: #d9fff1;
+}
+
+#message-reduc a:focus-visible {
+    outline: 2px solid rgb(119, 241, 190);
+    outline-offset: 2px;
+}
+
 
 /***Affichage des produits***/
 
