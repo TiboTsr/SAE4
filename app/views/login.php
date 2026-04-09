@@ -40,7 +40,8 @@
             <button type="submit">Se connecter</button>
         </form>
 
-        <form method="GET" action="index.php?page=signin" id="create-account">
+        <form method="GET" action="index.php" id="create-account">
+            <input type="hidden" name="page" value="signin">
             <h2>Pas encore de compte ?</h2>
             <button type="submit">Créez en un</button>
         </form>

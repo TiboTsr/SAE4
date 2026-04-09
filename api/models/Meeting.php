@@ -9,6 +9,17 @@ require_once __DIR__ . '/Member.php';
 
 class Meeting extends BaseModel implements JsonSerializable
 {
+    public function updateDate(string $date): Meeting
+    {
+        $this->DB->query(
+            "UPDATE REUNION SET date_reunion = ? WHERE id_reunion = ?",
+            "si",
+            [$date, $this->id]
+        );
+
+        return $this;
+    }
+
     public function delete(): void
     {
         $this->getFile()?->deleteFile();

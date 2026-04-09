@@ -68,7 +68,7 @@ require_once "app/views/header.php" ;
 </div>
 
 <p id='message-reduc'>
-    * Articles non éligibles aux réductions de grade
+    * Articles non éligibles aux réductions de grade <a href="index.php?page=grade">En savoir plus</a>
 </p>
 <?php if (!empty($products)) : ?>
     <div id="product-list">
@@ -83,12 +83,12 @@ require_once "app/views/header.php" ;
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>
                         </h3>
-                        <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € </p>
-                        <p><?= htmlspecialchars($product['xp_article']) ?> XP
+                        <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € 
                             <?php if (!(int)$product['reduction_article']) { ?>
                             <span>    * </span>
                             <?php } ?>
                         </p>
+                        <p><?= htmlspecialchars($product['xp_article']) ?> XP</p>
                     </div>
                     <div>
                         <p id="stock-status">
@@ -158,9 +158,7 @@ require_once "app/views/header.php" ;
             });
         });
     </script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="assets/scripts/add_cart.js"></script>
 
 </body>
 </html>
-

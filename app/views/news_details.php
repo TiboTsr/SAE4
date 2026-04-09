@@ -48,6 +48,22 @@
             <?php echo nl2br(htmlspecialchars($event['contenu_actualite'])); ?>
         </p>
 
+        <div class="news-nav-buttons">
+            <?php if (!is_null($newerNewsId)) : ?>
+                <a class="news-nav-button news-nav-button-left" href="index.php?page=news_details&id=<?= (int) $newerNewsId ?>">
+                    <span class="news-nav-icon" aria-hidden="true">&#8592;</span>
+                    <span>Actualite plus recente</span>
+                </a>
+            <?php endif; ?>
+
+            <?php if (!is_null($olderNewsId)) : ?>
+                <a class="news-nav-button news-nav-button-right" href="index.php?page=news_details&id=<?= (int) $olderNewsId ?>">
+                    <span>Actualite plus ancienne</span>
+                    <span class="news-nav-icon" aria-hidden="true">&#8594;</span>
+                </a>
+            <?php endif; ?>
+        </div>
+
     </section>
 
 

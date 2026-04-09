@@ -165,3 +165,154 @@ h1 {
   color: black;
   transform: scale(1.05);
 }
+
+/***********************
+****** Calendrier ******
+************************/
+
+.event-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80vw;
+    height: 15vh;
+    border-radius: 15px;
+    box-shadow: 10px 7px 4px rgba(0, 0, 0, 0.107);
+    background-color: #000000;
+    overflow: hidden;
+	  margin-top: 2%;
+	  margin-bottom: 1%;
+}
+
+#calendar {
+    width: 100%;
+    height: 100%;
+    color: white;
+    padding: 2%;
+}
+
+.fc {
+    --fc-page-bg-color: #1E1E1E;
+    --fc-neutral-bg-color: #2a2a2a;
+    --fc-neutral-text-color: #fff;
+    --fc-border-color: #444;
+    --fc-button-text-color: #fff;
+    --fc-button-bg-color: #444;
+    --fc-button-border-color: #555;
+    --fc-button-hover-bg-color: #555;
+    --fc-daygrid-event-bg-color: #11998e;
+    --fc-daygrid-event-border-color: #11998e;
+    font-family: "Inter", sans-serif;
+}
+
+/* Titre du calendrier*/
+.fc .fc-toolbar-title {
+    font-family: "Koulen", sans-serif !important;
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+    font-weight: 500;
+    color: white;
+}
+
+/* Boutons navigation */
+.fc .fc-button {
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.fc .fc-button-primary {
+    background-color: #11998e !important;
+    border-color: #11998e !important;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #0e7a6e !important;
+    border-color: #0e7a6e !important;
+}
+
+.fc .fc-button-primary.fc-button-active {
+    background-color: white !important;
+    border-color: #0e7a6e !important;
+    color: #0e7a6e !important;
+}
+
+/* Grille des jours */
+.fc .fc-daygrid-day-number {
+    color: #ccc;
+}
+
+.fc .fc-daygrid-day {
+    border-color: #444;
+    background-color: transparent;
+}
+
+.fc .fc-daygrid-day-top {
+    color: #fff;
+}
+
+/* Evénements */
+.fc .fc-daygrid-event {
+    border-radius: 6px;
+    font-size: 0.9em;
+    padding: 2px 6px;
+    background-color: #f59e0b !important;
+    border: 1px solid #f59e0b !important;
+    color: #ffffff !important;
+}
+
+/* Aujourd'hui */
+.fc-today {
+    background-color: rgba(17, 153, 142, 0.2) !important;
+    border-color: #11998e !important;
+}
+
+/******************************
+****** Filtre Calendrier ******
+*******************************/
+
+.calendar-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 80vw;
+    margin: 0 auto 20px auto;
+    color: white;
+}
+
+.calendar-filters input,
+.calendar-filters select,
+.calendar-filters button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgb(119, 241, 190);
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.calendar-filters button {
+    background-color: #11998e;
+    border-color: #11998e;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .agenda-wrapper {
+        width: 95vw;
+        height: 60vh;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.8rem !important;
+        letter-spacing: 2px;
+    }
+
+    #calendar {
+        font-size: 0.9em;
+    }
+}
+
+

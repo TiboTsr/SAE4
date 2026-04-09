@@ -59,7 +59,9 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
             </a>
         </div>
 
-        <h1 onclick="window.location.href='../index.php'" style="cursor: pointer;">ADIIL - Admin</h1>
+        <a id="accueil" href="../index.php">
+            <img src="../assets/images/logo.png" alt="Logo de l'ADIIL">
+        </a>
 
         <ul>
 

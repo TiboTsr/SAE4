@@ -20,3 +20,34 @@ function getNew($eventid) {
         args: [$eventid]
     );
 }
+
+function getAdjacentNewsIds($newsId, $newsDate) {
+    $db = new DB();
+
+    $older = $db->select(
+        "SELECT id_actualite
+        FROM ACTUALITE
+        WHERE date_actualite <= NOW()
+          AND (date_actualite < ? OR (date_actualite = ? AND id_actualite < ?))
+        ORDER BY date_actualite DESC, id_actualite DESC
+        LIMIT 1",
+        "ssi",
+        [$newsDate, $newsDate, $newsId]
+    );
+
+    $newer = $db->select(
+        "SELECT id_actualite
+        FROM ACTUALITE
+        WHERE date_actualite <= NOW()
+          AND (date_actualite > ? OR (date_actualite = ? AND id_actualite > ?))
+        ORDER BY date_actualite ASC, id_actualite ASC
+        LIMIT 1",
+        "ssi",
+        [$newsDate, $newsDate, $newsId]
+    );
+
+    return [
+        'older' => !empty($older) ? (int) $older[0]['id_actualite'] : null,
+        'newer' => !empty($newer) ? (int) $newer[0]['id_actualite'] : null,
+    ];
+}

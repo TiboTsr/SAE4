@@ -42,7 +42,7 @@
     <article class="help-card" id="contact-admin">
         <h2>Contacter un administrateur</h2>
         <p>Pour toute demande, ecrivez a un administrateur ADIIL via email.</p>
-        <a class="help-link" href="mailto:aassociation.adiil@gmail.com">Contacter un administrateur</a>
+        <a class="help-link" href="mailto:association.adiil@gmail.com">Contacter un administrateur</a>
     </article>
 
     <article class="help-card" id="faq-section">

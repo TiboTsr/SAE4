@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -25,8 +25,10 @@
     <h2>MON COMPTE</h2>
 
     <?php if (isset($_SESSION['message'])) : ?>
-        <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
-        <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
+        <?php $toastType = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error' : ''; ?>
+        <div id="account-toast" class="toast-container <?php echo $toastType; ?>" role="status" aria-live="polite" aria-atomic="true">
+            <p class="toast"><?php echo htmlspecialchars($_SESSION['message']); ?></p>
+        </div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
 
@@ -34,7 +36,7 @@
         <div id="account-generalInfo">
 
             <!-- Photo de profil -->
-            <div>
+            <div class="account-profile-block">
                 <form method="POST" enctype="multipart/form-data" id="pp-form">
                     <label id="cadre-pp" for="profilePictureInput">
                         <?php if (empty($infoUser[0]['pp_membre'])) : ?>
@@ -45,13 +47,13 @@
                     </label>
                     <input type="file" id="profilePictureInput" name="file" accept="image/jpeg, image/png, image/webp" style="display:none;" onchange="this.form.submit()">
                     <button type="button" id="edit-icon" onclick="document.getElementById('profilePictureInput').click()">
-                        <img src="assets/images/edit_logo.png" alt="Éditer la photo de profil">
+                        <img src="assets/images/edit_logo.png" alt="Ã‰diter la photo de profil">
                     </button>
                 </form>
             </div>
 
             <!-- XP -->
-            <div>
+            <div class="account-xp-block">
                 <p><?php echo htmlspecialchars($infoUser[0]['xp_membre']); ?></p>
                 <p>XP</p>
             </div>
@@ -75,15 +77,19 @@
         <form method="POST" action="index.php?page=account" id="account-personalInfo-form">
             <div>
                 <div>
-                    <input type="text" id="name" name="name" placeholder="Prénom"
+                    <label for="name">Prenom</label>
+                    <input type="text" id="name" name="name" placeholder="PrÃ©nom"
                         value="<?php echo htmlspecialchars($infoUser[0]['prenom_membre']); ?>" required>
+                    <label for="lastName">Nom</label>
                     <input type="text" id="lastName" name="lastName" placeholder="Nom de famille"
                         value="<?php echo htmlspecialchars($infoUser[0]['nom_membre']); ?>" required>
                 </div>
                 <div>
+                    <label for="mail">Adresse mail</label>
                     <input type="email" id="mail" name="mail" placeholder="Adresse mail"
                         value="<?php echo htmlspecialchars($infoUser[0]['email_membre']); ?>" required>
-                    <?php if (!empty($infoUser[0]['tp_membre'])) : ?>
+                    
+                    <label for="tp">Groupe TP</label>
                     <select id="tp" name="tp">
                         <?php
                         $tpOptions = ['11A','11B','12C','12D','21A','21B','22C','22D','31A','31B','32C','32D'];
@@ -95,7 +101,6 @@
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <?php endif; ?>
                 </div>
             </div>
             <button type="submit">
@@ -109,8 +114,6 @@
                 <div>
                     <p>Modifier mon mot de passe :</p>
                     <input type="password" id="mdp" name="mdp" placeholder="Mot de passe actuel">
-                </div>
-                <div>
                     <input type="password" id="newMdp" name="newMdp" placeholder="Nouveau mot de passe" required>
                     <input type="password" id="newMdpVerif" name="newMdpVerif" placeholder="Confirmation du nouveau mot de passe" required>
                 </div>
@@ -126,14 +129,14 @@
             <button type="button">
                 <a href="https://discord.com/login" target="_blank">
                     <img src="assets/images/logo_discord.png" alt="Logo Discord">
-                    Associer mon compte à Discord
+                    Associer mon compte Discord
                 </a>
             </button>
 
             <form action="index.php?page=account" method="post">
                 <input type="hidden" name="deconnexion" value="true">
                 <button type="submit">
-                    <img src="assets/images/logOut_icon.png" alt="Déconnexion">
+                    <img src="assets/images/logOut_icon.png" alt="DÃ©connexion">
                     Déconnexion
                 </button>
             </form>
@@ -171,7 +174,7 @@
                             <td><?php echo htmlspecialchars($achat['date_transaction']); ?></td>
                             <td><?php echo htmlspecialchars($achat['element']); ?></td>
                             <td><?php echo htmlspecialchars($achat['quantite']); ?></td>
-                            <td><?php echo htmlspecialchars(number_format($achat['montant'], 2, ',', ' ')); ?> €</td>
+                            <td><?php echo htmlspecialchars(number_format($achat['montant'], 2, ',', ' ')); ?> â‚¬</td>
                             <td><?php echo htmlspecialchars($achat['mode_paiement']); ?></td>
                             <td><?php echo htmlspecialchars($achat['statut']); ?></td>
                         </tr>
@@ -185,5 +188,29 @@
     </section>
 
     <?php require_once 'app/views/footer.php'; ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toast = document.getElementById('account-toast');
+
+            if (!toast) {
+                return;
+            }
+
+            toast.style.display = 'flex';
+
+            requestAnimationFrame(function () {
+                toast.classList.add('showed');
+            });
+
+            setTimeout(function () {
+                toast.classList.remove('showed');
+                setTimeout(function () {
+                    toast.style.display = 'none';
+                }, 200);
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
+
+

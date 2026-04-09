@@ -4,22 +4,27 @@
   
 #index section{
     display: flex;
+    flex-direction: column;
     height: fit-content;
-    align-items: stretch
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 60px;
 }
 
 .titre_vertical{
     font-family: "Koulen","Inter", sans-serif;
     width: fit-content;
+    order: -1;
 
-    writing-mode: vertical-lr;
-    text-orientation: upright;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
 
-    letter-spacing: -40px;
+    letter-spacing: 8px;
 
     font-weight: 500;
 
-    font-size: 90px;
+    font-size: clamp(2.6rem, 7vw, 5.6rem);
+    line-height: 1;
     text-align: center;
 
 }
@@ -142,7 +147,7 @@
 
 .events-display{
     width: 100%;
-    transform: translateX(calc(163px/2));
+    transform: none;
 
     display: flex;
 

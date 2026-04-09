@@ -52,6 +52,19 @@ function getAllEventsToDisplay($sql_date) {
     );
 }
 
+function getAllEventsForCalendar() {
+    $db = new DB();
+    $typeSelect = eventTypeSelectExpr();
+
+    return $db->select(
+        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect}
+         FROM EVENEMENT
+         ORDER BY date_evenement ASC",
+        "",
+        []
+    );
+}
+
 function getEventsByDateDesc(int $show): array
 {
     $db = new DB();

@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $_SESSION['message_type'] = "error";
     }
 
-    header("Location: " . $_SERVER['PHP_SELF']);
+    header("Location: index.php?page=account");
     exit();
 }
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['lastN
         $_SESSION['message_type'] = "error";
     }
 
-    header("Location: " . $_SERVER['PHP_SELF']);
+    header("Location: index.php?page=account");
     exit();
 }
 
@@ -76,20 +76,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mdp'], $_POST['newMdp
             ? true
             : password_verify($currentPassword, $user[0]['password_membre']);
 
-        if ($password_ok && $newPassword === $newPasswordVerif) {
+        if (!$password_ok) {
+            $_SESSION['message']      = "Mot de passe actuel incorrect.";
+            $_SESSION['message_type'] = "error";
+        } elseif ($newPassword !== $newPasswordVerif) {
+            $_SESSION['message']      = "Les nouveaux mots de passe ne correspondent pas.";
+            $_SESSION['message_type'] = "error";
+        } else {
             updatePassword(password_hash($newPassword, PASSWORD_DEFAULT));
             $_SESSION['message']      = "Mot de passe mis à jour avec succès !";
             $_SESSION['message_type'] = "success";
-        } else {
-            $_SESSION['message']      = "Les nouveaux mots de passe ne correspondent pas.";
-            $_SESSION['message_type'] = "error";
         }
     } else {
-        $_SESSION['message']      = "Mot de passe actuel incorrect.";
+        $_SESSION['message']      = "Erreur : utilisateur introuvable dans la base de données.";
         $_SESSION['message_type'] = "error";
     }
 
-    header("Location: " . $_SERVER['PHP_SELF']);
+    header("Location: index.php?page=account");
     exit();
 }
 

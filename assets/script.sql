@@ -7,6 +7,7 @@
 DROP TABLE IF EXISTS ASSIGNATION;
 DROP TABLE IF EXISTS INSCRIPTION;
 DROP TABLE IF EXISTS ADMIN_CHAT;
+DROP TABLE IF EXISTS ADMIN_AGENDA;
 DROP TABLE IF EXISTS MEDIA;
 DROP TABLE IF EXISTS REUNION;
 DROP TABLE IF EXISTS ACTUALITE;
@@ -52,14 +53,15 @@ CREATE TABLE ROLE(
 );
 
 CREATE TABLE ARTICLE(
-                        id_article INT AUTO_INCREMENT,
-                        xp_article INT NOT NULL DEFAULT 1,
-                        nom_article VARCHAR(100) NOT NULL,
-                        stock_article INT NOT NULL,
-                        image_article VARCHAR(500) NOT NULL,
-                        reduction_article BIT NOT NULL DEFAULT 1,
-                        prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
-                        PRIMARY KEY(id_article)
+                         id_article INT AUTO_INCREMENT,
+                         xp_article INT NOT NULL DEFAULT 1,
+                         nom_article VARCHAR(100) NOT NULL,
+                         stock_article INT NOT NULL,
+                         image_article VARCHAR(500) NOT NULL,
+                         reduction_article BIT NOT NULL DEFAULT 1,
+                         prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
+                         deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                         PRIMARY KEY(id_article)
 );
 
 CREATE TABLE COMMANDE(
@@ -77,17 +79,18 @@ CREATE TABLE COMMANDE(
 );
 
 CREATE TABLE EVENEMENT(
-                          id_evenement INT AUTO_INCREMENT,
-                          nom_evenement VARCHAR(100) NOT NULL,
-                          description_evenement VARCHAR(1000),
-                          image_evenement VARCHAR(500),
-                          xp_evenement INT NOT NULL DEFAULT 10,
-                          places_evenement INT NOT NULL,
-                          prix_evenement INT NOT NULL,
-                          reductions_evenement BIT NOT NULL DEFAULT 1,
-                          lieu_evenement VARCHAR(50) NOT NULL,
-                          date_evenement DATETIME NOT NULL,
-                          PRIMARY KEY(id_evenement)
+                           id_evenement INT AUTO_INCREMENT,
+                           nom_evenement VARCHAR(100) NOT NULL,
+                           description_evenement VARCHAR(1000),
+                           image_evenement VARCHAR(500),
+                           xp_evenement INT NOT NULL DEFAULT 10,
+                           places_evenement INT NOT NULL,
+                           prix_evenement INT NOT NULL,
+                           reductions_evenement BIT NOT NULL DEFAULT 1,
+                           lieu_evenement VARCHAR(50) NOT NULL,
+                           date_evenement DATETIME NOT NULL,
+                           deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                           PRIMARY KEY(id_evenement)
 );
 
 CREATE TABLE COMPTABILITE(
@@ -101,13 +104,14 @@ CREATE TABLE COMPTABILITE(
 );
 
 CREATE TABLE GRADE(
-                      id_grade INT AUTO_INCREMENT,
-                      reduction_grade INT NOT NULL,
-                      image_grade VARCHAR(500) NOT NULL,
-                      prix_grade INT NOT NULL CHECK (prix_grade >= 0),
-                      description_grade VARCHAR(500),
-                      nom_grade VARCHAR(100) NOT NULL,
-                      PRIMARY KEY(id_grade)
+                       id_grade INT AUTO_INCREMENT,
+                       reduction_grade INT NOT NULL,
+                       image_grade VARCHAR(500) NOT NULL,
+                       prix_grade INT NOT NULL CHECK (prix_grade >= 0),
+                       description_grade VARCHAR(500),
+                       nom_grade VARCHAR(100) NOT NULL,
+                       deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                       PRIMARY KEY(id_grade)
 );
 
 CREATE TABLE ADHESION(
@@ -231,30 +235,35 @@ INSERT INTO ASSIGNATION (id_membre, id_role) VALUES
 (6, 3);  -- Barnabe HAVARD a egalement le role "comptable"
 
 -- Ajout des grades
-INSERT INTO GRADE (reduction_grade, image_grade, prix_grade, description_grade, nom_grade) VALUES
-(0, 'http://files.bdeinfo.fr/grade_fer.jpg', 5, 'Un grade de base en fer.', 'Fer'),
-(0, 'http://files.bdeinfo.fr/grade_or.jpg', 10, 'Un grade sup�rieur en or.', 'Or'),
-(10, 'http://files.bdeinfo.fr/grade_diamand.jpg', 13, 'Le grade ultime en diamant.', 'Diamant');
+INSERT INTO `GRADE` (`id_grade`, `reduction_grade`, `image_grade`, `prix_grade`, `description_grade`, `nom_grade`, `deleted`) VALUES
+(1, 10, '27f050a0c9974411ad7d34299daea81b.webp', 5, 'Un grade de base en fer. 10% de réduction sur tous le site', 'Fer', 0),
+(2, 15, '8f0e40b2f0504898b08140fc48cf709e.jpg', 10, 'Un grade supérieur en or. 15% de réduction sur tous le site', 'Or', 0),
+(3, 20, 'c2fe8611ece9404c98aed82495324869.png', 15, 'Le grade ultime en diamant. 20% de réduction sur tous le site', 'Diamant', 0);
 
 -- Insertion des adh�sions
-INSERT INTO ADHESION (date_adhesion, prix_adhesion, paiement_adhesion, id_membre, id_grade) VALUES
-('2024-05-02 11:44:18', 13, 'TPE', 7, 3),	 -- Theo Fevrier achete le grade Diamant
-('2024-05-02 11:44:18', 10, 'PayPal', 8, 2),  -- Tom Gouin achete le grade Diamant
-('2019-11-18 10:34:09', 8, 'TPE', 2, 2),	 -- Axelle HANNIER achete le grade or, elle paye uniquement 8e car il coutait moins cher a l'epoque
-('2024-05-02 11:44:18', 5, 'Especes', 10, 1); -- Erwan le Coz achete le grade Fer
+INSERT INTO `ADHESION` (`id_adhesion`, `date_adhesion`, `prix_adhesion`, `paiement_adhesion`, `id_membre`, `id_grade`) VALUES
+(1, '2024-05-02 11:44:18', 13, 'TPE', 7, 3),
+(2, '2024-05-02 11:44:18', 10, 'PayPal', 8, 2),
+(3, '2019-11-18 10:34:09', 8, 'TPE', 2, 2),
+(4, '2024-05-02 11:44:18', 5, 'Especes', 10, 1);
+
+-- Insertion des messages dans le chat admin
+INSERT INTO `ADMIN_CHAT` (`id_message`, `id_membre`, `contenu_message`, `date_message`) VALUES
+(1, 2, 'Salut', '2026-04-08 11:29:40'),
+(2, 1, 'Salut', '2026-04-08 11:30:28');
 
 -- Ajout des articles de la boutique
-INSERT INTO ARTICLE (xp_article, nom_article, stock_article, image_article, reduction_article, prix_article) VALUES
-(1, 'Canette de Coca', 50, 'http://files.bdeinfo.fr/coca.jpg', 0, 1.50),
-(1, 'Coca Cherry', 30, 'http://files.bdeinfo.fr/coca_cherry.jpg', 0, 1.75),
-(20, 'Lipton Ice Tea', 40, 'http://files.bdeinfo.fr/lipton.jpg', 0, 1.50),
-(1, 'Formule Cafe', 20, 'http://files.bdeinfo.fr/_cafe.jpg', 0, 2.00),
-(1, 'Bueno White', 25, 'http://files.bdeinfo.fr/_bueno_white.jpg', 1, 1.20),
-(1, 'Bueno', 35, 'http://files.bdeinfo.fr/bueno.jpg', 1, 1.20),
-(10, 'Snack Chips', 60, 'http://files.bdeinfo.fr/chips.jpg', 0, 1.00),
-(1, 'Barre de Chocolat', 0, 'http://files.bdeinfo.fr/chocolat.jpg', 0, 1.50),
-(1, 'Jus d Orange', 55, 'http://files.bdeinfo.fr/jus_orange.jpg', 0, 1.30),
-(30, 'Volvic', 70, 'http://files.bdeinfo.fr/volvic.jpg', 0, 0.80);
+INSERT INTO `ARTICLE` (`id_article`, `xp_article`, `nom_article`, `stock_article`, `image_article`, `reduction_article`, `prix_article`, `deleted`) VALUES
+(1, 1, 'Canette de Coca', 47, 'df2ac11f3037475a8811ad79b5c4cda2.png', b'0', 1.5, 0),
+(2, 1, 'Coca Cherry', 26, '7e9de75273464d6b931d1d2c6ed8687d.png', b'0', 1.75, 0),
+(3, 20, 'Lipton Ice Tea', 40, '13190239ee9a4fa7a7d774598192590a.webp', b'0', 1.5, 0),
+(4, 1, 'Formule Cafe', 20, 'da86f1a48487490fad293a2627913826.png', b'0', 2, 0),
+(5, 1, 'Bueno White', 30, 'c8cfd92d058e4e1dbee210fc03aaf315.jpg', b'1', 1.2, 0),
+(6, 1, 'Bueno', 34, 'c0a5e47c63694df986d8db4b5cfd19c5.jpg', b'1', 1.2, 0),
+(7, 10, 'Snack Chips', 60, '9309f9b0712b41d991d9db7857216d30.png', b'0', 1, 0),
+(8, 1, 'Barre de Chocolat', 0, 'http://files.bdeinfo.fr/chocolat.jpg', b'0', 1.5, 1),
+(9, 1, 'Jus d Orange', 55, '1d1c3c41fbbc4f898a74d60f3ef0001c.png', b'0', 1.3, 0),
+(10, 30, 'Volvic', 70, '0c39651172c04906a071b45584552be1.webp', b'0', 0.8, 0);
 
 -- Ajout des commandes
 INSERT INTO COMMANDE (statut_commande, prix_commande, paiement_commande, date_commande, qte_commande, id_membre, id_article) VALUES
@@ -270,17 +279,16 @@ INSERT INTO COMMANDE (statut_commande, prix_commande, paiement_commande, date_co
 (1, 1.60, 'Especes', NOW(), 4, 10, 10);       -- Baptiste achete 4 Volvic
 
 -- Ajout des evenements
-INSERT INTO EVENEMENT (nom_evenement, xp_evenement, places_evenement, prix_evenement, reductions_evenement, lieu_evenement, date_evenement) VALUES
-('LAN Minecraft', 10, 100, 20, 1, 'Amphi 1', '2024-09-15 10:00:00'),
-('Competition CSGO', 10, 200, 15, 1, 'Amphi 1', '2024-10-20 14:00:00'),
-('Raclette', 10, 30, 25, 0, 'TD2', '2024-11-05 18:30:00'),
-('Loup Garou', 10, 150, 10, 1, 'TD2', '2024-12-10 19:00:00'),
-('LAN Mario Kart', 10, 1, 5, 1, 'Amphi 3', '2025-01-15 15:00:00'),
-('Barbecue de l''ADIIL', 10, 300, 10, 1, 'Parking du Batiment Dep. Informatique', '2025-05-01 12:00:00'),
-('Raclette 2', 10, 75, 12, 0, 'TD2', '2025-05-20 18:30:00'),
-('Course de Caddie Carrefour', 10, 100, 10, 1, 'Carrefour', '2025-06-10 10:00:00'),
-('Soiree Bar', 10, 200, 15, 1, 'Bar l''After Work', '2025-06-20 20:00:00'),
-('Barbecue de Depart', 10, 50, 30, 0, 'Centre de Conferences', '2025-07-01 12:00:00');
+INSERT INTO `EVENEMENT` (`id_evenement`, `nom_evenement`, `description_evenement`, `image_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`, `deleted`) VALUES
+(1, 'LAN Minecraft', NULL, NULL, 10, 100, 20, b'1', 'Amphi 1', '2024-09-15 10:00:00', 0),
+(3, 'Raclette', NULL, NULL, 10, 30, 25, b'0', 'TD2', '2024-11-05 18:30:00', 0),
+(4, 'Loup Garou', NULL, NULL, 10, 150, 10, b'1', 'TD2', '2024-12-10 19:00:00', 0),
+(5, 'LAN Mario Kart', NULL, NULL, 10, 1, 5, b'1', 'Amphi 3', '2025-01-15 15:00:00', 0),
+(6, 'Barbecue de l\'ADIIL', NULL, NULL, 10, 300, 10, b'1', 'Parking du Batiment Dep. Informatique', '2025-05-01 12:00:00', 0),
+(7, 'Raclette 2', NULL, NULL, 10, 75, 12, b'0', 'TD2', '2025-05-20 18:30:00', 0),
+(8, 'Course de Caddie Carrefour', NULL, NULL, 10, 100, 10, b'1', 'Carrefour', '2025-06-10 10:00:00', 0),
+(9, 'Soiree Bar', NULL, NULL, 10, 200, 15, b'1', 'Bar l\'After Work', '2025-06-20 20:00:00', 0),
+(10, 'Barbecue de Depart', NULL, NULL, 10, 50, 30, b'0', 'Centre de Conferences', '2025-07-01 12:00:00', 0);
 
 
 -- Ajout des inscriptions
@@ -298,30 +306,22 @@ INSERT INTO INSCRIPTION (id_membre, id_evenement, date_inscription, paiement_ins
 
 
 -- Ajout des actualites
-INSERT INTO ACTUALITE (image_actualite, titre_actualite, contenu_actualite, date_actualite, id_membre) VALUES
-('http://files.bdeinfo.fr/photoIntegration2024.jpg', 'Un soiree d''integration haute en couleur', 'Hier soir se tenait la soiree d''integration de notre chere BDE. Elle fut remarquable, nous en gardons un tres bon souvenir ! Merci a tous d''etre venu nombreux !', '2024-09-12 19:30:00', 1),
-('http://files.bdeinfo.fr/photoNouvelleSalleEtude.jpg', 'Inauguration de la nouvelle salle d etude', 'La nouvelle salle d etude equipee de postes informatiques dernier cri est desormais ouverte a tous les etudiants. Venez la decouvrir !', '2024-09-18 10:15:00', 1),
-('http://files.bdeinfo.fr/photoNouvelEquipementSport.jpg', 'Nouveau matariel sportif au gymnase', 'Le gymnase de l IUT a ete equipe de nouveaux appareils de musculation. Une bonne nouvelle pour les amateurs de sport.', '2024-09-25 14:45:00', 1),
-('http://files.bdeinfo.fr/photoPartenariatEntreprise.jpg', 'Partenariat avec une entreprise locale', 'Un nouveau partenariat a ete signe entre l IUT et TechMayenne entreprise specialisee dans le developpement d applications web. De belles opportunites de stages en perspective.', '2024-10-01 09:00:00', 1),
-('http://files.bdeinfo.fr/photoRenovationBibliotheque.jpg', 'Renovation de la bibliotheque', 'La bibliotheque de l IUT a subi une renovation complete et propose desormais plus d espace et de nouveaux ouvrages en informatique.', '2024-10-05 11:20:00', 1),
-('http://files.bdeinfo.fr/photoResultatsConcoursTech.jpg', 'Resultats du concours de technologie', 'Les resultats du concours de technologie viennent de tomber ! Felicitations a tous les participants, et en particulier aux vainqueurs du departement informatique Theo et Alban.', '2024-10-10 16:00:00', 1),
-('http://files.bdeinfo.fr/photoSemaineIntegration.jpg', 'Retour sur la semaine d integration', 'La semaine d integration s est achevee avec succes. Merci a tous ceux qui ont contribue a rendre ces moments inoubliables pour les nouveaux etudiants.', '2024-10-15 18:50:00', 1),
-('http://files.bdeinfo.fr/photoNouveauSiteWeb.jpg', 'Lancement du nouveau site web du BDE', 'Le BDE est fier de vous annoncer le lancement de son nouveau site web, entierement repense pour faciliter l acces aux informations et evenements.', '2024-10-20 13:30:00', 1),
-('http://files.bdeinfo.fr/photoCollecteVetements.jpg', 'Collecte de vetements reussie', 'La collecte de vetements organisee par le BDE a permis de rassembler plus de 200 kg de vetements qui seront distribues a des associations locales.', '2024-10-22 10:45:00', 1),
-('http://files.bdeinfo.fr/photoConferenceInnovations.jpg', 'Conference sur les innovations technologiques', 'Une conference sur les innovations technologiques recentes s est tenue a l IUT. Des intervenants de renom ont partage leurs experiences avec les etudiants.', '2024-10-22 17:15:00', 1);
+INSERT INTO `ACTUALITE` (`id_actualite`, `image_actualite`, `titre_actualite`, `contenu_actualite`, `date_actualite`, `id_membre`) VALUES
+(1, 'b1719ca250664892a012796855ec3a22.jpg', 'Un soiree d\'integration haute en couleur', 'Hier soir se tenait la soiree d\'integration de notre chere BDE. Elle fut remarquable, nous en gardons un tres bon souvenir ! Merci a tous d\'etre venu nombreux !', '2024-09-12 19:30:00', 1),
+(2, '9efda17275494aaebcb166f363e21c82.png', 'Inauguration de la nouvelle salle d etude', 'La nouvelle salle d etude equipee de postes informatiques dernier cri est desormais ouverte a tous les etudiants. Venez la decouvrir !', '2024-09-18 10:15:00', 1),
+(3, '822197b092a64b7ab40bbbdacc49b8d1.jpg', 'Nouveau matariel sportif au gymnase', 'Le gymnase de l IUT a ete equipe de nouveaux appareils de musculation. Une bonne nouvelle pour les amateurs de sport.', '2024-09-25 14:45:00', 1),
+(4, '73e89b5730c04d1fb8b77ebbb06f01f8.jpg', 'Partenariat avec une entreprise locale', 'Un nouveau partenariat a ete signe entre l IUT et TechMayenne entreprise specialisee dans le developpement d applications web. De belles opportunites de stages en perspective.', '2024-10-01 09:00:00', 1),
+(5, 'dd7fe0c799684ab78cfdabfb29d7b065.jpg', 'Renovation de la bibliotheque', 'La bibliotheque de l IUT a subi une renovation complete et propose desormais plus d espace et de nouveaux ouvrages en informatique.', '2024-10-05 11:20:00', 1),
+(6, 'dae3652030254923bc14827ce59548fc.png', 'Resultats du concours de technologie', 'Les resultats du concours de technologie viennent de tomber ! Felicitations a tous les participants, et en particulier aux vainqueurs du departement informatique Theo et Alban.', '2024-10-10 16:00:00', 1),
+(7, '4199b47fab7e49ef9b7b63a146117768.jpg', 'Retour sur la semaine d integration', 'La semaine d integration s est achevee avec succes. Merci a tous ceux qui ont contribue a rendre ces moments inoubliables pour les nouveaux etudiants.', '2024-10-15 18:50:00', 1),
+(8, '5ddccd292f0946469f9acb2366492d6f.jpg', 'Lancement du nouveau site web du BDE', 'Le BDE est fier de vous annoncer le lancement de son nouveau site web, entierement repense pour faciliter l acces aux informations et evenements.', '2024-10-20 13:30:00', 1),
+(9, '6c75f6a839df4567a443fdae4ca6b40f.jpg', 'Collecte de vetements reussie', 'La collecte de vetements organisee par le BDE a permis de rassembler plus de 200 kg de vetements qui seront distribues a des associations locales.', '2024-10-22 10:45:00', 1),
+(10, '396d6cf5da2e409da2c6a4a46c8e94c5.png', 'Conference sur les innovations technologiques', 'Une conference sur les innovations technologiques recentes s est tenue a l IUT. Des intervenants de renom ont partage leurs experiences avec les etudiants.', '2024-10-22 17:15:00', 1);
 
 -- Ajout de la comptabilite
-INSERT INTO COMPTABILITE (date_comptabilite, nom_comptabilite, url_comptabilite, id_membre) VALUES
-('2024-03-05', 'Compta fev2024', 'http://files.bdeinfo.fr/comptaFev2024.xls', 6),
-('2023-12-10', 'Compta nov2023', 'http://files.bdeinfo.fr/comptaNov2023.xls', 6),
-('2024-01-07', 'Compta dec2023', 'http://files.bdeinfo.fr/comptaDec2023.xls', 6),
-('2024-02-05', 'Compta janv2024', 'http://files.bdeinfo.fr/comptaJanv2024.xls', 6),
-('2024-04-10', 'Compta mars2024', 'http://files.bdeinfo.fr/comptaMars2024.xls', 6),
-('2024-05-07', 'Compta avril2024', 'http://files.bdeinfo.fr/comptaAvril2024.xls', 6),
-('2024-06-10', 'Compta mai2024', 'http://files.bdeinfo.fr/comptaMai2024.xls', 6),
-('2024-07-05', 'Compta juin2024', 'http://files.bdeinfo.fr/comptaJuin2024.xls', 6),
-('2024-08-12', 'Compta juillet2024', 'http://files.bdeinfo.fr/comptaJuillet2024.xls', 6),
-('2024-09-09', 'Compta aout2024', 'http://files.bdeinfo.fr/comptaAout2024.xls', 6);
+INSERT INTO `COMPTABILITE` (`id_comptabilite`, `date_comptabilite`, `nom_comptabilite`, `url_comptabilite`, `id_membre`) VALUES
+(1, '2026-04-08 00:00:00', 'Fevrier 2026', 'c06cf3216c3a4cb4b3abdac6fdd923da.xlsx', 1),
+(2, '2026-04-08 00:00:00', 'Mars 2026', '505f767902b443ff94554fdacbcac54c.xlsx', 1);
 
 
 -- Ajout des reunions
@@ -340,8 +340,8 @@ INSERT INTO REUNION (date_reunion, fichier_reunion, id_membre) VALUES
 
 -- Ajout des medias
 INSERT INTO MEDIA (url_media, date_media, id_membre, id_evenement) VALUES
-('http://files.bdeinfo.fr/hjrehr.mp4', '2024-10-21', 3, 2),
-('http://files.bdeinfo.fr/fhir.jpeg', '2024-10-21', 5, 2),
+('http://files.bdeinfo.fr/hjrehr.mp4', '2024-10-21', 3, 1),
+('http://files.bdeinfo.fr/fhir.jpeg', '2024-10-21', 5, 1),
 ('http://files.bdeinfo.fr/uyjhghg.mp4', '2024-11-05', 6, 3),
 ('http://files.bdeinfo.fr/rtuhght.jpeg', '2024-09-17', 3, 1),
 ('http://files.bdeinfo.fr/ytraztru.mp4', '2024-12-13', 8, 4),
@@ -945,7 +945,7 @@ SELECT*FROM MEMBRE;
 
 -- fixs for deployment
 ALTER TABLE EVENEMENT
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE EVENEMENT
     ADD COLUMN IF NOT EXISTS description_evenement VARCHAR(1000);
@@ -954,10 +954,10 @@ ALTER TABLE EVENEMENT
     ADD COLUMN IF NOT EXISTS image_evenement VARCHAR(500);
 
 ALTER TABLE GRADE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE ARTICLE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 
 DROP VIEW IF EXISTS LISTE_PERMISSIONS;

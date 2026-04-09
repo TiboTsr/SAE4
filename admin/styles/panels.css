@@ -286,7 +286,7 @@ textarea{
 /* TOGGLE */
 .toggle{
     position: relative;
-    background-color: var(--background-color-darker);
+    background-color: #656565;
     width: 60px;
     height: 30px;
     border-radius: 20px;
