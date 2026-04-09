@@ -28,241 +28,136 @@ function get_logs() : void
         $maxLines = max(10, min(1000, $maxLines));
     }
 
-    $candidates = list_candidate_log_paths();
-    $readableLogs = get_readable_logs($candidates);
-
-    if (count($readableLogs) === 0) {
-        echo json_encode(
-            [
-                'logs' => build_no_log_message($candidates),
-                'sources' => []
-            ],
-            JSON_INVALID_UTF8_SUBSTITUTE
-        );
+    $result = resolve_log_content($maxLines);
+    if ($result === null) {
+        echo json_encode([
+            'logs' => 'Aucun fichier de log lisible trouve (XAMPP/Linux).',
+            'source' => null
+        ], JSON_INVALID_UTF8_SUBSTITUTE);
         return;
     }
 
-    $sections = [];
-    foreach ($readableLogs as $entry) {
-        $content = read_last_lines($entry['path'], $maxLines);
-        if ($content === '') {
+    echo json_encode([
+        'logs' => $result['logs'],
+        'source' => $result['source']
+    ], JSON_INVALID_UTF8_SUBSTITUTE);
+}
+
+function resolve_log_content(int $maxLines): ?array
+{
+    $firstEmptyFile = null;
+
+    foreach (get_candidate_paths() as $path) {
+        if (!is_file($path)) {
             continue;
         }
 
-        $timestamp = @filemtime($entry['path']);
-        $updatedAt = $timestamp !== false ? date('Y-m-d H:i:s', $timestamp) : 'unknown';
-        $sections[] = '===== ' . $entry['label'] . " =====\n"
-            . 'File: ' . $entry['path'] . "\n"
-            . 'Last update: ' . $updatedAt . "\n\n"
-            . $content;
+        $logs = read_last_lines_simple($path, $maxLines);
+        if ($logs === '') {
+            if ($firstEmptyFile === null) {
+                $firstEmptyFile = $path;
+            }
+            continue;
+        }
+
+        return [
+            'logs' => $logs,
+            'source' => $path
+        ];
     }
 
-    if (count($sections) === 0) {
-        echo json_encode(
-            [
-                'logs' => 'Log files were found but could not be read.',
-                'sources' => []
-            ],
-            JSON_INVALID_UTF8_SUBSTITUTE
-        );
-        return;
+    if ($firstEmptyFile !== null) {
+        return [
+            'logs' => '',
+            'source' => $firstEmptyFile
+        ];
     }
 
-    echo json_encode(
-        [
-            'logs' => implode("\n\n", $sections),
-            'sources' => array_values(array_map(static function ($entry) {
-                return $entry['path'];
-            }, $readableLogs))
-        ],
-        JSON_INVALID_UTF8_SUBSTITUTE
-    );
+    return null;
 }
 
-function append_candidate(array &$candidates, string $label, string $path): void
+function get_candidate_paths(): array
 {
-    $cleanPath = trim($path, " \t\n\r\0\x0B\"'");
-    if ($cleanPath === '' || strtolower($cleanPath) === 'syslog') {
-        return;
-    }
-
-    $realPath = @realpath($cleanPath);
-    if ($realPath !== false) {
-        $cleanPath = $realPath;
-    }
-
-    $key = strtolower(str_replace('\\', '/', $cleanPath));
-    if (isset($candidates[$key])) {
-        return;
-    }
-
-    $candidates[$key] = [
-        'label' => $label,
-        'path' => $cleanPath
-    ];
-}
-
-function append_xampp_candidates(array &$candidates, string $xamppRoot): void
-{
-    $root = rtrim($xamppRoot, '/\\');
-    if ($root === '') {
-        return;
-    }
-
-    append_candidate($candidates, 'Apache error log', $root . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log');
-    append_candidate($candidates, 'Apache access log', $root . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'access.log');
-    append_candidate($candidates, 'PHP error log', $root . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'php_error_log');
-    append_candidate($candidates, 'MySQL error log', $root . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysql_error.log');
-    append_candidate($candidates, 'MySQL daemon log', $root . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysqld.log');
-}
-
-function list_candidate_log_paths(): array
-{
-    $candidates = [];
-
-    $phpErrorLog = (string)ini_get('error_log');
-    append_candidate($candidates, 'PHP ini error_log', $phpErrorLog);
-
     $projectRoot = @realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
-    if ($projectRoot !== false) {
-        append_candidate($candidates, 'Project php_error_log', $projectRoot . DIRECTORY_SEPARATOR . 'php_error_log');
+    if ($projectRoot === false) {
+        $projectRoot = dirname(__DIR__);
     }
 
-    $xamppRoots = [];
-
-    $fromProject = $projectRoot !== false
-        ? @realpath($projectRoot . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..')
-        : false;
-    if ($fromProject !== false) {
-        $xamppRoots[] = $fromProject;
+    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+    $xamppFromDocRoot = '';
+    if (is_string($documentRoot) && $documentRoot !== '') {
+        $docRootRealPath = @realpath($documentRoot);
+        if ($docRootRealPath !== false) {
+            $xamppFromDocRoot = dirname($docRootRealPath);
+        }
     }
 
-    $fromPhpBinary = @realpath(dirname(PHP_BINARY) . DIRECTORY_SEPARATOR . '..');
-    if ($fromPhpBinary !== false) {
-        $xamppRoots[] = $fromPhpBinary;
+    $paths = [
+        (string)ini_get('error_log'),
+        $projectRoot . DIRECTORY_SEPARATOR . 'php_error_log',
+        'C:/xampp/apache/logs/error.log',
+        'C:/xampp/apache/logs/access.log',
+        'C:/xampp/php/logs/php_error_log',
+        'C:/xampp/mysql/data/mysql_error.log',
+        '/opt/lampp/logs/error_log',
+        '/opt/lampp/logs/php_error_log',
+        '/var/log/apache2/error.log',
+        '/var/log/httpd/error_log',
+        '/var/log/nginx/error.log',
+        '/var/log/php-fpm/error.log',
+        '/var/log/mysql/error.log'
+    ];
+
+    if ($xamppFromDocRoot !== '') {
+        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log';
+        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'access.log';
+        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysql_error.log';
     }
 
-    $envXampp = getenv('XAMPP_ROOT');
-    if (is_string($envXampp) && $envXampp !== '') {
-        $xamppRoots[] = $envXampp;
-    }
+    $finalPaths = [];
+    $seen = [];
 
-    foreach (array_unique($xamppRoots) as $root) {
-        append_xampp_candidates($candidates, $root);
-    }
-
-    append_candidate($candidates, 'Apache error log (Debian/Ubuntu)', '/var/log/apache2/error.log');
-    append_candidate($candidates, 'Apache access log (Debian/Ubuntu)', '/var/log/apache2/access.log');
-    append_candidate($candidates, 'Apache error log (RHEL/CentOS)', '/var/log/httpd/error_log');
-    append_candidate($candidates, 'Apache access log (RHEL/CentOS)', '/var/log/httpd/access_log');
-    append_candidate($candidates, 'Nginx error log', '/var/log/nginx/error.log');
-    append_candidate($candidates, 'PHP-FPM error log', '/var/log/php-fpm/error.log');
-    append_candidate($candidates, 'PHP-FPM 8.3 log', '/var/log/php8.3-fpm.log');
-    append_candidate($candidates, 'PHP-FPM 8.2 log', '/var/log/php8.2-fpm.log');
-    append_candidate($candidates, 'PHP-FPM 8.1 log', '/var/log/php8.1-fpm.log');
-    append_candidate($candidates, 'MySQL error log', '/var/log/mysql/error.log');
-    append_candidate($candidates, 'MySQL log', '/var/log/mysql/mysql.log');
-    append_candidate($candidates, 'MySQL daemon log', '/var/log/mysqld.log');
-    append_candidate($candidates, 'XAMPP Linux Apache log', '/opt/lampp/logs/error_log');
-    append_candidate($candidates, 'XAMPP Linux PHP log', '/opt/lampp/logs/php_error_log');
-
-    foreach (glob('/opt/lampp/var/mysql/*.err') ?: [] as $path) {
-        append_candidate($candidates, 'XAMPP Linux MySQL err', $path);
-    }
-
-    foreach (glob('/var/log/mysql/*.err') ?: [] as $path) {
-        append_candidate($candidates, 'MySQL err', $path);
-    }
-
-    return array_values($candidates);
-}
-
-function get_readable_logs(array $candidates): array
-{
-    $readable = [];
-
-    foreach ($candidates as $entry) {
-        $path = $entry['path'];
-        if (!is_file($path) || !is_readable($path)) {
+    foreach ($paths as $path) {
+        $path = trim((string)$path, " \t\n\r\0\x0B\"'");
+        if ($path === '' || strtolower($path) === 'syslog') {
             continue;
         }
 
-        $readable[] = $entry;
-    }
-
-    usort($readable, static function (array $left, array $right): int {
-        $leftTime = @filemtime($left['path']);
-        $rightTime = @filemtime($right['path']);
-        $leftTime = $leftTime !== false ? $leftTime : 0;
-        $rightTime = $rightTime !== false ? $rightTime : 0;
-        return $rightTime <=> $leftTime;
-    });
-
-    return array_slice($readable, 0, 4);
-}
-
-function read_last_lines(string $path, int $maxLines): string
-{
-    $maxBytes = 512 * 1024;
-
-    $handle = @fopen($path, 'rb');
-    if ($handle === false) {
-        return '';
-    }
-
-    $size = @filesize($path);
-    if ($size === false) {
-        fclose($handle);
-        return '';
-    }
-
-    $offset = max(0, $size - $maxBytes);
-    if (@fseek($handle, $offset, SEEK_SET) !== 0) {
-        fclose($handle);
-        return '';
-    }
-
-    $length = $size - $offset;
-    $buffer = $length > 0 ? @fread($handle, $length) : '';
-    fclose($handle);
-
-    if (!is_string($buffer) || $buffer === '') {
-        return '';
-    }
-
-    $buffer = str_replace("\0", '', $buffer);
-    $lines = preg_split("/\r\n|\r|\n/", $buffer);
-    if (!is_array($lines) || count($lines) === 0) {
-        return '';
-    }
-
-    if ($offset > 0) {
-        array_shift($lines);
-    }
-
-    $lines = array_filter($lines, static function ($line) {
-        return $line !== '';
-    });
-    $lines = array_slice(array_values($lines), -$maxLines);
-
-    return implode("\n", $lines);
-}
-
-function build_no_log_message(array $candidates): string
-{
-    $lines = [
-        'No readable log file was found.',
-        'Checked paths:'
-    ];
-
-    foreach (array_slice($candidates, 0, 20) as $entry) {
-        $status = 'missing';
-        if (is_file($entry['path'])) {
-            $status = is_readable($entry['path']) ? 'readable' : 'permission denied';
+        if (!is_absolute_path($path)) {
+            $path = $projectRoot . DIRECTORY_SEPARATOR . $path;
         }
 
-        $lines[] = '- [' . $entry['label'] . '] ' . $entry['path'] . ' (' . $status . ')';
+        $realPath = @realpath($path);
+        if ($realPath !== false) {
+            $path = $realPath;
+        }
+
+        $key = strtolower(str_replace('\\', '/', $path));
+        if (isset($seen[$key])) {
+            continue;
+        }
+
+        $seen[$key] = true;
+        $finalPaths[] = $path;
     }
 
-    return implode("\n", $lines);
+    return $finalPaths;
+}
+
+function is_absolute_path(string $path): bool
+{
+    return str_starts_with($path, '/')
+        || preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1
+        || str_starts_with($path, '\\\\');
+}
+
+function read_last_lines_simple(string $path, int $maxLines): string
+{
+    $lines = @file($path, FILE_IGNORE_NEW_LINES);
+    if ($lines === false) {
+        return '';
+    }
+
+    $lastLines = array_slice($lines, -$maxLines);
+    return implode("\n", $lastLines);
 }
