@@ -1,6 +1,17 @@
 // Import ajax
 import { requestGET } from './ajax.js';
 
-// Récupérer la textarea par son ID
+// Recuperer la textarea par son ID
 const textarea = document.getElementById('content');
-textarea.value = (await requestGET('/logs.php')).logs;
+
+const response = await requestGET('/logs.php');
+textarea.value = response.logs ?? '';
+
+const scrollToBottom = () => {
+    textarea.scrollTop = textarea.scrollHeight;
+};
+
+// Force le scroll apres insertion puis apres le rendu effectif du panel/iframe.
+scrollToBottom();
+requestAnimationFrame(scrollToBottom);
+setTimeout(scrollToBottom, 60);

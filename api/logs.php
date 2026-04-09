@@ -11,206 +11,258 @@ tools::checkPermission('p_log');
 
 $methode = $_SERVER['REQUEST_METHOD'];
 
-# On accepte le format multipart/form-data UNIQUEMENT sur les requetes POST et PATCH
-# Sinon, il faudrait coder un parser de multipart/form-data
 switch ($methode) {
-    case 'GET':                      # READ
+    case 'GET':
         get_logs();
         break;
     default:
-        # 405 Method Not Allowed
         http_response_code(405);
         break;
 }
 
-class TechnicalLogGenerator {
-    private $components = [
-        'DataProcessor', 'MemoryManager', 'NetworkStack', 'SecurityModule', 'CacheHandler',
-        'QueryOptimizer', 'LoadBalancer', 'FileSystem', 'AuthenticationService', 'SessionManager',
-        'DatabaseConnector', 'APIGateway', 'MessageQueue', 'EventBus', 'ConfigurationManager',
-        'MetricsCollector', 'LogRotator', 'BackupService', 'IndexManager', 'CronScheduler',
-        'RoutingEngine', 'ProxyServer', 'ValidationEngine', 'NotificationService', 'StreamProcessor',
-        'Apache', 'MySQL', 'PhpServer', 'Docker'
-    ];
-
-    private $actions = [
-        'initializing', 'analyzing', 'processing', 'optimizing', 'validating', 'synchronizing',
-        'maintaining', 'monitoring', 'executing', 'deploying', 'rolling back', 'scaling',
-        'reindexing', 'compressing', 'archiving', 'authenticating', 'authorizing', 'dispatching',
-        'streaming', 'batching', 'persisting', 'caching', 'purging', 'replicating', 'sharding', 'restarting',
-        'starting', 'stopping', 'encrypting', 'compressing', 'serializing',
-    ];
-
-    private $statuses = [
-        'SUCCESS' => 0,
-        'WARNING' => 1,
-        'ERROR' => 2,
-        'INFO' => 3,
-        'DEBUG' => 4,
-        'TRACE' => 5,
-        'FATAL' => 6,
-        'NOTICE' => 7
-    ];
-
-    private $technicalTerms = [
-        'heap allocation', 'garbage collection', 'thread pool', 'socket binding', 'cache invalidation',
-        'mutex lock', 'buffer overflow', 'memory pagination', 'race condition', 'deadlock prevention',
-        'stack trace', 'kernel panic', 'connection pool', 'thread dump', 'memory leak', 'cpu throttling',
-        'network latency', 'disk i/o', 'cache miss', 'index fragmentation', 'connection timeout',
-        'database deadlock', 'query timeout', 'ssl handshake', 'dns resolution', 'tcp backlog',
-        'memory swapping', 'load average', 'inode usage', 'zombie process', 'orphan process',
-        'resource exhaustion', 'buffer underflow', 'stack overflow', 'heap fragmentation',
-        'memory corruption', 'disk failure', 'network partition', 'file descriptor leak',
-    ];
-
-    private $errorMessages = [
-        'Connection refused', 'Invalid credentials', 'Resource not available', 'Timeout exceeded',
-        'Maximum retries reached', 'Invalid configuration', 'Resource limit exceeded', 'Permission denied',
-        'Protocol version mismatch', 'Invalid checksum', 'Data corruption detected', 'Version conflict',
-        'Incompatible protocol', 'Service unavailable', 'Circuit breaker open', 'Rate limit exceeded',
-        'Invalid state transition', 'Deadlock detected', 'Insufficient resources', 'Quota exceeded',
-        'Invalid request', 'Invalid response', 'Invalid payload', 'Invalid signature', 'Invalid token',
-        'Nil pointer dereference', 'Segmentation fault', 'Stack overflow', 'Heap corruption',
-        'Memory leak detected', 'Buffer overflow', 'Buffer underflow', 'Invalid opcode', 'Invalid memory access',
-    ];
-
-    private $subsystems = [
-        'CORE', 'NET', 'IO', 'SEC', 'DB', 'CACHE', 'AUTH', 'API', 'QUEUE', 'CRON', 'METRICS',
-        'BACKUP', 'INDEX', 'PROXY', 'VALID', 'NOTIF', 'STREAM', 'CONFIG', 'CLUSTER', 'DEPLOY',
-        'ROUTER', 'LOG', 'MONITOR', 'DISPATCH', 'PERSIST', 'ENCRYPT', 'COMPRESS', 'ARCHIVE',
-        'REPL', 'SHARD', 'RESTART', 'START', 'STOP', 'SCALE', 'ROLLBACK', 'REINDEX', 'PURGE',
-        'SYNC', 'MAINT', 'ANALYZE', 'INIT', 'AUTHZ', 'AUTHN', 'DISCARD', 'RENEW', 'REVOKE',
-    ];
-
-    private $currentTimestamp;
-
-    public function __construct() {
-        $this->currentTimestamp = time();
+function get_logs() : void
+{
+    $maxLines = 200;
+    if (isset($_GET['lines']) && is_numeric($_GET['lines'])) {
+        $maxLines = (int)$_GET['lines'];
+        $maxLines = max(10, min(1000, $maxLines));
     }
 
-    private function getRandomMetrics() {
-        $metrics = [
-            'cpu' => rand(0, 100) . '%',
-            'mem' => rand(64, 8192) . 'MB',
-            'io' => rand(0, 1000) . 'ops/s',
-            'lat' => rand(1, 500) . 'ms',
-            'conn' => rand(1, 1000)
-        ];
-        return $metrics[array_rand($metrics)];
+    $candidates = list_candidate_log_paths();
+    $readableLogs = get_readable_logs($candidates);
+
+    if (count($readableLogs) === 0) {
+        echo json_encode(
+            [
+                'logs' => build_no_log_message($candidates),
+                'sources' => []
+            ],
+            JSON_INVALID_UTF8_SUBSTITUTE
+        );
+        return;
     }
 
-    private function getRandomIP(): string
-    {
-        return rand(1, 255) . '.' . rand(0, 255) . '.' . rand(0, 255) . '.' . rand(0, 255);
-    }
-
-    private function getRandomPort(): int
-    {
-        return rand(1024, 65535);
-    }
-
-    private function getRandomPID(): int
-    {
-        return rand(1000, 65535);
-    }
-
-    private function getRandomHex($length = 8) {
-        return substr(md5(rand()), 0, $length);
-    }
-
-    private function getRandomElement($array) {
-        return $array[array_rand($array)];
-    }
-
-    private function getNextTimestamp() {
-        $this->currentTimestamp -= rand(1, 1800);
-        return date('Y-m-d H:i:s.', $this->currentTimestamp) . sprintf('%03d', rand(0, 999));
-    }
-
-    private function getRandomVersionNumber() {
-        return sprintf("%d.%d.%d", rand(0, 9), rand(0, 99), rand(0, 999));
-    }
-
-    private function getRandomThreadId() {
-        return sprintf("t-%04x", rand(0, 65535));
-    }
-
-    public function generateLog() {
-        $timestamp = $this->getNextTimestamp();
-        $status = $this->getRandomElement(array_keys($this->statuses));
-        $subsystem = $this->getRandomElement($this->subsystems);
-        $component = $this->getRandomElement($this->components);
-        $action = $this->getRandomElement($this->actions);
-        $term = $this->getRandomElement($this->technicalTerms);
-
-        $logFormats = [
-            // Format standard
-            fn() => sprintf(
-                "[%s] [%s] [%s] [PID:%d] %s::%s - %s (metrics: %s, addr: %s:%d) [0x%s]",
-                $timestamp, $status, $subsystem, $this->getRandomPID(),
-                $component, $action, $term, $this->getRandomMetrics(),
-                $this->getRandomIP(), $this->getRandomPort(), $this->getRandomHex()
-            ),
-            // Format détaillé avec thread
-            fn() => sprintf(
-                "[%s] [%s] [%s-%s] [v%s] %s::%s - %s (thread: %s, heap: %s) [trace: 0x%s]",
-                $timestamp, $status, $subsystem, $component,
-                $this->getRandomVersionNumber(), $action, $term,
-                $this->getRandomElement($this->errorMessages),
-                $this->getRandomThreadId(), $this->getRandomMetrics(),
-                $this->getRandomHex(16)
-            ),
-            // Format concis
-            fn() => sprintf(
-                "[%s] [%s/%s] %s on %s [id: 0x%s]",
-                $timestamp, $subsystem, $status,
-                $action, $component, $this->getRandomHex(6)
-            ),
-            // Format technique
-            fn() => sprintf(
-                "[%s] [%s] [PID:%d] {component: %s, action: %s, status: %s, metric: %s, version: %s}",
-                $timestamp, $subsystem, $this->getRandomPID(),
-                $component, $action, $status,
-                $this->getRandomMetrics(), $this->getRandomVersionNumber()
-            ),
-
-            fn() => sprintf(
-                "[%s] {%s} %s || %s %s",
-                $timestamp, $status, $subsystem, $component, $this->getRandomElement($this->errorMessages)
-            ),
-
-            fn () => sprintf(
-                "[%s] [%s] %s occurred",
-                $timestamp, $subsystem, $this->getRandomElement($this->errorMessages),
-            )
-        ];
-
-        $format = $this->getRandomElement($logFormats);
-        $message = $format();
-
-        if ($status === 'ERROR' || $status === 'FATAL') {
-            $message .= sprintf(" [ERROR] %s [stack: 0x%s]",
-                $this->getRandomElement($this->errorMessages),
-                $this->getRandomHex(16)
-            );
+    $sections = [];
+    foreach ($readableLogs as $entry) {
+        $content = read_last_lines($entry['path'], $maxLines);
+        if ($content === '') {
+            continue;
         }
 
-        return $message;
+        $timestamp = @filemtime($entry['path']);
+        $updatedAt = $timestamp !== false ? date('Y-m-d H:i:s', $timestamp) : 'unknown';
+        $sections[] = '===== ' . $entry['label'] . " =====\n"
+            . 'File: ' . $entry['path'] . "\n"
+            . 'Last update: ' . $updatedAt . "\n\n"
+            . $content;
     }
 
-    public function generateMultipleLogs($count = 10) {
-        $logs = [];
-        for ($i = 0; $i < $count; $i++) {
-            $logs[] = $this->generateLog();
-        }
-
-        return join("\n", $logs);
+    if (count($sections) === 0) {
+        echo json_encode(
+            [
+                'logs' => 'Log files were found but could not be read.',
+                'sources' => []
+            ],
+            JSON_INVALID_UTF8_SUBSTITUTE
+        );
+        return;
     }
+
+    echo json_encode(
+        [
+            'logs' => implode("\n\n", $sections),
+            'sources' => array_values(array_map(static function ($entry) {
+                return $entry['path'];
+            }, $readableLogs))
+        ],
+        JSON_INVALID_UTF8_SUBSTITUTE
+    );
 }
 
-function get_logs() : void {
-    $generator = new TechnicalLogGenerator();
-    $logs = $generator->generateMultipleLogs(100);
+function append_candidate(array &$candidates, string $label, string $path): void
+{
+    $cleanPath = trim($path, " \t\n\r\0\x0B\"'");
+    if ($cleanPath === '' || strtolower($cleanPath) === 'syslog') {
+        return;
+    }
 
-    echo json_encode(["logs"=>$logs]);
+    $realPath = @realpath($cleanPath);
+    if ($realPath !== false) {
+        $cleanPath = $realPath;
+    }
+
+    $key = strtolower(str_replace('\\', '/', $cleanPath));
+    if (isset($candidates[$key])) {
+        return;
+    }
+
+    $candidates[$key] = [
+        'label' => $label,
+        'path' => $cleanPath
+    ];
+}
+
+function append_xampp_candidates(array &$candidates, string $xamppRoot): void
+{
+    $root = rtrim($xamppRoot, '/\\');
+    if ($root === '') {
+        return;
+    }
+
+    append_candidate($candidates, 'Apache error log', $root . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log');
+    append_candidate($candidates, 'Apache access log', $root . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'access.log');
+    append_candidate($candidates, 'PHP error log', $root . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'php_error_log');
+    append_candidate($candidates, 'MySQL error log', $root . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysql_error.log');
+    append_candidate($candidates, 'MySQL daemon log', $root . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysqld.log');
+}
+
+function list_candidate_log_paths(): array
+{
+    $candidates = [];
+
+    $phpErrorLog = (string)ini_get('error_log');
+    append_candidate($candidates, 'PHP ini error_log', $phpErrorLog);
+
+    $projectRoot = @realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
+    if ($projectRoot !== false) {
+        append_candidate($candidates, 'Project php_error_log', $projectRoot . DIRECTORY_SEPARATOR . 'php_error_log');
+    }
+
+    $xamppRoots = [];
+
+    $fromProject = $projectRoot !== false
+        ? @realpath($projectRoot . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..')
+        : false;
+    if ($fromProject !== false) {
+        $xamppRoots[] = $fromProject;
+    }
+
+    $fromPhpBinary = @realpath(dirname(PHP_BINARY) . DIRECTORY_SEPARATOR . '..');
+    if ($fromPhpBinary !== false) {
+        $xamppRoots[] = $fromPhpBinary;
+    }
+
+    $envXampp = getenv('XAMPP_ROOT');
+    if (is_string($envXampp) && $envXampp !== '') {
+        $xamppRoots[] = $envXampp;
+    }
+
+    foreach (array_unique($xamppRoots) as $root) {
+        append_xampp_candidates($candidates, $root);
+    }
+
+    append_candidate($candidates, 'Apache error log (Debian/Ubuntu)', '/var/log/apache2/error.log');
+    append_candidate($candidates, 'Apache access log (Debian/Ubuntu)', '/var/log/apache2/access.log');
+    append_candidate($candidates, 'Apache error log (RHEL/CentOS)', '/var/log/httpd/error_log');
+    append_candidate($candidates, 'Apache access log (RHEL/CentOS)', '/var/log/httpd/access_log');
+    append_candidate($candidates, 'Nginx error log', '/var/log/nginx/error.log');
+    append_candidate($candidates, 'PHP-FPM error log', '/var/log/php-fpm/error.log');
+    append_candidate($candidates, 'PHP-FPM 8.3 log', '/var/log/php8.3-fpm.log');
+    append_candidate($candidates, 'PHP-FPM 8.2 log', '/var/log/php8.2-fpm.log');
+    append_candidate($candidates, 'PHP-FPM 8.1 log', '/var/log/php8.1-fpm.log');
+    append_candidate($candidates, 'MySQL error log', '/var/log/mysql/error.log');
+    append_candidate($candidates, 'MySQL log', '/var/log/mysql/mysql.log');
+    append_candidate($candidates, 'MySQL daemon log', '/var/log/mysqld.log');
+    append_candidate($candidates, 'XAMPP Linux Apache log', '/opt/lampp/logs/error_log');
+    append_candidate($candidates, 'XAMPP Linux PHP log', '/opt/lampp/logs/php_error_log');
+
+    foreach (glob('/opt/lampp/var/mysql/*.err') ?: [] as $path) {
+        append_candidate($candidates, 'XAMPP Linux MySQL err', $path);
+    }
+
+    foreach (glob('/var/log/mysql/*.err') ?: [] as $path) {
+        append_candidate($candidates, 'MySQL err', $path);
+    }
+
+    return array_values($candidates);
+}
+
+function get_readable_logs(array $candidates): array
+{
+    $readable = [];
+
+    foreach ($candidates as $entry) {
+        $path = $entry['path'];
+        if (!is_file($path) || !is_readable($path)) {
+            continue;
+        }
+
+        $readable[] = $entry;
+    }
+
+    usort($readable, static function (array $left, array $right): int {
+        $leftTime = @filemtime($left['path']);
+        $rightTime = @filemtime($right['path']);
+        $leftTime = $leftTime !== false ? $leftTime : 0;
+        $rightTime = $rightTime !== false ? $rightTime : 0;
+        return $rightTime <=> $leftTime;
+    });
+
+    return array_slice($readable, 0, 4);
+}
+
+function read_last_lines(string $path, int $maxLines): string
+{
+    $maxBytes = 512 * 1024;
+
+    $handle = @fopen($path, 'rb');
+    if ($handle === false) {
+        return '';
+    }
+
+    $size = @filesize($path);
+    if ($size === false) {
+        fclose($handle);
+        return '';
+    }
+
+    $offset = max(0, $size - $maxBytes);
+    if (@fseek($handle, $offset, SEEK_SET) !== 0) {
+        fclose($handle);
+        return '';
+    }
+
+    $length = $size - $offset;
+    $buffer = $length > 0 ? @fread($handle, $length) : '';
+    fclose($handle);
+
+    if (!is_string($buffer) || $buffer === '') {
+        return '';
+    }
+
+    $buffer = str_replace("\0", '', $buffer);
+    $lines = preg_split("/\r\n|\r|\n/", $buffer);
+    if (!is_array($lines) || count($lines) === 0) {
+        return '';
+    }
+
+    if ($offset > 0) {
+        array_shift($lines);
+    }
+
+    $lines = array_filter($lines, static function ($line) {
+        return $line !== '';
+    });
+    $lines = array_slice(array_values($lines), -$maxLines);
+
+    return implode("\n", $lines);
+}
+
+function build_no_log_message(array $candidates): string
+{
+    $lines = [
+        'No readable log file was found.',
+        'Checked paths:'
+    ];
+
+    foreach (array_slice($candidates, 0, 20) as $entry) {
+        $status = 'missing';
+        if (is_file($entry['path'])) {
+            $status = is_readable($entry['path']) ? 'readable' : 'permission denied';
+        }
+
+        $lines[] = '- [' . $entry['label'] . '] ' . $entry['path'] . ' (' . $status . ')';
+    }
+
+    return implode("\n", $lines);
 }

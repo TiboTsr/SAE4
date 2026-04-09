@@ -5,6 +5,7 @@ textarea{
     padding: 30px;
     outline: none;
     border: none;
+    overflow: auto;
 }
 
 @media screen and (max-width: 640px) {
