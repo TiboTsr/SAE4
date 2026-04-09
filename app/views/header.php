@@ -5,7 +5,18 @@
     <a id="accueil" href="index.php">
         <img src="assets/images/logo.png" alt="Logo de l'ADIIL">
     </a>
-    <nav>
+    <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-navigation"
+        aria-label="Ouvrir le menu de navigation"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <nav id="site-navigation">
         <ul>
             <li>
                 <a href="index.php?page=events">Événements</a>
@@ -51,3 +62,34 @@
         </ul>
     </nav>
 </header>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.querySelector('header');
+    const toggle = header ? header.querySelector('.nav-toggle') : null;
+    const nav = document.getElementById('site-navigation');
+
+    if (!header || !toggle || !nav) {
+        return;
+    }
+
+    const closeMenu = function () {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    toggle.addEventListener('click', function () {
+        const isOpen = header.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    nav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMenu);
+    });
+
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 1100) {
+            closeMenu();
+        }
+    });
+});
+</script>

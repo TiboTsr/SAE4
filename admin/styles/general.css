@@ -5,8 +5,8 @@
     --background-color-darker: #E3E3E3;
     --border-color: #CECECE;
 
-    --text-main: black;
-    --text-lighter: #909090;
+    --text-main: #1a1a1a;
+    --text-lighter: #4f4f4f;
 
     --bounce: cubic-bezier(.47,1.64,.41,.8);
 }
@@ -19,6 +19,7 @@
 }
 html{
     font-family: "Inter", sans-serif;
+    color: var(--text-main);
 }
 
 /* BUTTON */
@@ -26,13 +27,12 @@ button{
     outline: none;
     border: none;
     cursor: pointer;
-    padding: 15px 25px;
-
+    padding: 12px 20px;
     transition-duration: 0.2s;
 }
 button:hover{
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 button:active{
-    transform: scale(0.95);
+    transform: scale(0.98);
 }

@@ -6,3 +6,9 @@ textarea{
     outline: none;
     border: none;
 }
+
+@media screen and (max-width: 640px) {
+    textarea{
+        padding: 12px;
+    }
+}

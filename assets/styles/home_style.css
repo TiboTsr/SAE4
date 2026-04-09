@@ -1,14 +1,30 @@
 /*********************
 ******  INDEX   ******
 **********************/
-  
+ 
+#page-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 24px 0 24px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    #page-container {
+        padding: 0 24px 0 24px;
+    }
+}
+
 #index section{
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: fit-content;
     align-items: center;
     gap: 24px;
-    margin-bottom: 60px;
+    margin: 0 auto 80px auto;
+    padding: 16px 0;
 }
 
 .titre_vertical{
@@ -30,35 +46,46 @@
 }
 
 #index_carrousel{
+    width: 100%;
+    display: flex;
+    justify-content: center;
     align-self: center;
-    margin: auto;
+    margin: 0 auto;
 }
 
 #index_carrousel img{
     border-radius: 30px;
-    width : 65vw;
+    width : min(100%, 1100px);
 }
 
 .paragraphes p{
     margin-bottom: 50px;
-    width: 60vw;
+    width: min(100%, 900px);
     text-align: justify;
+    padding: 0 12px;
 }
 .paragraphes {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     align-self: center;
-    margin: auto;
+    margin: 0 auto;
 }
 .paragraphes b{
     color: rgb(119, 241, 190);
 }
 
 #podium{
-    margin: auto auto 8% auto;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 16px 12px 0 12px;
 
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: flex-end;
-    gap: 10vw;
+    gap: clamp(24px, 5vw, 72px);
 }
 
 
@@ -66,7 +93,7 @@
     display: flex;
     flex-direction: column;
 
-    width: 200px;
+    width: min(200px, 100%);
 
     text-wrap: nowrap;
     white-space: nowrap;
@@ -146,8 +173,9 @@
 }
 
 .events-display{
-    width: 100%;
+    width: min(100%, 900px);
     transform: none;
+    padding: 16px 12px 0 12px;
 
     display: flex;
 
@@ -155,6 +183,7 @@
     flex-direction: column;
 
     justify-content: space-evenly;
+    gap: 20px;
 }
 
 .event{
@@ -162,8 +191,8 @@
     justify-content: space-between;
     align-items: center;
 
-    width: 40vw;
-    min-width: 500px;
+    width: min(100%, 780px);
+    min-width: 0;
     max-width: 780px;
     
     min-height: 130px;
@@ -220,7 +249,142 @@
 
 /* index specific */
 .events-display > h3{
+    width: 100%;
+    text-align: center;
     margin-bottom: 5vh;
+}
+
+@media (max-width: 900px) {
+    #podium {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .podium_unit {
+        width: min(280px, 100%);
+    }
+
+    .podium_unit:nth-child(1) > div,
+    .podium_unit:nth-child(2) > div,
+    .podium_unit:nth-child(3) > div {
+        height: auto;
+        min-height: 280px;
+    }
+}
+
+@media (max-width: 680px) {
+    #page-container {
+        width: 100%;
+        max-width: none;
+        padding: 12px 16px 0 16px;
+    }
+
+    #index section {
+        width: 100%;
+        gap: 18px;
+        margin-bottom: 40px;
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .titre_vertical {
+        width: 100%;
+        text-align: center;
+        font-size: clamp(2rem, 10vw, 2.8rem);
+        letter-spacing: 4px;
+    }
+
+    #index_carrousel {
+        width: 100%;
+    }
+
+    #index_carrousel img {
+        display: block;
+        width: 100%;
+        max-width: none;
+        border-radius: 18px;
+    }
+
+    .paragraphes {
+        width: 100%;
+        padding: 0;
+    }
+
+    .paragraphes p {
+        margin-bottom: 28px;
+        padding: 0;
+        width: 100%;
+        font-size: 1.05rem;
+        line-height: 1.45;
+    }
+
+    #podium,
+    .events-display {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+    }
+
+    #podium {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .podium_unit:nth-child(2) {
+        order: 1;
+    }
+
+    .podium_unit:nth-child(1) {
+        order: 2;
+    }
+
+    .podium_unit:nth-child(3) {
+        order: 3;
+    }
+
+    .podium_unit {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .podium_unit h3 {
+        font-size: 54px;
+    }
+
+    .podium_unit h4 {
+        font-size: 26px;
+    }
+
+    .podium_unit > div {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        font-size: 28px;
+        border-radius: 28px;
+    }
+
+    .profile_picture {
+        width: 120px;
+        height: 120px;
+    }
+
+    .event {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        min-height: 0;
+        max-height: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 24px;
+    }
+
+    .event h4 {
+        width: 100%;
+    }
 }
 
 

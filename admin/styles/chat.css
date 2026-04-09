@@ -1,7 +1,17 @@
 #main_content.chat-layout {
     height: 100%;
-    padding: 20px;
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+@media screen and (max-width: 640px) {
+    #main_content.chat-layout {
+        padding: 8px;
+        gap: 8px;
+    }
 }
 
 .chat-toolbar {
@@ -27,6 +37,7 @@
 .chat-messages {
     width: 100%;
     flex: 1;
+    min-height: 0;
     border: 1px solid var(--border-color);
     border-radius: 12px;
     background: var(--background-color-whiter);
@@ -35,6 +46,14 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+@media screen and (max-width: 640px) {
+    .chat-messages {
+        padding: 8px;
+        gap: 6px;
+        border-radius: 8px;
+    }
 }
 
 .chat-empty {
@@ -47,6 +66,13 @@
     border-radius: 10px;
     padding: 10px;
     background: white;
+}
+
+@media screen and (max-width: 640px) {
+    .chat-message {
+        border-radius: 8px;
+        padding: 8px;
+    }
 }
 
 .chat-message-header {
@@ -76,6 +102,12 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 10px;
+}
+
+@media screen and (max-width: 640px) {
+    .chat-form {
+        gap: 6px;
+    }
 }
 
 #chat_input {

@@ -5,8 +5,8 @@ section {
 h1 {
   margin: 0 0 12px 2vw;
   padding: 0;
-  font-size: 4.5em;
-  letter-spacing: 15px;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  letter-spacing: clamp(4px, 1vw, 15px);
   line-height: 1.2;
   font-weight: 500;
   font-family: "Koulen", sans-serif;
@@ -25,7 +25,7 @@ h1 {
 }
 
 .events-display {
-  width: fit-content;
+  width: min(100%, 1100px);
 
   margin: auto;
   margin-bottom: 5vh;
@@ -35,12 +35,12 @@ h1 {
   height: fit-content;
   /* Limite la hauteur pour permettre le défilement */
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  gap: 8vh;
-  align-items: flex-end;
-  align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 8vh;
+    align-items: stretch;
+    align-self: center;
 
   position: relative;
 }
@@ -49,8 +49,8 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 40vw;
-  min-width: 500px;
+  width: 100%;
+  min-width: 0;
   max-width: 780px;
   min-height: 130px;
   max-height: 170px;
@@ -98,6 +98,8 @@ h1 {
   display: flex;
   align-items: center;
   position: relative;
+  width: 100%;
+  justify-content: center;
 }
 
 .passed {
@@ -190,17 +192,18 @@ h1 {
 ************************/
 
 .event-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80vw;
-  height: 15vh;
-  border-radius: 15px;
-  box-shadow: 10px 7px 4px rgba(0, 0, 0, 0.107);
-  background-color: #000000;
-  overflow: hidden;
-  margin-top: 2%;
-  margin-bottom: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 1100px);
+    min-height: 360px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 10px 7px 4px rgba(0, 0, 0, 0.107);
+    background-color: #000000;
+    overflow: hidden;
+	  margin-top: 2%;
+	  margin-bottom: 1%;
 }
 
 #calendar {
@@ -292,13 +295,13 @@ h1 {
 *******************************/
 
 .calendar-filters {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  width: 80vw;
-  margin: 0 auto 20px auto;
-  color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: min(100%, 1100px);
+    margin: 0 auto 20px auto;
+    color: white;
 }
 
 .calendar-filters input,
@@ -326,10 +329,68 @@ h1 {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .agenda-wrapper {
-    width: 95vw;
-    height: 60vh;
-  }
+    h1 {
+        margin-left: 0;
+    }
+
+    .calendar-filters {
+        align-items: stretch;
+    }
+
+    .calendar-filters label,
+    .calendar-filters input,
+    .calendar-filters select,
+    .calendar-filters button {
+        width: 100%;
+    }
+
+    .event-wrapper {
+        min-height: 520px;
+    }
+
+    .event-box {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .timeline-event {
+        margin-right: 0;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .vertical-line,
+    .time-line {
+        display: none;
+    }
+
+    .timeline-event p,
+    .timeline-event h4 {
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .event {
+        max-width: none;
+        min-height: 0;
+        max-height: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 24px;
+    }
+
+    .event h4 {
+        width: 100%;
+    }
+
+    .fc .fc-toolbar {
+        flex-direction: column;
+        gap: 12px;
+    }
 
   .fc .fc-toolbar-title {
     font-size: 1.8rem !important;

@@ -108,3 +108,31 @@ section > div > img {
     margin-bottom: 30px;
     line-height: 2;
 }
+
+@media (max-width: 768px) {
+    .titre_section_apropos {
+        font-size: clamp(2.2rem, 8vw, 4rem);
+        margin-bottom: 32px;
+    }
+
+    section > div {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    section > div > p,
+    #bureau p,
+    #adhesion p {
+        margin-left: 0;
+        margin-right: 0;
+        line-height: 1.7;
+    }
+
+    .photo-membres {
+        gap: 16px;
+    }
+
+    #bureau img {
+        width: 100%;
+    }
+}
