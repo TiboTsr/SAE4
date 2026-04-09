@@ -3,9 +3,9 @@
 ************************/
 
 H1 {
-    font-size: 4.5em;
-    letter-spacing: 15px;
-    line-height: 100px;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    letter-spacing: clamp(4px, 1vw, 15px);
+    line-height: 1.2;
     font-weight: 500;
     font-family: "Koulen", sans-serif;
 }
@@ -19,7 +19,7 @@ H1 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 40px;
-    margin: 60px;
+    margin: 40px 0 75px 0;
     margin-bottom: 75px;
 }
 
@@ -114,4 +114,14 @@ H1 {
     border: none;
     cursor:initial;
     font-size: 1em;
+}
+
+@media (max-width: 640px) {
+    #product-list {
+        gap: 20px;
+    }
+
+    #one-product {
+        width: min(100%, 320px);
+    }
 }

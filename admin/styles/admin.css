@@ -1,45 +1,50 @@
 /* VARIABLES */
 :root{
     --bg-color: #0F0F0F;
-
     --nav-text-color: white;
     --nav-width: 270px;
 }
 
+/* All styles prefixed with #main to avoid conflicts with iframe styles */
 
-/*
-    All the styles are prefixed with #main to avoid conflicts with styles within the iframe.
-*/
+/* GENERAL */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
 
 /* MAIN BODY */
 #main{
     background-color: var(--bg-color);
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: row;
-    gap: 30px;
-    padding: 30px;
+    gap: 0;
+    padding: 8px;
     overflow: hidden;
 }
 
 /* ADMIN QUIT BUTTON */
 .admin-quit-btn {
-    margin-bottom: 20px;
+    margin-bottom: 6px;
     border-bottom: 1px solid rgba(119, 241, 190, 0.2);
-    padding-bottom: 15px;
+    padding-bottom: 6px;
 }
 
 .admin-quit-btn a {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 6px;
     border: 1px solid rgb(119, 241, 190);
     background: rgba(25, 25, 25, 0.7);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    font-size: 0.95em;
+    box-shadow: none;
+    font-size: 0.9em;
     font-weight: 500;
     color: rgb(119, 241, 190);
     text-decoration: none;
@@ -50,16 +55,14 @@
 .admin-quit-btn a:hover {
     background: rgb(119, 241, 190);
     color: rgb(20, 20, 20);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(119, 241, 190, 0.3);
+    transform: scale(1.02);
 }
 
 /* NAVIGATION */
 #main nav{
     display: flex;
     flex-direction: column;
-    gap: 30px;
-
+    gap: 4px;
     width: var(--nav-width);
 }
 
@@ -109,49 +112,52 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 3px;
     width: 100%;
     user-select: none;
     overflow: auto;
 }
 #main nav ul li{
     width: 100%;
-    padding: 15px;
-    border-radius: 12px;
+    padding: 10px 12px;
+    min-height: 44px;
+    border-radius: 8px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 15px;
-
+    gap: 10px;
     color: var(--nav-text-color);
-    font-size: 16px;
-
+    font-size: 14px;
     position: relative;
     cursor: pointer;
-
-    transition-duration: 0.2s;
+    transition-duration: 0.15s;
+}
+#main nav ul li:focus-visible{
+    outline: 2px solid rgb(119, 241, 190);
+    outline-offset: 1px;
 }
 #main nav ul li img{
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
-
 #main nav ul li.selected{
-    background-color: rgba(169, 169, 169, 0.15);
+    background-color: rgba(119, 241, 190, 0.15);
 }
 
 /* MAIN */
 #main main{
-    width: calc(100% - var(--nav-width));
-    border-radius: 35px;
+    width: calc(100% - var(--nav-width) - 8px);
+    border-radius: 12px;
     background-color: var(--background-color);
     overflow: hidden;
+    margin-left: 8px;
 }
 #main main iframe{
     width: 100%;
     height: 100%;
     user-select: none;
+    display: block;
 }
 
 /* SCROLL BAR */
@@ -181,33 +187,81 @@
 /* RESPONSIVE */
 @media screen and (max-width: 1300px) {
     #main{
-        flex-direction: column-reverse;
-        gap: 30px;
-        padding: 10px;
+        flex-direction: column;
+        gap: 6px;
+        padding: 6px;
+        height: 100%;
+        overflow: hidden;
     }
     #main nav{
         width: 100%;
-    }
-    #main::after{
-        content: 'ADIIL - Admin';
-        color: var(--nav-text-color);
-        font-size: 30px;
-        font-weight: bold;
-        text-align: center;
+        flex-direction: row;
+        gap: 3px;
+        height: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0;
+        align-items: center;
+        flex-shrink: 0;
     }
     #main nav>#accueil{
         display: none;
     }
+    .admin-quit-btn {
+        margin: 0;
+        border: none;
+        padding: 0;
+        flex-shrink: 0;
+    }
     #main nav>ul{
+        display: flex;
         flex-direction: row;
-        gap: 15px;
-        overflow: auto;
+        gap: 3px;
+        overflow-x: auto;
+        width: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
     }
     #main nav>ul>li{
-        height: 60px;
+        padding: 8px 12px;
+        min-height: 40px;
+        min-width: fit-content;
+        white-space: nowrap;
     }
     #main main{
         width: 100%;
-        height: 80vh;
+        flex: 1;
+        overflow: hidden;
+        margin-left: 0;
+        border-radius: 8px;
+    }
+    .admin-quit-btn a {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    #main nav>ul>li {
+        font-size: 13px;
+        padding: 6px 10px;
+        min-height: 36px;
+    }
+    #main nav ul li img {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #main {
+        gap: 4px;
+        padding: 4px;
+    }
+    #main nav {
+        max-height: 44px;
+    }
+    #main nav>ul>li {
+        font-size: 12px;
+        padding: 5px 8px;
     }
 }

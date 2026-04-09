@@ -3,9 +3,9 @@
 ************************/
 
 H1 {
-    font-size: 4.5em;
-    letter-spacing: 15px;
-    line-height: 100px;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    letter-spacing: clamp(4px, 1vw, 15px);
+    line-height: 1.2;
     font-weight: 500;
     font-family: "Koulen", sans-serif;
     margin-bottom: 75px;
@@ -19,6 +19,9 @@ H1 {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 60px;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 
@@ -34,7 +37,8 @@ H1 {
     justify-content: space-around;
     align-content: center;
     gap: 20px;
-    width: 65vw;
+    width: min(100%, 980px);
+    flex-wrap: wrap;
 }
 
 
@@ -54,6 +58,7 @@ H1 {
     background-position: 10px center;
     background-repeat: no-repeat;
     background-size: 20px 20px;
+    width: min(100%, 320px);
 }
 
 #search-input:not(:placeholder-shown) { /* Lorsque le champ est rempli, on cache l'icône */
@@ -93,7 +98,7 @@ H1 {
 }
 
 #cart-info {
-    margin-right: 4vw;
+    margin-right: 0;
 }
 
 #cart-info button {
@@ -160,7 +165,7 @@ H1 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 40px;
-    margin: 60px;
+    margin: 40px 0 60px 0;
     margin-top: 0px;
 }
 
@@ -292,4 +297,46 @@ H1 {
     margin: 0;
     color: white;
     font-size: 16px;
+}
+
+@media (max-width: 900px) {
+    #filter-form {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    #filter-form div:first-of-type {
+        width: 100%;
+        height: auto;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    #filter-form div:first-of-type label,
+    #filter-form div:first-of-type select {
+        width: 100%;
+    }
+
+    #cart-info button p {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    #filter-form {
+        padding: 16px;
+        gap: 14px;
+    }
+
+    #search-input {
+        width: 100%;
+    }
+
+    #product-list {
+        gap: 20px;
+    }
+
+    #one-product {
+        width: min(100%, 320px);
+    }
 }

@@ -3,9 +3,9 @@
 ************************/
 
 H2 {
-    font-size: 4.5em;
-    letter-spacing: 15px;
-    line-height: 100px;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    letter-spacing: clamp(4px, 1vw, 15px);
+    line-height: 1.2;
     font-weight: 500;
     font-family: "Koulen", sans-serif;
 }
@@ -147,7 +147,7 @@ H2 {
 }
 
 #account-generalInfo div:nth-of-type(3) p{
-    font-size: 35px;
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
     font-weight: 500;
     text-align: center;
     overflow-wrap: anywhere;
@@ -155,8 +155,8 @@ H2 {
 }
 
 #cadre-grade {
-    width: 200px;
-    height: 200px;
+    width: clamp(130px, 18vw, 200px);
+    height: clamp(130px, 18vw, 200px);
     overflow: hidden;
     margin-top: 2vh;
 }
@@ -515,4 +515,35 @@ H2 {
 
 #viewAll-form button:hover {
     opacity: 100%;
+}
+
+@media (max-width: 768px) {
+    #account-generalInfo,
+    #account-personalInfo-form,
+    #account-editPass-form,
+    #historique-achats {
+        width: 100%;
+    }
+
+    #account-generalInfo {
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    #account-personalInfo-form,
+    #account-editPass-form {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    #buttons-section {
+        width: 100%;
+    }
+
+    #buttons-section > button:first-of-type,
+    #buttons-section form:first-of-type button,
+    #buttons-section form:nth-of-type(2) button {
+        min-width: 0;
+        width: 100%;
+    }
 }

@@ -4,27 +4,43 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     align-items: flex-end;
-    gap: 10px;
+    gap: 8px;
+}
+
+@media (max-width: 640px) {
+    #prop_roles{
+        gap: 4px;
+        justify-content: flex-start;
+    }
 }
 
 #prop_roles p{
-    padding: 10px;
-    border-radius: 13px;
+    padding: 6px 10px;
+    border-radius: 10px;
     color: var(--text-lighter);
     border: 1px solid var(--border-color);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: normal;
     cursor: pointer;
     transition-duration: 0.2s;
     user-select: none;
 }
+
+@media (max-width: 640px) {
+    #prop_roles p{
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+}
 #prop_roles p:hover{
-    transform: scale(1.05);
+    transform: scale(1.03);
+    border-color: #63CA60;
 }
 #prop_roles p:active{
-    transform: scale(0.95);
+    transform: scale(0.97);
 }
 #prop_roles p.selected{
     color: #63CA60;
     border-color: #63CA60;
+    background: rgba(99, 202, 96, 0.08);
 }

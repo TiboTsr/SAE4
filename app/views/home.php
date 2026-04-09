@@ -17,6 +17,7 @@
     <?php
      require_once 'app/views/header.php';
     ?>
+    <div id="bubble-layer" aria-hidden="true"></div>
     <div id="page-container">
 
         <section>

@@ -3,9 +3,9 @@
 ************************/
 
 H1 {
-    font-size: 4.5em;
-    letter-spacing: 15px;
-    line-height: 100px;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    letter-spacing: clamp(4px, 1vw, 15px);
+    line-height: 1.2;
     font-weight: 500;
     font-family: "Koulen", sans-serif;
     margin-bottom: 75px;
@@ -211,6 +211,11 @@ H1 {
 
     #calendar {
         font-size: 0.9em;
+    }
+
+    .fc .fc-toolbar {
+        flex-direction: column;
+        gap: 12px;
     }
 }
 

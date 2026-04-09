@@ -1,6 +1,14 @@
 // Constants
 const BUBBLE_COUNT = 20;
-const body = document.querySelector('body');
+const bubbleLayer = document.getElementById('bubble-layer');
+
+if (!bubbleLayer) {
+    return;
+}
+
+const viewportWidth = window.innerWidth;
+const viewportHeight = window.innerHeight;
+const bubbleSize = viewportWidth <= 680 ? 220 : 300;
 
 // Create bubbles
 for (let i = 0; i < BUBBLE_COUNT; i++) {
@@ -13,11 +21,13 @@ for (let i = 0; i < BUBBLE_COUNT; i++) {
     } else {
         bubble.classList.add('red-bubble');
     }
-    body.appendChild(bubble);
+    bubbleLayer.appendChild(bubble);
 
-    // Set bubble position
-    bubble.style.left = `${randomIntFromRange(0, 100)}vw`;
-    bubble.style.top = `${randomIntFromRange(0, body.clientHeight - 100)}px`;
+    const maxLeft = Math.max(0, viewportWidth - bubbleSize);
+    const maxTop = Math.max(0, viewportHeight - bubbleSize);
+
+    bubble.style.left = `${randomIntFromRange(0, maxLeft)}px`;
+    bubble.style.top = `${randomIntFromRange(0, maxTop)}px`;
 
 }
 

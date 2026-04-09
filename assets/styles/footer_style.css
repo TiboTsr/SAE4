@@ -17,6 +17,7 @@ footer {
     position: relative;
     bottom: 0px;
     left: 0px;
+    gap: 24px;
 }
 
 footer > div {
@@ -59,4 +60,29 @@ footer > h2{
     font-weight: 200;
 
     font-size: 2em;
+}
+
+@media (max-width: 900px) {
+    footer {
+        height: auto;
+        padding: 28px 20px;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        margin-top: 10vh;
+    }
+
+    footer > div {
+        gap: 14px;
+    }
+
+    footer > div a {
+        font-size: 1.05rem;
+    }
+
+    footer > h2 {
+        writing-mode: initial;
+        text-orientation: initial;
+        letter-spacing: 2px;
+        margin: 0;
+    }
 }
