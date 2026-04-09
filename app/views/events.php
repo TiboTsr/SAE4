@@ -28,6 +28,21 @@
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
 
+    <div class="calendar-filters">
+        <label for="filter-date">Date :</label>
+        <input type="date" id="filter-date">
+
+        <label for="filter-type">Type :</label>
+        <select id="filter-type">
+            <option value="all">Tous</option>
+            <option value="soirée">Soirée</option>
+            <option value="sport">Sport</option>
+            <option value="réunion">Réunion</option>
+            <option value="autre">Autre</option>
+        </select>
+
+        <button type="button" id="reset-filters">Réinitialiser</button>
+    </div>
     <div class="event-wrapper">
         <div id="calendar"></div>
     </div>
@@ -66,7 +81,7 @@
     </section>
 
 
-    <script>
+    <!--<script>
         const calendarEl = document.getElementById('calendar');
         const events = <?= json_encode($calendarEvents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
@@ -94,6 +109,68 @@
             }
         });
         calendar.render();
+    </script>-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+            const filterDateEl = document.getElementById('filter-date');
+            const filterTypeEl = document.getElementById('filter-type');
+            const resetBtn = document.getElementById('reset-filters');
+
+            const allEvents = <?= json_encode($calendarEvents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+
+            function filterEvents() {
+                const selectedDate = filterDateEl.value;
+                const selectedType = filterTypeEl.value;
+
+                return allEvents.filter(event => {
+                    const eventDate = String(event.start).split('T')[0];
+                    const eventType = event.extendedProps?.type ?? 'autre';
+
+                    const matchDate = !selectedDate || eventDate === selectedDate;
+                    const matchType = selectedType === 'all' || eventType.toLowerCase() === selectedType.toLowerCase();
+
+                    return matchDate && matchType;
+                });
+            }
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'fr',
+                initialView: 'dayGridMonth',
+                firstDay: 1,
+                aspectRatio: 3,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,listMonth'
+                },
+                buttonText: {
+                    today: 'Aujourd’hui',
+                    month: 'Mois',
+                    list: 'Liste'
+                },
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    successCallback(filterEvents());
+                },
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault();
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
+                    }
+                }
+            });
+
+            filterDateEl.addEventListener('change', () => calendar.refetchEvents());
+            filterTypeEl.addEventListener('change', () => calendar.refetchEvents());
+
+            resetBtn.addEventListener('click', () => {
+                filterDateEl.value = '';
+                filterTypeEl.value = 'all';
+                calendar.refetchEvents();
+            });
+
+            calendar.render();
+        });
     </script>
 
     <?php require_once 'app/views/footer.php'; ?>

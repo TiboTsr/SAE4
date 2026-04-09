@@ -267,6 +267,35 @@ h1 {
     border-color: #11998e !important;
 }
 
+/******************************
+****** Filtre Calendrier ******
+*******************************/
+
+.calendar-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 80vw;
+    margin: 0 auto 20px auto;
+    color: white;
+}
+
+.calendar-filters input,
+.calendar-filters select,
+.calendar-filters button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgb(119, 241, 190);
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.calendar-filters button {
+    background-color: #11998e;
+    border-color: #11998e;
+    cursor: pointer;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
