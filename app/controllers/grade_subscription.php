@@ -2,6 +2,7 @@
 
 require_once 'app/models/gradeModel.php';
 require_once 'app/models/files_save.php';
+require_once 'app/models/userModel.php';
 
 $isLoggedIn = isset($_SESSION["userid"]);
 if (!$isLoggedIn) {
@@ -11,6 +12,20 @@ if (!$isLoggedIn) {
 
 $userid = $_SESSION["userid"];
 
+$userInfo = getMinimalUserInfo();
+$checkoutProfile = [
+    'prenom' => '',
+    'nom' => '',
+    'email' => '',
+    'tp' => '',
+];
+
+if (!empty($userInfo)) {
+    $checkoutProfile['prenom'] = (string) ($userInfo[0]['prenom_membre'] ?? '');
+    $checkoutProfile['nom'] = (string) ($userInfo[0]['nom_membre'] ?? '');
+    $checkoutProfile['email'] = (string) ($userInfo[0]['email_membre'] ?? '');
+    $checkoutProfile['tp'] = (string) ($userInfo[0]['tp_membre'] ?? '');
+}
 
 // Vérification que l'ID du grade est fourni dans l'URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -18,7 +33,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     exit;
 }
 $id_grade = intval($_GET['id']);
-
 
 // On récupère les informations du grade
 $grade = getGradeById($id_grade);
