@@ -25,6 +25,13 @@
     require_once "app/views/header.php";
 ?>
 
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=home">
+        <img src="assets/images/fleche_retour.png" alt="Retour">
+        Retour à l'accueil
+    </a>
+</div>
+
 <!-- MENU POUR NAVIGUER DANS LES SECTIONS -->
 <nav class="menu-ancrage">
   <a href="#bureau">Le Bureau</a>

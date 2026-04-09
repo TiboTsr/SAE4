@@ -53,6 +53,12 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])) {
     <!-- Navigation -->
     <nav>
 
+        <div class="admin-quit-btn">
+            <a href="../index.php" title="Quitter l'administration">
+                ← Quitter l'admin
+            </a>
+        </div>
+
         <a id="accueil" href="../index.php">
             <img src="../assets/images/logo.png" alt="Logo de l'ADIIL">
         </a>

@@ -37,13 +37,11 @@
         <?php endif; ?>
     </div>
 
-    <div>
-        <button id="shop-button">
-            <a href="index.php?page=shop">
-                <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
-                Retourner à la boutique
-            </a>
-        </button>
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=shop">
+            <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
+            Retourner à la boutique
+        </a>
     </div>
 </div>
 

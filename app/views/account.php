@@ -15,11 +15,20 @@
 
     <?php require_once 'app/views/header.php'; ?>
 
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=home">
+            <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+            Retour a l'accueil
+        </a>
+    </div>
+
     <h2>MON COMPTE</h2>
 
     <?php if (isset($_SESSION['message'])) : ?>
-        <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
-        <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>
+        <?php $toastType = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error' : ''; ?>
+        <div id="account-toast" class="toast-container <?php echo $toastType; ?>" role="status" aria-live="polite" aria-atomic="true">
+            <p class="toast"><?php echo htmlspecialchars($_SESSION['message']); ?></p>
+        </div>
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
 
@@ -79,7 +88,7 @@
                     <label for="mail">Adresse mail</label>
                     <input type="email" id="mail" name="mail" placeholder="Adresse mail"
                         value="<?php echo htmlspecialchars($infoUser[0]['email_membre']); ?>" required>
-                    <?php if (!empty($infoUser[0]['tp_membre'])) : ?>
+                    
                     <label for="tp">Groupe TP</label>
                     <select id="tp" name="tp">
                         <?php
@@ -92,7 +101,6 @@
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <?php endif; ?>
                 </div>
             </div>
             <button type="submit">
@@ -180,6 +188,28 @@
     </section>
 
     <?php require_once 'app/views/footer.php'; ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toast = document.getElementById('account-toast');
+
+            if (!toast) {
+                return;
+            }
+
+            toast.style.display = 'flex';
+
+            requestAnimationFrame(function () {
+                toast.classList.add('showed');
+            });
+
+            setTimeout(function () {
+                toast.classList.remove('showed');
+                setTimeout(function () {
+                    toast.style.display = 'none';
+                }, 200);
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
 

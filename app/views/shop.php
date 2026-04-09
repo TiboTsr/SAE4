@@ -22,6 +22,13 @@ require_once "app/views/header.php" ;
 
 <body class="body_margin">
 
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=home">
+        <img src="assets/images/fleche_retour.png" alt="Retour">
+        Retour à l'accueil
+    </a>
+</div>
+
 <H1>LA BOUTIQUE</H1>
 
 <div id="principal-section">

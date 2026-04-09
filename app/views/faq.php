@@ -16,6 +16,13 @@
 
 <?php require_once "app/views/header.php"; ?>
 
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=home">
+        <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+        Retour a l'accueil
+    </a>
+</div>
+
 <h1>AIDE ET FAQ</h1>
 <p class="help-intro">Retrouvez ici les acces utiles de l'ADIIL: Instagram, Discord, contact administration et questions frequentes.</p>
 

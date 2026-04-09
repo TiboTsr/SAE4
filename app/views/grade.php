@@ -15,6 +15,13 @@
 
     <?php require_once 'app/views/header.php'; ?>
 
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=home">
+            <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+            Retour à l'accueil
+        </a>
+    </div>
+
     <h1>Les grades</h1>
 
     <?php if (isset($_SESSION['message'])) : ?>

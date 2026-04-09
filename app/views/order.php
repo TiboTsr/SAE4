@@ -29,8 +29,8 @@
     <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($message); ?></div>
 <?php endif; ?>
 
-<div>
-    <a id="cart-button" href="index.php?page=cart">
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=cart">
         <img src="assets/images/fleche_retour.png" alt="Fleche de retour">
         Retourner au panier
     </a>

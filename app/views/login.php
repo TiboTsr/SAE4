@@ -17,6 +17,13 @@
             require_once 'app/views/header.php';
         ?>
 
+        <div class="page-back-wrap">
+            <a class="page-back" href="index.php?page=home">
+                <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+                Retour a l'accueil
+            </a>
+        </div>
+
 
         <!-- Formulaire de connexion -->
         <form method="POST" action="index.php?page=login" class="login-form">
@@ -33,7 +40,8 @@
             <button type="submit">Se connecter</button>
         </form>
 
-        <form method="GET" action="index.php?page=signin" id="create-account">
+        <form method="GET" action="index.php" id="create-account">
+            <input type="hidden" name="page" value="signin">
             <h2>Pas encore de compte ?</h2>
             <button type="submit">Créez en un</button>
         </form>
