@@ -17,6 +17,13 @@
             require_once 'app/views/header.php';
         ?>
 
+        <div class="page-back-wrap">
+            <a class="page-back" href="index.php?page=home">
+                <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+                Retour a l'accueil
+            </a>
+        </div>
+
 
         <!-- Formulaire de connexion -->
         <form method="POST" action="index.php?page=login" class="login-form">

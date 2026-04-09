@@ -26,6 +26,12 @@
         return in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true);
     };
     ?>
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=events">
+            <img src="assets/images/fleche_retour.png" alt="Retour aux evenements">
+            Retour aux evenements
+        </a>
+    </div>
     <?php if (isset($_SESSION['message'])) : ?>
         <?php $messageStyle = (isset($_SESSION['message_type']) && $_SESSION['message_type'] === 'error') ? 'error-message' : 'success-message'; ?>
         <div id="<?php echo $messageStyle; ?>"><?php echo htmlspecialchars($_SESSION['message']); ?></div>

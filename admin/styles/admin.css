@@ -23,6 +23,37 @@
     overflow: hidden;
 }
 
+/* ADMIN QUIT BUTTON */
+.admin-quit-btn {
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(119, 241, 190, 0.2);
+    padding-bottom: 15px;
+}
+
+.admin-quit-btn a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgb(119, 241, 190);
+    background: rgba(25, 25, 25, 0.7);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 0.95em;
+    font-weight: 500;
+    color: rgb(119, 241, 190);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.admin-quit-btn a:hover {
+    background: rgb(119, 241, 190);
+    color: rgb(20, 20, 20);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(119, 241, 190, 0.3);
+}
+
 /* NAVIGATION */
 #main nav{
     display: flex;

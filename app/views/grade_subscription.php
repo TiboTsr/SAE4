@@ -21,13 +21,11 @@ require_once "app/views/header.php";
 
 <h1>MON ADHESION</h1>
 
-<div>
-    <button id="cart-button">
-        <a href="index.php?page=grade">
-            <img src="assets/images/fleche_retour.png" alt="Flèche de retour, retourne à la page des grades">
-            Retourner aux grades
-        </a>
-    </button>
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=grade">
+        <img src="assets/images/fleche_retour.png" alt="Flèche de retour, retourne à la page des grades">
+        Retourner aux grades
+    </a>
 </div>
 
 <div>

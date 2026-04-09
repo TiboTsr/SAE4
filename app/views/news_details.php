@@ -20,6 +20,12 @@
     <?php
         require_once 'app/views/header.php';
     ?>
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=news">
+            <img src="assets/images/fleche_retour.png" alt="Retour aux actualites">
+            Retour aux actualites
+        </a>
+    </div>
     <section class="event-details">
         <?php if ($event['image_actualite'] == null) :?>
             <img src="admin/ressources/default_images/event.jpg" alt="Image de l'actualite">

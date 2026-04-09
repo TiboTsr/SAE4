@@ -26,8 +26,8 @@
         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
     <?php endif; ?>
 
-    <div>
-        <a id="cart-button" href="index.php?page=event_details&id=<?php echo $eventid ?>">
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=event_details&id=<?php echo $eventid ?>">
             <img src="assets/images/fleche_retour.png" alt="Flèche de retour">
             Retourner à l'évènement
         </a>

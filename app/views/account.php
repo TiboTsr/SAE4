@@ -15,6 +15,13 @@
 
     <?php require_once 'app/views/header.php'; ?>
 
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=home">
+            <img src="assets/images/fleche_retour.png" alt="Retour a l'accueil">
+            Retour a l'accueil
+        </a>
+    </div>
+
     <h2>MON COMPTE</h2>
 
     <?php if (isset($_SESSION['message'])) : ?>

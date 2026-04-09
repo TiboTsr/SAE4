@@ -31,9 +31,12 @@
 
 <section class="user-gallery">
 
-    <a href="index.php?page=event_details&id=<?php echo "$eventid";?>" class="back-arrow">
-        &#8592;<span>Retour</span> <!-- &#8592; est une flèche -->
-    </a>
+    <div class="page-back-wrap">
+        <a class="page-back" href="index.php?page=event_details&id=<?php echo "$eventid";?>">
+            <img src="assets/images/fleche_retour.png" alt="Retour">
+            Retour
+        </a>
+    </div>
     <h1>MA GALLERIE</h1>
     <h2><?php echo $event['nom_evenement']?></h2>
 

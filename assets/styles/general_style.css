@@ -16,6 +16,7 @@ html{
     color: white;
     background-color: #1E1E1E;
     margin-top: 20vh;
+    scroll-padding-top: 0;
 }
 
 body {
@@ -65,4 +66,54 @@ a {
     border-radius: 5px;
     margin-bottom: 20px;
     border: 1px solid #f5c6cb;
+}
+
+.page-back-wrap {
+    margin: 12px 2vw 8px 2vw;
+}
+
+#closest-event {
+    scroll-margin-top: 120px;
+}
+
+.page-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgb(119, 241, 190);
+    background: rgba(25, 25, 25, 0.7);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 0.95em;
+    font-weight: 500;
+    color: rgb(119, 241, 190);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.page-back img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.page-back:hover {
+    background: rgb(119, 241, 190);
+    color: rgb(20, 20, 20);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(119, 241, 190, 0.25);
+}
+
+@media (max-width: 680px) {
+    .page-back {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+
+    .page-back img {
+        width: 18px;
+        height: 18px;
+    }
 }

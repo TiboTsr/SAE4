@@ -13,6 +13,13 @@
 </head>
 <body>
 
+<div class="page-back-wrap">
+    <a class="page-back" href="index.php?page=account">
+        <img src="assets/images/fleche_retour.png" alt="Retour">
+        Retour au compte
+    </a>
+</div>
+
 <div id="deleteAccountAlert" class="alert-container">
     <div class="alert-content">
         <p>
@@ -26,9 +33,6 @@
                 <form action="index.php?page=delete_account" method="POST">
                     <button id="confirmDelete" name="delete_account_valid" value="true" disabled>Valider</button>
                 </form>
-            </li>
-            <li>
-                <button id="cancelDelete" onclick="window.location.href='index.php?page=account'">Revenir en arriere</button>
             </li>
         </ul>
     </div>
