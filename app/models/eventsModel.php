@@ -57,8 +57,9 @@ function getAllEventsForCalendar() {
     $typeSelect = eventTypeSelectExpr();
 
     return $db->select(
-        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect}
+        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement, {$typeSelect}, deleted
          FROM EVENEMENT
+         WHERE deleted = false
          ORDER BY date_evenement ASC",
         "",
         []

@@ -81,6 +81,7 @@ $events = getAllEventsForCalendar();
 $calendarEvents = [];
 
 foreach ($events as $event) {
+    if ($event['deleted']) continue;
     $calendarEvents[] = [
         'title' => $event['nom_evenement'],
         'start' => substr($event['date_evenement'], 0, 10),
