@@ -24,7 +24,7 @@
 </div>
 
 <h1>AIDE ET FAQ</h1>
-<p class="help-intro">Retrouvez ici les acces utiles de l'ADIIL: Instagram, Discord, contact administration et questions frequentes.</p>
+<p class="help-intro">Retrouvez ici les accès utiles de l'ADIIL: Instagram, Discord, contact administration et questions fréquentes.</p>
 
 <section class="help-grid">
     <article class="help-card" id="instagram-posts">
@@ -41,7 +41,7 @@
 
     <article class="help-card" id="contact-admin">
         <h2>Contacter un administrateur</h2>
-        <p>Pour toute demande, ecrivez a un administrateur ADIIL via email.</p>
+        <p>Pour toute demande, écrivez à un administrateur ADIIL via email.</p>
         <a class="help-link" href="mailto:association.adiil@gmail.com">Contacter un administrateur</a>
     </article>
 

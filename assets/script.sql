@@ -471,7 +471,7 @@ SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = 2; -- Liste des permissions po
 
 
 /*******************************************************************/
-/*ADMINISTRATEUR : Ajouter un role  un utilisateur*/
+/*ADMINISTRATEUR : Ajouter un rôle à un utilisateur*/
 /******************************************************************/
 INSERT into ASSIGNATION values (2, 4);
 SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = 2;
@@ -530,15 +530,15 @@ SELECT * FROM MEMBRE WHERE id_membre = 2; -- Le membre a bien ete deduit des XP 
 
 
 /****************************************************************/
-/*ADMINISTRATEUR : Supprimer un evenement et la galerie associee*/
+/*ADMINISTRATEUR : Supprimer un événement et la galerie associée*/
 /****************************************************************/
 
-/* Contexte : Une administrateur supprime un evenement. Les images
-associees doivent donc etre supprimees*/
+/* Contexte : Une administrateur supprime un événement. Les images
+associées doivent donc être supprimées*/
 
-/*Fonctionnement : On recupere l'ID de l'article qui va etre supprime,
-on supprime toutes les images associees a l'evenement, puis on supprime
-l'evenement*/
+/*Fonctionnement : On récupère l'ID de l'article qui va être supprimé,
+on supprime toutes les images associées à l'événement, puis on supprime
+l'événement*/
 
 DROP PROCEDURE IF EXISTS delete_event;
 
@@ -552,7 +552,7 @@ CREATE PROCEDURE delete_event
 
 DELIMITER ;
 /* Test */
-SELECT * FROM MEDIA WHERE id_evenement = 2;    -- Deux memdias sont en lien avec l'evenement
+SELECT * FROM MEDIA WHERE id_evenement = 2;    -- Deux médias sont en lien avec l'événement
 CALL delete_event(2); --  On supprime l'evenement
 SELECT * FROM MEDIA WHERE id_evenement = 2;    -- Les deux medias ont été supprimes
 
@@ -613,14 +613,14 @@ DELIMITER ;
 /*Membre : Ajouter un media (photo ou vid�o) � la galerie d'un �v�nement*/
 /************************************************************************/
 
-/* Contexte : un membre souhaite ajouter une photo ou une vid�o � la galerie.*/
+/* Contexte : un membre souhaite ajouter une photo ou une vidéo à la galerie.*/
 
 /*Fonctionnement : on fait une insertion dans media*/
 
 INSERT INTO MEDIA (url_media, date_media, id_membre, id_evenement) VALUES('https://bdeinfo.fr/image_345.png', '2024-10-23', 3, 1);
 
 /* Test */
-SELECT * FROM MEDIA; -- l'image a bien �t� ajout�e
+SELECT * FROM MEDIA; -- l'image a bien été ajoutée
 
 
 
@@ -679,12 +679,12 @@ BEGIN
  	DECLARE _xp_gagne int;
     DECLARE _is_reductible BOOL;
 
- 	-- On recupere l'xp gagné par article, son prix unitaire et si les reductions sont applicable sur l'article.
+ 	-- On récupère l'xp gagné par article, son prix unitaire et si les réductions sont applicables sur l'article.
  	set _xp_gagne = (select ARTICLE.xp_article from ARTICLE where ARTICLE.id_article = _id_article_achat);
  	set _prix_art = (select ARTICLE.prix_article from ARTICLE where ARTICLE.id_article = _id_article_achat);
  	set _is_reductible = (select ARTICLE.reduction_article from ARTICLE where ARTICLE.id_article = _id_article_achat);
     
- 	-- On recupere la reduction applicable du grade, en prenant le Grade le plus recent du membre
+ 	-- On récupère la réduction applicable du grade, en prenant le Grade le plus récent du membre
  	set _reduc_grade = (
     	select GRADE.reduction_grade from GRADE
     	join ADHESION on ADHESION.id_grade = GRADE.id_grade
@@ -692,10 +692,10 @@ BEGIN
     	and ADHESION.id_membre = _id_membre_acheteur);
 
  	-- RETOUR :
-   	-- NULL ou 0 si, respectivement, le membre ne poss�de de grade ou que son grade n'offre pas de r�duction.
+   	-- NULL ou 0 si, respectivement, le membre ne possède de grade ou que son grade n'offre pas de réduction.
    	-- Ou alors la valeur de la r�duction en pourcentage.
 
- 	-- Par consequent, on convertit le pourcentage en valeur multipliable.
+ 	-- Par conséquent, on convertit le pourcentage en valeur multipliable.
  	if (_reduc_grade IS NULL OR _reduc_grade = 0 OR _is_reductible = 0) THEN
             SET _reduc_grade = 1;
  	ELSE
@@ -721,15 +721,15 @@ DELIMITER ;
 
 /* Test */
 
-CALL achat_article(7, 6, 1, 'TPE'); -- Un membre ayant le grade diamant ach�te un article reductible.
-select * from COMMANDE; -- la reduction a ete appliquee sur le prix paye
+CALL achat_article(7, 6, 1, 'TPE'); -- Un membre ayant le grade diamant achète un article réductible.
+select * from COMMANDE; -- la réduction a été appliquée sur le prix payé
 
 
 select MEMBRE.xp_membre from MEMBRE where MEMBRE.id_membre = 7; -- Ce membre a pour le moment 1 d'XP
 SELECT ARTICLE.stock_article FROM ARTICLE WHERE ARTICLE.id_article = 1; -- Le stock de l'article est de 50
 
-CALL achat_article(7, 1, 2, 'TPE'); -- Un membre ayant le grade diamant ach�te un article non-reductible.
-select * from COMMANDE; -- la reduction n'a pas ete applique sur le prix paye
+CALL achat_article(7, 1, 2, 'TPE'); -- Un membre ayant le grade diamant achète un article non-réductible.
+select * from COMMANDE; -- la réduction n'a pas été appliquée sur le prix payé
 
 select MEMBRE.xp_membre from MEMBRE where MEMBRE.id_membre = 7; -- l XP a ete credite
 SELECT ARTICLE.stock_article FROM ARTICLE WHERE ARTICLE.id_article = 1; -- Le stock a baisse de 2
@@ -744,10 +744,10 @@ SELECT ARTICLE.stock_article FROM ARTICLE WHERE ARTICLE.id_article = 1; -- Le st
 
 /* Contexte : un membre souhaite supprimer son compte.*/
 
-/*Fonctionnement : On supprime, les donnees personnelles de l'utilisateurs
- et les medias qu'il a partage de ce fait les administrateur ne pas faire
+/*Fonctionnement : On supprime, les données personnelles de l'utilisateurs
+ et les médias qu'il a partagés de ce fait les administrateur ne pas faire
  un delete de membre permet aux administrateur d'avoir une meilleure 
- lisibilite de l'historique des achats*/
+ lisibilité de l'historique des achats*/
 
 DROP PROCEDURE IF EXISTS suppressionCompte;
 
@@ -758,7 +758,7 @@ CREATE PROCEDURE suppressionCompte
 BEGIN
 	-- Dans un soucis de suivie des donnees on conserve l'identifiant du membre mais on enleve/anonymise ses donnees personnelles
 	UPDATE MEMBRE SET nom_membre='N/A', prenom_membre= 'N/A', email_membre='N/A', password_membre ='N/A', xp_membre = 0, discord_token_membre = 'N/A', pp_membre ='N/A' WHERE id_membre = _id_utilisateur_supprime;
-	-- En revanche les medias partages par le membre sont definitivement supprimees
+	-- En revanche les médias partagés par le membre sont définitivement supprimés
 	DELETE FROM MEDIA WHERE id_membre = _id_utilisateur_supprime;
 	-- De meme le membre perd ses roles
 	DELETE FROM ASSIGNATION WHERE id_membre = _id_utilisateur_supprime;
