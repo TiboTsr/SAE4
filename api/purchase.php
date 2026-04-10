@@ -36,7 +36,8 @@ switch ($methode) {
         break;
 }
 
-function get_purchase() : void {
+function get_purchase() : void
+{
     $db = new DB();
 
     if (isset($_GET['meta']) && filter::bool($_GET['meta']) === true) {
@@ -113,7 +114,8 @@ function get_purchase() : void {
     }
 }
 
-function get_purchase_meta(DB $db): void {
+function get_purchase_meta(DB $db): void
+{
     try {
         $hasDeletedColumnRows = $db->select(
             "SELECT COUNT(*) AS count_deleted
@@ -160,7 +162,8 @@ function get_purchase_meta(DB $db): void {
     }
 }
 
-function create_purchase() : void {
+function create_purchase() : void
+{
     $payload = json_decode(file_get_contents('php://input'), true);
 
     if (!is_array($payload) || !isset($payload['id_article'], $payload['quantite'], $payload['mode_paiement'])) {
@@ -305,7 +308,8 @@ function create_purchase() : void {
     }
 }
 
-function update_purchase_status() : void {
+function update_purchase_status() : void
+{
     if (!isset($_GET['id'])) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing command id']);
@@ -465,4 +469,3 @@ function get_or_create_anonymous_member_id(mysqli $conn): int
         [$anonymousEmail, $anonymousPassword]
     );
 }
-

@@ -50,8 +50,7 @@ switch ($methode) {
 
 function get_grades() : void
 {
-    if (isset($_GET['id']))
-    {
+    if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
         $grades = Grade::getInstance($id);
 
@@ -60,13 +59,11 @@ function get_grades() : void
             echo json_encode(['error' => 'Grade not found']);
             return;
         }
-        
     } else {
         $grades = Grade::bulkFetch();
     }
 
     echo json_encode($grades);
-
 }
 
 function create_grade() : void
@@ -143,7 +140,6 @@ function update_image() : void
     $grade->updateImage($image);
 
     echo json_encode($grade);
-
 }
 
 function delete_grade() : void
@@ -168,4 +164,3 @@ function delete_grade() : void
     http_response_code(200);
     echo json_encode(['message' => 'Grade deleted']);
 }
-

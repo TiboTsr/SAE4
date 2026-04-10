@@ -50,9 +50,7 @@ function get_accounting(): void
             echo json_encode(["message" => "Accounting file not found"]);
             return;
         }
-
     } else {
-
         $data = Accounting::bulkFetch();
     }
 
@@ -75,9 +73,7 @@ function create_accounting(): void
     if ($file == null) {
         http_response_code(400);
         echo json_encode(["message" => "Accounting file not created"]);
-
     } else {
-
         $date = filter::date($_POST['date']);
         $nom = filter::string($_POST['nom'], maxLenght: 100);
         $id_membre = filter::int($_SESSION['userid']);
@@ -88,7 +84,6 @@ function create_accounting(): void
         http_response_code(201);
         echo $compta;
     }
-
 }
 
 function delete_accounting() : void
@@ -113,4 +108,3 @@ function delete_accounting() : void
     http_response_code(200);
     echo json_encode(["message" => "Accounting file deleted"]);
 }
-

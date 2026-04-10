@@ -53,7 +53,6 @@ function get_role() : void
             echo json_encode(["message" => "Role not found"]);
             return;
         }
-
     } else {
         // Sinon, on renvoie la liste de tous les utilisateurs. On va juste préciser si ils ont des rôles ou non
         $data = Role::bulkFetch();
@@ -107,8 +106,6 @@ function update_role() : void
 
     http_response_code(200);
     echo json_encode($role);
-
-
 }
 
 function delete_role() : void
@@ -134,4 +131,3 @@ function delete_role() : void
     http_response_code(200);
     echo json_encode(['message' => 'Role deleted']);
 }
-

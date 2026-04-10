@@ -64,7 +64,6 @@ function get_news() : void
             return;
         }
         echo $news;
-
     } else {
         $news = News::bulkFetch();
         echo json_encode($news);
@@ -169,4 +168,3 @@ function delete_news() : void
     http_response_code(200);
     echo json_encode(['message' => 'News deleted']);
 }
-

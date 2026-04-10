@@ -67,6 +67,4 @@ class News extends BaseModel implements JsonSerializable
     {
         return json_encode($this);
     }
-
-
 }

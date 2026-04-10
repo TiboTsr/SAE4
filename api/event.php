@@ -89,8 +89,7 @@ function update_event(): void
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
-    if (
-        !is_array($data) ||
+    if (!is_array($data) ||
         !isset(
             $data['nom'],
             $data['description'],

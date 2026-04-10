@@ -53,8 +53,6 @@ function get_userRoles() : void
 
         http_response_code(200);
         echo json_encode($data->getRoles());
-
-
     } else {
         http_response_code(400);
         echo json_encode(["message" => "Missing id"]);
@@ -64,7 +62,6 @@ function get_userRoles() : void
 function setUserRoles() : void
 {
     if (isset($_GET['id'])) {
-
         $id = filter::int($_GET['id']);
 
         $data = Member::getInstance($id);

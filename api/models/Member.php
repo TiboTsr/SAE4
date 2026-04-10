@@ -160,6 +160,3 @@ class Member extends BaseModel implements JsonSerializable
         return $this->toJsonWithRoles();
     }
 }
-
-
-
