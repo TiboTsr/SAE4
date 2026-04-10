@@ -83,36 +83,14 @@ function get_candidate_paths(): array
         $projectRoot = dirname(__DIR__);
     }
 
-    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
-    $xamppFromDocRoot = '';
-    if (is_string($documentRoot) && $documentRoot !== '') {
-        $docRootRealPath = @realpath($documentRoot);
-        if ($docRootRealPath !== false) {
-            $xamppFromDocRoot = dirname($docRootRealPath);
-        }
-    }
-
     $paths = [
+        $projectRoot . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'php_error.log',
         (string)ini_get('error_log'),
         $projectRoot . DIRECTORY_SEPARATOR . 'php_error_log',
         'C:/xampp/apache/logs/error.log',
         'C:/xampp/apache/logs/access.log',
-        'C:/xampp/php/logs/php_error_log',
-        'C:/xampp/mysql/data/mysql_error.log',
-        '/opt/lampp/logs/error_log',
-        '/opt/lampp/logs/php_error_log',
-        '/var/log/apache2/error.log',
-        '/var/log/httpd/error_log',
-        '/var/log/nginx/error.log',
-        '/var/log/php-fpm/error.log',
-        '/var/log/mysql/error.log'
+        'C:/xampp/php/logs/php_error_log'
     ];
-
-    if ($xamppFromDocRoot !== '') {
-        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'error.log';
-        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'apache' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'access.log';
-        $paths[] = $xamppFromDocRoot . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'mysql_error.log';
-    }
 
     $finalPaths = [];
     $seen = [];
